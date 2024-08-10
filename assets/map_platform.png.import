@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://da3dhqvmt45ri"
-path="res://.godot/imported/wiz_blue.png-820fc63a36826000c11de97aedd37b81.ctex"
+uid="uid://3butdt2y5mya"
+path="res://.godot/imported/map_platform.png-6afaf8dc29f7300cd5339368656eea97.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/wiz_blue.png"
-dest_files=["res://.godot/imported/wiz_blue.png-820fc63a36826000c11de97aedd37b81.ctex"]
+source_file="res://assets/map_platform.png"
+dest_files=["res://.godot/imported/map_platform.png-6afaf8dc29f7300cd5339368656eea97.ctex"]
 
 [params]
 
@@ -23,12 +23,12 @@ compress/normal_map=0
 compress/channel_pack=0
 mipmaps/generate=false
 mipmaps/limit=-1
-roughness/mode=1
+roughness/mode=0
 roughness/src_normal=""
-process/fix_alpha_border=false
+process/fix_alpha_border=true
 process/premult_alpha=false
 process/normal_map_invert_y=false
 process/hdr_as_srgb=false
 process/hdr_clamp_exposure=false
 process/size_limit=0
-detect_3d/compress_to=0
+detect_3d/compress_to=1
