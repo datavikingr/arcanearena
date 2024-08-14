@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dj1bkuuo2x6bu"]
+
+[ext_resource type="Texture2D" uid="uid://3butdt2y5mya" path="res://assets/map_platform.png" id="1_xojs7"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_bp1e8"]
+radius = 4.0
+height = 102.0
+
+[node name="MapPlatform" type="StaticBody2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_xojs7")
+
+[node name="PhysicsBody" type="CollisionShape2D" parent="."]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_bp1e8")

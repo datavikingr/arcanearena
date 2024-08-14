@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://c34aqtr1kgotl"]
+
+[ext_resource type="Script" path="res://scripts/PlayerBlue.gd" id="1_rurug"]
+[ext_resource type="Texture2D" uid="uid://da3dhqvmt45ri" path="res://assets/wiz_blue.png" id="2_oh0ic"]
+
+[node name="PlayerBlue" type="CharacterBody2D"]
+floor_stop_on_slope = false
+script = ExtResource("1_rurug")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_oh0ic")
+
+[node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-6, 7, -6, 7, -6, -4, -5, -6, -4, -7, -2, -8, 2, -8, 4, -7, 5, -6, 6, -4, 6, 3, 6, 7, 5, 8, -5, 8)
