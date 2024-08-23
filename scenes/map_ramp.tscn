@@ -1,0 +1,11 @@
+[gd_scene load_steps=2 format=3 uid="uid://cp2d4ky7kfyt3"]
+
+[ext_resource type="Texture2D" uid="uid://barajd70cs6s8" path="res://assets/map_ramp.png" id="1_od0r0"]
+
+[node name="MapRamp" type="RigidBody2D"]
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_od0r0")
+
+[node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -16, -16, -16, -16, 22, -11, 10, -5, -1, 0, -6, 8, -11, 21, -16)
