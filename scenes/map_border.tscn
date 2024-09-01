@@ -2,11 +2,9 @@
 
 [ext_resource type="Texture2D" uid="uid://dokidjb3tb5w" path="res://assets/ui_border.png" id="1_nmrcv"]
 
-[node name="MapBorder" type="Node2D"]
+[node name="MapBorder" type="StaticBody2D"]
 
-[node name="PhysicsBody" type="StaticBody2D" parent="."]
-
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="PhysicsBody"]
+[node name="PhysicsShape" type="CollisionPolygon2D" parent="."]
 position = Vector2(0, 18.8819)
 scale = Vector2(1, 1.64224)
 polygon = PackedVector2Array(0, -11.4976, 0, -11.4976, 640, -11.4976, 640, 207.715, 0, 207.715, 0, 99.3265, 45, 99.3265, 45, 124.901, 50, 124.901, 50, 182.749, 598, 182.749, 598, 124.901, 603, 124.901, 603, 78.0142, 598, 78.0142, 598, 15.9039, 50, 15.9039, 50, 78.0142, 45, 78.0142, 45, 98.1087, 0, 98.1087)

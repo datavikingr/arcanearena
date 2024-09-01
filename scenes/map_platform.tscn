@@ -6,11 +6,11 @@
 radius = 4.0
 height = 102.0
 
-[node name="MapPlatform" type="StaticBody2D"]
+[node name="MapPlatformSingle" type="StaticBody2D"]
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+rotation = -1.5708
+shape = SubResource("CapsuleShape2D_bp1e8")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_xojs7")
-
-[node name="PhysicsBody" type="CollisionShape2D" parent="."]
-rotation = -1.5708
-shape = SubResource("CapsuleShape2D_bp1e8")

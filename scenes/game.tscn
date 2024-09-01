@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3 uid="uid://ulne1ia3hqc7"]
+[gd_scene load_steps=10 format=3 uid="uid://ulne1ia3hqc7"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/map_bg_void.png" id="1_mvbm5"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bg_forest.png" id="2_hyum3"]
@@ -7,7 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://bkscks57o7vkd" path="res://scenes/map_platform_double.tscn" id="5_fhfy4"]
 [ext_resource type="Texture2D" uid="uid://36l8xb1wq8ea" path="res://assets/map_grass.png" id="6_ifovv"]
 [ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="7_ep8t1"]
-[ext_resource type="PackedScene" uid="uid://c34aqtr1kgotl" path="res://scenes/player_blue.tscn" id="8_uwthx"]
+[ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="9_lk03m"]
+[ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/player_purp.tscn" id="9_sl1vj"]
 
 [node name="StandardBattlefield" type="Node2D"]
 
@@ -63,5 +64,8 @@ rotation = -1.5708
 position = Vector2(518, 244)
 rotation = -3.14159
 
-[node name="PlayerBlue" parent="." instance=ExtResource("8_uwthx")]
-position = Vector2(189, 70)
+[node name="Ball" parent="." instance=ExtResource("9_lk03m")]
+position = Vector2(317, 82)
+
+[node name="PlayerPurple" parent="." instance=ExtResource("9_sl1vj")]
+position = Vector2(190, 80)

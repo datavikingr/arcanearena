@@ -2,10 +2,10 @@
 
 [ext_resource type="Texture2D" uid="uid://barajd70cs6s8" path="res://assets/map_ramp.png" id="1_od0r0"]
 
-[node name="MapRamp" type="RigidBody2D"]
+[node name="MapRamp" type="StaticBody2D"]
+
+[node name="PhysicsShape" type="CollisionPolygon2D" parent="."]
+polygon = PackedVector2Array(-16, -16, -16, -16, -16, 22, -11, 10, -5, -1, 0, -6, 8, -11, 21, -16)
 
 [node name="Sprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_od0r0")
-
-[node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-16, -16, -16, -16, -16, 22, -11, 10, -5, -1, 0, -6, 8, -11, 21, -16)
