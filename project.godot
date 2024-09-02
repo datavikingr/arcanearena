@@ -83,6 +83,15 @@ blue_special={
 ]
 }
 
+[layer_names]
+
+2d_physics/layer_1="Map and Platforms"
+2d_physics/layer_2="Goal"
+2d_physics/layer_3="Ball"
+2d_physics/layer_4="Player"
+2d_physics/layer_5="Red Team"
+2d_physics/layer_6="Blue Team"
+
 [rendering]
 
 textures/canvas_textures/default_texture_filter=0

@@ -10,7 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="9_lk03m"]
 [ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/player_purp.tscn" id="9_sl1vj"]
 
-[node name="StandardBattlefield" type="Node2D"]
+[node name="test arena" type="Node2D"]
 
 [node name="BGs" type="Node2D" parent="."]
 position = Vector2(320, 180)

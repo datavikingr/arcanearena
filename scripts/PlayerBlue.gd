@@ -7,7 +7,7 @@ extends CharacterBody2D
 @export var jump_speed: int = 300 # 400 is a little too high for the maps. 300 feels good. player_jump()
 @export var slide_speed: int = 400 # Twice as fast as the run, player_jump()
 @export var push_force: float = 200.0 # This represents the player's inertia, physics_collisions()
-@export var near_range: int = 35 # Nearness range, is_ball_near() & player_jump()
+@export var near_range: int = 50 # Nearness range, is_ball_near() & player_jump()
 
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") # gravity = 980, player_movement()
 var is_holding = false #TODO: Implement posession feature?
@@ -22,19 +22,20 @@ func is_ball_near() -> bool: # Called from player_jump()
 	ball_position = %Ball.position #Get ball position from transform
 	player_position = self.position #Get self position from transform
 	#NOTE: If player and ball are within near_range of each other in x and y, return true
-	return abs(ball_position.x - player_position.x) < near_range and abs(ball_position.y - player_position.y) < near_range
+	return abs(ball_position.x - player_position.x) < near_range and abs(ball_position.y - player_position.y) < (near_range / 2)
 
 ## EXECUTION
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	pass
 
 func _physics_process(delta) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
-	player_movement(delta)
-	if Input.is_action_just_pressed("blue_jump"):
-		player_jump(delta)
-	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"):
+	player_movement(delta) # Left/right/idle
+	if Input.is_action_just_pressed("blue_jump"): # what it say on the can
+		player_jump(delta) 
+	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"): # This is a slide
 		player_slide(delta)
-	physics_collisions()
+	move_and_slide() # Execute movement accumulated above
+	physics_collisions() # React to Physics, as per the movement.
 	if Input.is_action_just_pressed("blue_attack"):
 		player_attack(delta)
 	if Input.is_action_just_pressed("blue_special"):
@@ -61,7 +62,6 @@ func player_movement(delta) -> void: # Player Controller, called by _physics_pro
 		#TODO: animation line for ground idle
 		#TODO: animation line for falling idle
 		velocity.x = 0 # don't move
-	move_and_slide() #execute movement
 
 func player_jump(_delta) -> void: # Called by player input from _physics_process()
 	if !is_slide(): #Make sure we're not sliding
@@ -69,17 +69,18 @@ func player_jump(_delta) -> void: # Called by player input from _physics_process
 		print("Jump!") # Log
 		if is_ball_near(): # If ball is in range
 			%Ball.linear_velocity.y = -1.1 * jump_speed # Apply upward force to ball
-	move_and_slide() #execute movement
 
 func player_slide(delta) -> void:
-	if sprite.flip_h == true: # If player is facing left
-		left_right = -1 # Tune the forces to the left
-	else: # else, we're facing right
-		left_right = 1 # Keep the forces tuned to the right
-	print("Slide!") # Log
-	#TODO: animation line for slide
-	velocity.x = left_right * slide_speed # Load forces for move_and_slide()
-	move_and_slide() # Execute movement
+	# Without is_slide() here, this creates an air-dash. I think I like this air dash. 
+	# But, Airie says she doesn't. I'm going to test it with. And I leave it only commented, if I hate it, rather than remove it.
+	if is_slide():
+		if sprite.flip_h == true: # If player is facing left
+			left_right = -1 # Tune the forces to the left
+		else: # else, we're facing right
+			left_right = 1 # Keep the forces tuned to the right
+		print("Slide!") # Log
+		#TODO: animation line for slide
+		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
 
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()

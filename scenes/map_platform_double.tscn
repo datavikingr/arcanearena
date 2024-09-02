@@ -8,6 +8,7 @@ height = 206.0
 
 [node name="MapPlatformDouble" type="StaticBody2D"]
 position = Vector2(-2.5, 0)
+collision_mask = 0
 
 [node name="PhysicsShape" type="CollisionShape2D" parent="."]
 rotation = -1.5708

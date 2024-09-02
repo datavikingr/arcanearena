@@ -3,6 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://dokidjb3tb5w" path="res://assets/ui_border.png" id="1_nmrcv"]
 
 [node name="MapBorder" type="StaticBody2D"]
+collision_mask = 0
 
 [node name="PhysicsShape" type="CollisionPolygon2D" parent="."]
 position = Vector2(0, 18.8819)
