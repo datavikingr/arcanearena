@@ -65,7 +65,8 @@ position = Vector2(518, 244)
 rotation = -3.14159
 
 [node name="Ball" parent="." instance=ExtResource("9_lk03m")]
+unique_name_in_owner = true
 position = Vector2(317, 82)
 
 [node name="PlayerPurple" parent="." instance=ExtResource("9_sl1vj")]
-position = Vector2(190, 80)
+position = Vector2(186, 82)

@@ -4,6 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b3q27xvenm2xu" path="res://assets/wiz_purp.png" id="2_cs01j"]
 
 [node name="PlayerPurple" type="CharacterBody2D"]
+floor_max_angle = 1.48353
 script = ExtResource("1_1k1h6")
 
 [node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
