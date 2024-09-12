@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://bwn62t14qa0a0"]
 
-[ext_resource type="Texture2D" uid="uid://c1httc2obgnaf" path="res://assets/map_ball.png" id="1_61etl"]
+[ext_resource type="Texture2D" uid="uid://c1httc2obgnaf" path="res://assets/ball.png" id="1_61etl"]
 [ext_resource type="Script" path="res://scripts/ball.gd" id="1_k4exm"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f475m"]
