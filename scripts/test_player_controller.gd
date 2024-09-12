@@ -4,7 +4,7 @@ extends CharacterBody2D
 @onready var sprite = get_node("Sprite") # Sprite, player_movement()
 @onready var player = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
 
-@export var run_speed: int = 200 # Feels like a good lateral speed for now. player_movement()
+@export var run_speed: int = 250 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = 300 # 400 is a little too high for the maps. 300 feels good. player_jump()
 @export var slide_speed: int = 400 # Twice as fast as the run, player_jump()
 @export var push_force: float = 200.0 # This represents the player's inertia, physics_collisions()
