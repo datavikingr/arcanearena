@@ -58,27 +58,23 @@ func _process(_delta: float) -> void:
 func _physics_process(delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. 
 	# We're gonna collect input here. We'll start by stashing it all in variables to pass it around where needed.
 	left_right = Input.get_axis("blue_left", "blue_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
-	#TODO:
-	#TODO:
-	#TODO: This is what we're working on now. Variables for passing. Booleans.
-
-	
-	# Then we're gonan execute with the above
-	
 	player_movement(delta) # Left/right/idle
 	if Input.is_action_just_pressed("blue_jump"): # what it says on the can
 		player_jump(delta)
 	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"): # This is a slide
-		player_slide(delta)
-	animation_controller() # Change Animations
-	move_and_slide() # Execute movement accumulated above
-	physics_collisions() # React to Physics, as per the movement.
+		if is_on_floor():
+			player_slide(delta)
+		else:
+			player_meteor(delta)
 	if Input.is_action_just_pressed("blue_attack"):
 		player_attack(delta) 
 	if Input.is_action_just_pressed("blue_special"):
 		player_special(delta)
 	if Input.is_action_just_pressed("blue_block"):
 		player_block(delta)
+	animation_controller() # Change Animations
+	move_and_slide() # Execute movement accumulated above
+	physics_collisions() # React to Physics, as per the movement.
 	
 
 #######################################################################################################################################################
@@ -113,6 +109,13 @@ func player_slide(_delta: float) -> void:
 			left_right = 1 # Keep the forces tuned to the right
 		#print("Slide!") # Log
 		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
+
+func player_meteor(_delta: float) -> void:
+	# Meteor strike down
+	print("Meteor!") # Log
+	rotation = 180
+	velocity.y = -2 * jump_speed
+	rotation = 0	
 	
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Attack!") # Log
