@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=3 uid="uid://w3y2lg015ylj"]
+
+[ext_resource type="Texture2D" uid="uid://d1lgpg6webkl3" path="res://assets/map_wall.png" id="1_a15v3"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_dn6jl"]
+size = Vector2(40, 360)
+
+[node name="Map Border Wall" type="StaticBody2D"]
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_dn6jl")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_a15v3")

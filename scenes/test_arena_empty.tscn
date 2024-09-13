@@ -1,9 +1,8 @@
-[gd_scene load_steps=8 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=7 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bg_forest.png" id="2_8a7vy"]
-[ext_resource type="PackedScene" uid="uid://bg03x4kkxhxq8" path="res://scenes/map_border.tscn" id="3_h1aym"]
-[ext_resource type="Texture2D" uid="uid://36l8xb1wq8ea" path="res://assets/map_grass.png" id="4_h2bb0"]
+[ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="4_6qjae"]
 [ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="5_35l2g"]
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
 [ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/test_player.tscn" id="7_nqmyx"]
@@ -17,33 +16,46 @@ position = Vector2(320, 180)
 texture = ExtResource("1_a1h4a")
 
 [node name="BgForest" type="Sprite2D" parent="BGs"]
-position = Vector2(29, -5)
+position = Vector2(57, -9)
+scale = Vector2(1.2, 1.2)
 texture = ExtResource("2_8a7vy")
 
 [node name="Map" type="Node2D" parent="."]
-
-[node name="MapBorder" parent="Map" instance=ExtResource("3_h1aym")]
-
-[node name="MapGrass" type="Sprite2D" parent="Map"]
-position = Vector2(324, 326)
-texture = ExtResource("4_h2bb0")
 
 [node name="Ramps" type="Node2D" parent="Map"]
 position = Vector2(65, 60)
 
 [node name="MapRamp_TL" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
+position = Vector2(-39, -35)
 
 [node name="MapRamp_TR" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(518, 0)
+position = Vector2(549, -35)
 rotation = 1.5708
 
 [node name="MapRamp_BL" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(0, 244)
+position = Vector2(-39, 274)
 rotation = -1.5708
 
 [node name="MapRamp_BR" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(518, 244)
+position = Vector2(549, 274)
 rotation = -3.14159
+
+[node name="Map Border Wall East" parent="Map" instance=ExtResource("4_6qjae")]
+position = Vector2(649, 187)
+
+[node name="Map Border Wall West" parent="Map" instance=ExtResource("4_6qjae")]
+position = Vector2(-9, 180)
+rotation = 3.14159
+
+[node name="Map Border Wall South" parent="Map" instance=ExtResource("4_6qjae")]
+position = Vector2(322, 369)
+rotation = 1.5708
+scale = Vector2(1, 2)
+
+[node name="Map Border Wall North" parent="Map" instance=ExtResource("4_6qjae")]
+position = Vector2(349, -10)
+rotation = -1.5708
+scale = Vector2(1, 2)
 
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
