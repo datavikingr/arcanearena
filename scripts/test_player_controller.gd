@@ -5,7 +5,7 @@ extends CharacterBody2D
 # Nodes
 @onready var sprite = get_node("Sprite") # Sprite, player_movement()
 @onready var player = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
-@onready var raycast = get_node("RayCast2D") # Ball detector, used in physics_collisions()
+@onready var raycast = get_node("RayCast") # Ball detector, used in physics_collisions()
 # Exports
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
@@ -15,9 +15,10 @@ extends CharacterBody2D
 @export var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
 # Local
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") # gravity = 980, player_movement()
-var is_holding = false #TODO: Implement ball-posession feature???
+var is_holding: bool = false #TODO: Implement ball-posession feature???
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
+var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
 
 # Input
 var left_right: float = 0 # Control Input, player_movement()
@@ -25,7 +26,7 @@ var left_right: float = 0 # Control Input, player_movement()
 #######################################################################################################################################################
 ## CALLABLE CHECK FUNCTIONS
 func is_slide() -> bool: # Called by player_jumps()
-	return is_on_floor() and Input.is_action_pressed("blue_down")
+	return is_on_floor() and Input.is_action_pressed("blue_down") and not from_meteor
 
 func is_ball_near() -> bool: # Called from player_jump()
 	ball_position = %Ball.position #Get ball position from transform
@@ -45,7 +46,7 @@ func is_on_top_of_ball() -> bool: # called by physics_collisions
 		#print("RayCast hit the ball!") # Logs
 		return collider.is_in_group("balls") # True if on top of the ball, false if not
 	return false
-	        
+
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
@@ -55,7 +56,7 @@ func _process(_delta: float) -> void:
 	if Input.is_action_just_released("blue_jump") and velocity.y < 0:
 		velocity.y = jump_speed / 3
 
-func _physics_process(delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. 
+func _physics_process(delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	# We're gonna collect input here. We'll start by stashing it all in variables to pass it around where needed.
 	left_right = Input.get_axis("blue_left", "blue_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
 	player_movement(delta) # Left/right/idle
@@ -66,8 +67,10 @@ func _physics_process(delta: float) -> void: # Called every frame. 'delta' is th
 			player_slide(delta)
 		else:
 			player_meteor(delta)
+	if Input.is_action_just_released("blue_jump"):
+		from_meteor = false
 	if Input.is_action_just_pressed("blue_attack"):
-		player_attack(delta) 
+		player_attack(delta)
 	if Input.is_action_just_pressed("blue_special"):
 		player_special(delta)
 	if Input.is_action_just_pressed("blue_block"):
@@ -75,7 +78,7 @@ func _physics_process(delta: float) -> void: # Called every frame. 'delta' is th
 	animation_controller() # Change Animations
 	move_and_slide() # Execute movement accumulated above
 	physics_collisions() # React to Physics, as per the movement.
-	
+
 
 #######################################################################################################################################################
 ## PLAYER ACTIONS
@@ -94,15 +97,15 @@ func player_movement(delta: float) -> void: # Player Controller, called by _phys
 
 func player_jump(_delta: float) -> void: # Called by player input from _physics_process()
 	if !is_slide(): #Make sure we're not sliding
-		velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh* 
+		velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh*
 		#print("Jump!") # Log
 		if is_ball_near() and !is_on_top_of_ball(): # If ball is in range, but we're not directly on top of it
 			%Ball.linear_velocity.y = 1.1 * jump_speed # Apply upward force to ball
 
 func player_slide(_delta: float) -> void:
-	# Without is_slide() here, this creates an air-dash. I think I like this air dash. 
+	# Without is_slide() here, this creates an air-dash. I think I like this air dash.
 	# But, Airie says she doesn't. I'm going to test it with. And I leave it only commented, if I hate it, rather than remove it.
-	if is_slide():
+	if is_slide() and not from_meteor:
 		if sprite.flip_h == true: # If player is facing left
 			left_right = -1 # Tune the forces to the left
 		else: # else, we're facing right
@@ -111,12 +114,21 @@ func player_slide(_delta: float) -> void:
 		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
 
 func player_meteor(_delta: float) -> void:
-	# Meteor strike down
-	print("Meteor!") # Log
-	rotation = 180
-	velocity.y = -2 * jump_speed
-	rotation = 0	
-	
+	# Meteor strike downward
+	#print("Meteor!") # Log
+
+	# Astronomy 104: Intro to Meteors and Other Space Rocks (INIT sequence)
+	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe?
+	sprite.rotation = 180 # Sprite's head faces down.
+
+	# Astronomy 204: Meteorites. Contact! (Perform Meteor)
+	velocity.y = -2.5 * jump_speed
+
+	# Astronomy 304: Craters and Their Impact on Bodies (Clean Up)
+	from_meteor = true
+	sprite.rotation = 0 # Reset the sprite direction
+	raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
+
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Attack!") # Log
 
@@ -152,11 +164,9 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 			sprite.flip_h = false # toggles mirror off; faces right
 			player.play("run") # animation
 	else: #when the player is not on the floor
-		#TODO: if velocity.y < 0:
+		#TODO: if velocity.y < 0: # Less than zero is ascending (due to y-flip)
 		player.play("jump")
-		#TODO: elif velocity.y > 0:
+		#TODO: elif velocity.y <= -400
 		#TODO:	player.play("fall")
 
 		# #TODO: Generate those sprites
-	
-	

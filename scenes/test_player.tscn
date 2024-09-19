@@ -3,6 +3,21 @@
 [ext_resource type="Script" path="res://scripts/test_player_controller.gd" id="1_1k1h6"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_vjnan"]
 
+[sub_resource type="Animation" id="Animation_lokpq"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [32]
+}
+
 [sub_resource type="Animation" id="Animation_lgg0o"]
 resource_name = "idle"
 loop_mode = 1
@@ -19,8 +34,9 @@ tracks/0/keys = {
 "values": [32, 33]
 }
 
-[sub_resource type="Animation" id="Animation_lokpq"]
-length = 0.001
+[sub_resource type="Animation" id="Animation_1r5qw"]
+resource_name = "jump"
+step = 0.05
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -31,7 +47,7 @@ tracks/0/keys = {
 "times": PackedFloat32Array(0),
 "transitions": PackedFloat32Array(1),
 "update": 1,
-"values": [32]
+"values": [37]
 }
 
 [sub_resource type="Animation" id="Animation_n70cj"]
@@ -49,22 +65,6 @@ tracks/0/keys = {
 "transitions": PackedFloat32Array(1, 1),
 "update": 1,
 "values": [34, 35]
-}
-
-[sub_resource type="Animation" id="Animation_1r5qw"]
-resource_name = "jump"
-step = 0.05
-tracks/0/type = "value"
-tracks/0/imported = false
-tracks/0/enabled = true
-tracks/0/path = NodePath("Sprite:frame")
-tracks/0/interp = 1
-tracks/0/loop_wrap = true
-tracks/0/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
-"update": 1,
-"values": [37]
 }
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b06bv"]
@@ -97,6 +97,6 @@ libraries = {
 "": SubResource("AnimationLibrary_b06bv")
 }
 
-[node name="RayCast2D" type="RayCast2D" parent="."]
+[node name="RayCast" type="RayCast2D" parent="."]
 target_position = Vector2(0, 15)
 collision_mask = 4
