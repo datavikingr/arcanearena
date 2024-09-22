@@ -56,6 +56,11 @@ func is_on_top_of_ball() -> bool: # called by physics_collisions
 		return raycast.get_collider().is_in_group("balls") # True if on top of the ball, and...
 	return false # false if not
 
+func is_on_ramp() -> bool: # called by player_slide()
+	if raycast.is_colliding(): # what is says on the can - is it touching anything?
+		return raycast.get_collider().is_in_group("ramps") # True if on top of the ramp, and...
+	return false #false if not
+
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
@@ -117,7 +122,7 @@ func player_jump(_delta: float) -> void: # Called by player input from _physics_
 func player_slide(_delta: float) -> void:
 	# Without is_slide() here, this creates an air-dash. I think I like this air dash.
 	# But, Airie says she doesn't. I'm going to test it with. And I leave it only commented, if I hate it, rather than remove it.
-	if is_slide() and not from_meteor:
+	if is_slide() and not from_meteor and not is_on_ramp():
 		if sprite.flip_h == true: # If player is facing left
 			left_right = -1 # Tune the forces to the left
 		else: # else, we're facing right
