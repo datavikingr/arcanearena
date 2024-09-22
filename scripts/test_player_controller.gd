@@ -41,7 +41,9 @@ func is_ball_near() -> bool: # Called from player_jump()
 
 func variable_gravity(): # Game feel method. called by player_movement()
 	if velocity.y > 0: # If we're falling
-		return gravity * 1.3 # return double gravity and fall faster, snapping back to the ground
+		return gravity * 1.5 # return 30% higher gravity and fall faster, snapping back to the ground
+	if is_on_ramp():
+		return gravity * 4 # return 4 times gravity, to keep that player glued to the ramp, on their slide down. May increase.
 	return gravity # Else, return normal gravity
 
 func variable_force():
@@ -79,7 +81,7 @@ func _physics_process(delta: float) -> void: # Called every frame. 'delta' is th
 	if Input.is_action_just_pressed("blue_jump"): # what it says on the can
 		player_jump(delta)
 	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"): # This is a slide
-		if is_on_floor():
+		if is_on_floor() or is_on_ramp():
 			player_slide(delta)
 		else:
 			player_meteor(delta)
@@ -122,7 +124,7 @@ func player_jump(_delta: float) -> void: # Called by player input from _physics_
 func player_slide(_delta: float) -> void:
 	# Without is_slide() here, this creates an air-dash. I think I like this air dash.
 	# But, Airie says she doesn't. I'm going to test it with. And I leave it only commented, if I hate it, rather than remove it.
-	if is_slide() and not from_meteor and not is_on_ramp():
+	if (is_slide() and is_on_ramp() and from_meteor) or (is_slide() and not from_meteor):
 		if sprite.flip_h == true: # If player is facing left
 			left_right = -1 # Tune the forces to the left
 		else: # else, we're facing right
