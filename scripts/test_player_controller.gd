@@ -29,7 +29,7 @@ var left_right: float = 0 # Control Input, player_movement()
 
 #######################################################################################################################################################
 ## STATUS-CHECK FUNCTIONS
-func is_slide() -> bool: # Called by player_jumps()
+func is_slide() -> bool: # Called by player_jumps(), variable_force()
 	return is_on_floor() and Input.is_action_pressed("blue_down") and not from_meteor
 
 func is_ball_near() -> bool: # Called from player_jump()
@@ -41,24 +41,26 @@ func is_ball_near() -> bool: # Called from player_jump()
 
 func variable_gravity(): # Game feel method. called by player_movement()
 	if velocity.y > 0: # If we're falling
-		return gravity * 1.5 # return 30% higher gravity and fall faster, snapping back to the ground
+		return gravity * 1.4 # return 30% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
-		return gravity * 4 # return 4 times gravity, to keep that player glued to the ramp, on their slide down. May increase.
+		return gravity * 2 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
 	return gravity # Else, return normal gravity
 
-func variable_force():
-	if from_meteor == true:
-		return meteor_force
-	else:
-		return push_force
+func variable_force(): # How hard we punch the ball, called by physics_collisions() controller.
+	if from_meteor == true: # If we're down+A,
+		return meteor_force # hit the ball extra hard @ 1000
+	elif is_slide() and Input.is_action_pressed("blue_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
+		return push_force * 2 # 400
+	else: # If we're just running
+		return push_force # 200
 
-func is_on_top_of_ball() -> bool: # called by physics_collisions
+func is_on_top_of_ball() -> bool: # called by physics_collisions()
 	if raycast.is_colliding(): # what is says on the can - is it touching anything?
 		#print("RayCast hit the ball!") # Logs
 		return raycast.get_collider().is_in_group("balls") # True if on top of the ball, and...
 	return false # false if not
 
-func is_on_ramp() -> bool: # called by player_slide()
+func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _physics_process()
 	if raycast.is_colliding(): # what is says on the can - is it touching anything?
 		return raycast.get_collider().is_in_group("ramps") # True if on top of the ramp, and...
 	return false #false if not
@@ -69,17 +71,17 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	pass
 
 func _process(_delta: float) -> void:
-	if is_on_floor():
-		sprite.flip_v = false
-	if Input.is_action_just_released("blue_jump") and velocity.y < 0:
-		velocity.y = jump_speed / 4
+	if is_on_floor(): # If we're on the ground
+		sprite.flip_v = false # we always want the sprite right side up
+	if Input.is_action_just_released("blue_jump") and velocity.y < 0: # If we let go of jump
+		velocity.y = jump_speed / 4 # Let gravity overtake us faster, by skrinking upward velocity, pulling us to the earth sooner.
 
 func _physics_process(delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	# We're gonna collect input here. We'll start by stashing it all in variables to pass it around where needed.
 	left_right = Input.get_axis("blue_left", "blue_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
 	player_movement(delta) # Left/right/idle
 	if Input.is_action_just_pressed("blue_jump"): # what it says on the can
-		player_jump(delta)
+		player_jump(delta) # Execute jump
 	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"): # This is a slide
 		if is_on_floor() or is_on_ramp():
 			player_slide(delta)

@@ -1,11 +1,15 @@
 extends RigidBody2D
 
+const MAX_VELOCITY = 3000.0  # Set this to a value that feels right for your game
 
-# Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready(): # Called when the node enters the scene tree for the first time.
 	pass # Replace with function body.
 
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta):
+func _process(_delta): # Called every frame. 'delta' is the elapsed time since the previous frame.
 	pass
+
+func _integrate_forces(state) -> void:
+	var velocity = state.get_linear_velocity() # what it says on the can
+	if velocity.length() > MAX_VELOCITY: # If we're exceeding the speed limit
+		velocity = velocity.normalized() * MAX_VELOCITY # Clamp the velocity magnitude
+	state.set_linear_velocity(velocity) # Hard-write the clamped speed to the object
