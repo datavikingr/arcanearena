@@ -9,22 +9,26 @@ extends CharacterBody2D
 # Exports
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
+@export var meteor_speed: int = 800 # 2x jump speed
 @export var slide_speed: int = 400 # Twice as fast as the old run value, player_slide()
 @export var push_force: float = 200.0 # This represents the player's inertia, physics_collisions()
+@export var meteor_force: float = 1000.0 # This represents player inertia when meteor-striking
 @export var near_range: Vector2 = Vector2( 37 , 25 ) # Nearness range in x and y for the ground, is_ball_near() & player_jump()
 @export var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
+@export var pinch_threshold: int = 900
 # Local
+var collision
+var pinch_multiplier: int = 1.15 # Used in physics_collisions()
 var gravity = ProjectSettings.get_setting("physics/2d/default_gravity") # gravity = 980, player_movement()
 var is_holding: bool = false #TODO: Implement ball-posession feature???
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
-
 # Input
 var left_right: float = 0 # Control Input, player_movement()
 
 #######################################################################################################################################################
-## CALLABLE CHECK FUNCTIONS
+## STATUS-CHECK FUNCTIONS
 func is_slide() -> bool: # Called by player_jumps()
 	return is_on_floor() and Input.is_action_pressed("blue_down") and not from_meteor
 
@@ -40,12 +44,17 @@ func variable_gravity(): # Game feel method. called by player_movement()
 		return gravity * 1.3 # return double gravity and fall faster, snapping back to the ground
 	return gravity # Else, return normal gravity
 
+func variable_force():
+	if from_meteor == true:
+		return meteor_force
+	else:
+		return push_force
+
 func is_on_top_of_ball() -> bool: # called by physics_collisions
-	if raycast.is_colliding(): # what is says on the can
-		var collider = raycast.get_collider() # figure out what's touching the raycast directly under the player
+	if raycast.is_colliding(): # what is says on the can - is it touching anything?
 		#print("RayCast hit the ball!") # Logs
-		return collider.is_in_group("balls") # True if on top of the ball, false if not
-	return false
+		return raycast.get_collider().is_in_group("balls") # True if on top of the ball, and...
+	return false # false if not
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
@@ -53,8 +62,10 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	pass
 
 func _process(_delta: float) -> void:
+	if is_on_floor():
+		sprite.flip_v = false
 	if Input.is_action_just_released("blue_jump") and velocity.y < 0:
-		velocity.y = jump_speed / 3
+		velocity.y = jump_speed / 4
 
 func _physics_process(delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	# We're gonna collect input here. We'll start by stashing it all in variables to pass it around where needed.
@@ -69,6 +80,8 @@ func _physics_process(delta: float) -> void: # Called every frame. 'delta' is th
 			player_meteor(delta)
 	if Input.is_action_just_released("blue_jump"):
 		from_meteor = false
+		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
+		sprite.flip_v = false # Reset the sprite direction
 	if Input.is_action_just_pressed("blue_attack"):
 		player_attack(delta)
 	if Input.is_action_just_pressed("blue_special"):
@@ -78,7 +91,6 @@ func _physics_process(delta: float) -> void: # Called every frame. 'delta' is th
 	animation_controller() # Change Animations
 	move_and_slide() # Execute movement accumulated above
 	physics_collisions() # React to Physics, as per the movement.
-
 
 #######################################################################################################################################################
 ## PLAYER ACTIONS
@@ -113,21 +125,12 @@ func player_slide(_delta: float) -> void:
 		#print("Slide!") # Log
 		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
 
-func player_meteor(_delta: float) -> void:
-	# Meteor strike downward
+func player_meteor(_delta: float) -> void: 	# Meteor strike downward
 	#print("Meteor!") # Log
-
-	# Astronomy 104: Intro to Meteors and Other Space Rocks (INIT sequence)
-	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe?
-	sprite.rotation = 180 # Sprite's head faces down.
-
-	# Astronomy 204: Meteorites. Contact! (Perform Meteor)
-	velocity.y = -2.5 * jump_speed
-
-	# Astronomy 304: Craters and Their Impact on Bodies (Clean Up)
-	from_meteor = true
-	sprite.rotation = 0 # Reset the sprite direction
-	raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
+	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
+	sprite.flip_v = true # Sprite's head faces down. Returns to normal on Jump-just released in _physics_process()
+	velocity.y = meteor_speed # Drop really fast; 800
+	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Attack!") # Log
@@ -146,12 +149,18 @@ func physics_collisions() -> void: # Called from _physics_process()
 		#TODO: Okay, the following line, -here-, creates wall-stick. it's grippier than meatboy.
 		#self.velocity.y = 0
 		#TODO: I'm going to implement this as a match option, in the future.
-		var c = get_slide_collision(i) # Get collision, from # above
-		if c.get_collider().is_in_group("balls") and !is_on_top_of_ball(): # if the collision is with the ball, and we're not on top of it.
-			self.velocity.y = 0 # ensure no upward flick of player on ball contact (well, mitigate it, there are still edge cases)
+		collision = get_slide_collision(i) # Get collision, from # above
+		var collider = collision.get_collider()
+		if collider.is_in_group("balls") and !is_on_top_of_ball(): # if the collision is with the ball, and we're not on top of it.
 			#print("Ball!") # Log
-			c.get_collider().apply_central_impulse(-c.get_normal() * push_force) # Apply impulse forces to the ball in the appropriate direction
-			#break # attempts to apply force once, by breaking the loop
+			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball
+			var normal = collision.get_normal() # Collision normal vector
+			var pinch_factor = relative_velocity.dot(normal) # Pinch factor based on collision speed
+			if pinch_factor > pinch_threshold:
+				var pinch_force = pinch_factor * pinch_multiplier
+				collider.apply_central_impulse(-normal * pinch_force)
+			else:
+				collider.apply_central_impulse(-normal * variable_force()) # Apply impulse forces to the ball in the appropriate direction
 
 func animation_controller() -> void: # called by _physics_process(), left_right = input direction
 	if is_on_floor(): # what it says on the can
