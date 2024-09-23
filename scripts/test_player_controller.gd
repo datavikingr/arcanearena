@@ -16,14 +16,12 @@ extends CharacterBody2D
 @export var near_range: Vector2 = Vector2( 37 , 25 ) # Nearness range in x and y for the ground, is_ball_near() & player_jump()
 @export var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
 @export var pinch_threshold: int = 900 # Lower threshold of delta v to trigger pinch state in _physics_collisions()
-@export var max_pinch_force: float = 3500.0 # Upper threshold of pinch force applied in _physics_collisions()
+@export var max_pinch_force: float = 3000.0 # Upper threshold of pinch force applied in _physics_collisions()
 # Local
 var collision: KinematicCollision2D # Used in physics_collisions()
 var collider: Object # Used in physics_collisions()
-var pinch_multiplier: int = 1.15 # Used in physics_collisions()
+var pinch_multiplier: float = 1.15 # Used in physics_collisions()
 var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity") # gravity = 980, player_movement()
-var is_ball: bool #is_on_top_of_ball()
-var is_holding: bool = false #TODO: Implement ball-posession feature???
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
@@ -44,9 +42,11 @@ func is_ball_near() -> bool: # Called from player_jump()
 
 func variable_gravity(): # Game feel method. called by player_movement()
 	if velocity.y > 0: # If we're falling
-		return gravity * 1.4 # return 30% higher gravity and fall faster, snapping back to the ground
+		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
-		return gravity * 2 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
+		return gravity * 2.5 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
+	if Input.is_action_pressed("blue_up"): # If the player is holding up
+		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
 func variable_force(): # How hard we punch the ball, called by physics_collisions() controller.
@@ -60,9 +60,7 @@ func variable_force(): # How hard we punch the ball, called by physics_collision
 func is_on_top_of_ball() -> bool: # called by physics_collisions()
 	if raycast.is_colliding(): # what is says on the can - is it touching anything?
 		#print("RayCast hit the ball!") # Logs
-		collider = raycast.get_collider()
-		is_ball = collider.is_in_group("balls")
-		return is_ball # True if on top of the ball, and...
+		return raycast.get_collider().is_in_group("balls")
 	return false # false if not
 
 func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _physics_process()
@@ -164,7 +162,7 @@ func physics_collisions() -> void: # Called from _physics_process()
 		#TODO: I'm going to implement this as a match option, in the future.
 		collision = get_slide_collision(i) # Get collision, from # above
 		collider = collision.get_collider()
-		if collider.is_in_group("balls") and !is_on_top_of_ball(): # if the collision is with the ball, and we're not on top of it.
+		if collider.is_in_group("balls") and not is_on_top_of_ball() and not collider.is_in_group("ramps"): # if the collision is with the ball, and we're not on top of it.
 			#print("Ball!") # Log
 			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball
 			var normal = collision.get_normal() # Collision normal vector
@@ -173,25 +171,48 @@ func physics_collisions() -> void: # Called from _physics_process()
 				var pinch_force = pinch_factor * pinch_multiplier # We're adding forces
 				pinch_force = clamp(pinch_force, 0, max_pinch_force) # Up to a limit
 				var impulse = -normal * pinch_force
-				impulse = clamp(impulse, 0, max_pinch_force)
 				collider.apply_central_impulse(impulse) #
 			else:
 				collider.apply_central_impulse(-normal * variable_force()) # Apply impulse forces to the ball in the appropriate direction
 
 func animation_controller() -> void: # called by _physics_process(), left_right = input direction
 	if is_on_floor(): # what it says on the can
-		if left_right == 0: # if no input
-			player.play("idle") # animation
+		if left_right >= -0.25 and left_right <= 0.25: # if no input
+			idle_squat_stretch()
 		elif left_right < -0.25: # Pressed Left, inner 25% deadzone
 			sprite.flip_h = true # toggles mirror on; faces left
-			player.play("run") # animation
+			run_slide_animation()
 		elif left_right > .25:
 			sprite.flip_h = false # toggles mirror off; faces right
-			player.play("run") # animation
+			run_slide_animation()
 	else: #when the player is not on the floor
-		#TODO: if velocity.y < 0: # Less than zero is ascending (due to y-flip)
-		player.play("jump")
-		#TODO: elif velocity.y <= -400
-		#TODO:	player.play("fall")
-
+		jump_fall_meteor()
 		# #TODO: Generate those sprites
+
+#######################################################################################################################################################
+## SPECIFIC ANIMATIONS
+func run_slide_animation() -> void:
+	if abs(velocity.x) == 200: # If we're running
+		player.play("run") # moving animation
+	elif abs(velocity.x) == 400: # If we're sliding
+		#TODO: player.player("slide")
+		player.play("run")
+
+func idle_squat_stretch() -> void:
+	if Input.is_action_pressed("blue_down"):
+		player.play("squat")
+	elif Input.is_action_pressed("blue_up"):
+		player.play("stretch")
+	else:
+		player.play("idle")
+
+func jump_fall_meteor() -> void:
+	if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
+		#TODO: player.play("meteor")
+		player.play("jump")
+	elif velocity.y > 0: # NOTE: Y-inverse; Our y is increasing, meaning we're falling
+		#TODO: player.player("fall")
+		player.play("jump")
+	else: # NOTE: Y-inverse; we're ascending eg, jumping
+		player.play("jump")
+	pass
