@@ -74,8 +74,6 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	pass
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
-	if is_on_floor(): # If we're on the ground
-		sprite.flip_v = false # we always want the sprite right side up
 	if Input.is_action_just_released("blue_jump") and velocity.y < 0: # If we let go of jump
 		velocity.y = jump_speed / 4 # Let gravity overtake us faster, by skrinking upward velocity, pulling us to the earth sooner.
 
@@ -92,7 +90,6 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 	if Input.is_action_just_released("blue_jump"): # This catch is to prevent auto-slide after a meteor. Gotta release jump to slide again (except on ramps).
 		from_meteor = false #Reset our flag
 		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
-		sprite.flip_v = false # Reset the sprite direction
 	if Input.is_action_just_pressed("blue_attack"):
 		player_attack(delta)
 	if Input.is_action_just_pressed("blue_special"):
@@ -139,7 +136,6 @@ func player_slide(_delta: float) -> void:
 func player_meteor(_delta: float) -> void: 	# Meteor strike downward
 	#print("Meteor!") # Log
 	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
-	sprite.flip_v = true # Sprite's head faces down. Returns to normal on Jump-just released in _physics_process()
 	velocity.y = meteor_speed # Drop really fast; 800
 	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
@@ -177,6 +173,8 @@ func physics_collisions() -> void: # Called from _physics_process()
 
 func animation_controller() -> void: # called by _physics_process(), left_right = input direction
 	if is_on_floor(): # what it says on the can
+		sprite.flip_v = false
+		sprite.rotation = 0
 		if left_right >= -0.25 and left_right <= 0.25: # if no input
 			idle_squat_stretch()
 		elif left_right < -0.25: # Pressed Left, inner 25% deadzone
@@ -195,8 +193,7 @@ func run_slide_animation() -> void:
 	if abs(velocity.x) == 200: # If we're running
 		player.play("run") # moving animation
 	elif abs(velocity.x) == 400: # If we're sliding
-		#TODO: player.player("slide")
-		player.play("run")
+		player.play("slide")
 
 func idle_squat_stretch() -> void:
 	if Input.is_action_pressed("blue_down"):
@@ -209,10 +206,17 @@ func idle_squat_stretch() -> void:
 func jump_fall_meteor() -> void:
 	if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
 		#TODO: player.play("meteor")
+		sprite.flip_v = true
 		player.play("jump")
-	elif velocity.y > 0: # NOTE: Y-inverse; Our y is increasing, meaning we're falling
-		#TODO: player.player("fall")
-		player.play("jump")
+	elif velocity.y > 0 and abs(left_right) < .25 : # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but idle
+		player.play("falldown")
+	elif velocity.y > 0 and left_right > 0.25: # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but directing the fall sideways
+		sprite.flip_h = false # toggles mirror off; faces right
+		player.play("fallsideways")
+	elif velocity.y > 0 and left_right < -0.25: # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but directing the fall sideways
+		sprite.flip_h = true # toggles mirror off; faces right
+		player.play("fallsideways")
 	else: # NOTE: Y-inverse; we're ascending eg, jumping
+		sprite.flip_v = false
 		player.play("jump")
 	pass

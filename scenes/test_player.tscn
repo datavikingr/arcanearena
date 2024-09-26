@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://ce2uy5xg6tka4"]
+[gd_scene load_steps=14 format=3 uid="uid://ce2uy5xg6tka4"]
 
 [ext_resource type="Script" path="res://scripts/test_player_controller.gd" id="1_1k1h6"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_vjnan"]
@@ -28,6 +28,30 @@ tracks/1/keys = {
 "transitions": PackedFloat32Array(1),
 "update": 0,
 "values": [Vector2(0, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:flip_v")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [false]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("Sprite:rotation")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
 }
 
 [sub_resource type="Animation" id="Animation_lgg0o"]
@@ -111,10 +135,10 @@ tracks/1/path = NodePath("Sprite:position")
 tracks/1/interp = 1
 tracks/1/loop_wrap = true
 tracks/1/keys = {
-"times": PackedFloat32Array(0),
-"transitions": PackedFloat32Array(1),
+"times": PackedFloat32Array(0, 0.133333),
+"transitions": PackedFloat32Array(1, 1),
 "update": 0,
-"values": [Vector2(0, 0)]
+"values": [Vector2(0, 0), Vector2(0, 1)]
 }
 
 [sub_resource type="Animation" id="Animation_0d8tp"]
@@ -173,12 +197,105 @@ tracks/1/keys = {
 "values": [Vector2(0, -2)]
 }
 
+[sub_resource type="Animation" id="Animation_nfjee"]
+resource_name = "falldown"
+loop_mode = 1
+step = 0.01
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [38, 37, 38, 37]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sprite:flip_v")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 1,
+"values": [false, true, false, true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Sprite:rotation")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.25, 0.5, 0.75),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [0.0, -0.122173, 0.0, 0.122173]
+}
+
+[sub_resource type="Animation" id="Animation_tlkah"]
+resource_name = "slide"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.233333),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [40, 41]
+}
+
+[sub_resource type="Animation" id="Animation_3l1h0"]
+resource_name = "fallsideways"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [39]
+}
+
+[sub_resource type="Animation" id="Animation_31xjn"]
+resource_name = "special"
+length = 0.9
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 0.6),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 1,
+"values": [37, 46, 47]
+}
+
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b06bv"]
 _data = {
 "RESET": SubResource("Animation_lokpq"),
+"falldown": SubResource("Animation_nfjee"),
+"fallsideways": SubResource("Animation_3l1h0"),
 "idle": SubResource("Animation_lgg0o"),
 "jump": SubResource("Animation_1r5qw"),
 "run": SubResource("Animation_n70cj"),
+"slide": SubResource("Animation_tlkah"),
+"special": SubResource("Animation_31xjn"),
 "squat": SubResource("Animation_0d8tp"),
 "stretch": SubResource("Animation_cktr5")
 }
@@ -194,7 +311,7 @@ script = ExtResource("1_1k1h6")
 [node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-6, 5, -6, 5, -6, 1, -6, -5, -5, -7, -3, -8, 2, -8, 4, -7, 5, -5, 5, -2, 5, 3, 5, 6, 4, 8, 1, 9, 0, 9, -1, 9, -4, 8)
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="Sprite" type="Sprite2D" parent="." groups=["players"]]
 texture = ExtResource("2_vjnan")
 hframes = 8
 vframes = 12
