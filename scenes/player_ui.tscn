@@ -1,0 +1,55 @@
+[gd_scene load_steps=4 format=3 uid="uid://bwl56ve1rsnkn"]
+
+[ext_resource type="Script" path="res://scripts/player_ui.gd" id="1_as18e"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="1_fdubh"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_x03g6"]
+
+[node name="PlayerUI" type="Node2D"]
+script = ExtResource("1_as18e")
+
+[node name="Hearts" type="Node2D" parent="."]
+position = Vector2(0, -13)
+
+[node name="Heart1" type="Sprite2D" parent="Hearts"]
+position = Vector2(-7, 1)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12
+frame = 10
+
+[node name="Heart2" type="Sprite2D" parent="Hearts"]
+position = Vector2(1, 1)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12
+frame = 10
+
+[node name="Heart3" type="Sprite2D" parent="Hearts"]
+position = Vector2(9, 1)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12
+frame = 10
+
+[node name="PlayerSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_x03g6")
+hframes = 8
+vframes = 12
+
+[node name="GoalsSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 16)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12
+
+[node name="KillsSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 31)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12
+
+[node name="DeathsSprite" type="Sprite2D" parent="."]
+position = Vector2(0, 46)
+texture = ExtResource("1_fdubh")
+hframes = 8
+vframes = 12

@@ -1,11 +1,19 @@
-[gd_scene load_steps=7 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=15 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bg_forest.png" id="2_8a7vy"]
 [ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="4_6qjae"]
 [ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="5_35l2g"]
+[ext_resource type="PackedScene" uid="uid://c70wfwmqcvgy2" path="res://scenes/block_cover_sprite.tscn" id="5_fkke6"]
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
+[ext_resource type="PackedScene" uid="uid://bwl56ve1rsnkn" path="res://scenes/player_ui.tscn" id="6_e3s0m"]
+[ext_resource type="Script" path="res://scenes/blue_ui.gd" id="7_87kly"]
 [ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/test_player.tscn" id="7_nqmyx"]
+[ext_resource type="Script" path="res://scripts/green_ui.gd" id="8_q2urm"]
+[ext_resource type="Script" path="res://scripts/purple_ui.gd" id="9_gc17j"]
+[ext_resource type="Script" path="res://scripts/red_ui.gd" id="10_8sjcl"]
+[ext_resource type="Script" path="res://scripts/yellow_ui.gd" id="11_n8n62"]
+[ext_resource type="Script" path="res://scripts/orange_ui.gd" id="12_vnq04"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 
@@ -26,36 +34,91 @@ texture = ExtResource("2_8a7vy")
 position = Vector2(65, 60)
 
 [node name="MapRamp_TL" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(-39, -35)
+position = Vector2(-24, -35)
 
 [node name="MapRamp_TR" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(549, -35)
+position = Vector2(534, -35)
 rotation = 1.5708
 
 [node name="MapRamp_BL" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(-39, 274)
+position = Vector2(-24, 274)
 rotation = -1.5708
 
 [node name="MapRamp_BR" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
-position = Vector2(549, 274)
+position = Vector2(534, 274)
 rotation = -3.14159
 
-[node name="Map Border Wall East" parent="Map" instance=ExtResource("4_6qjae")]
-position = Vector2(649, 187)
+[node name="Map Borders" type="Node2D" parent="Map"]
 
-[node name="Map Border Wall West" parent="Map" instance=ExtResource("4_6qjae")]
-position = Vector2(-9, 180)
+[node name="Map Border Wall East" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+position = Vector2(634, 187)
+
+[node name="Map Border Wall West" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+position = Vector2(6, 180)
 rotation = 3.14159
 
-[node name="Map Border Wall South" parent="Map" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
 position = Vector2(322, 369)
 rotation = 1.5708
 scale = Vector2(1, 2)
 
-[node name="Map Border Wall North" parent="Map" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall North" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
 position = Vector2(349, -10)
 rotation = -1.5708
 scale = Vector2(1, 2)
+
+[node name="BlockCoverSprite_SW" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+position = Vector2(-7, 351)
+
+[node name="BlockCoverSprite_SE" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+position = Vector2(647, 353)
+
+[node name="BlockCoverSprite_NW" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+position = Vector2(-7, 10)
+
+[node name="BlockCoverSprite_NE" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+position = Vector2(647, 12)
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(12, 26)
+script = ExtResource("7_87kly")
+
+[node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(12, 160)
+script = ExtResource("8_q2urm")
+
+[node name="PlayerSprite" parent="UI/GreenUI" index="1"]
+frame = 16
+
+[node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(12, 297)
+script = ExtResource("9_gc17j")
+
+[node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
+frame = 32
+
+[node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(627, 26)
+script = ExtResource("10_8sjcl")
+
+[node name="PlayerSprite" parent="UI/RedUI" index="1"]
+frame = 48
+
+[node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(627, 160)
+script = ExtResource("11_n8n62")
+
+[node name="PlayerSprite" parent="UI/YellowUI" index="1"]
+frame = 64
+
+[node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
+position = Vector2(627, 297)
+script = ExtResource("12_vnq04")
+
+[node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
+frame = 80
 
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
@@ -63,3 +126,10 @@ position = Vector2(314, 267)
 
 [node name="TestPlayer" parent="." instance=ExtResource("7_nqmyx")]
 position = Vector2(183, 267)
+
+[editable path="UI/BlueUI"]
+[editable path="UI/GreenUI"]
+[editable path="UI/PurpleUI"]
+[editable path="UI/RedUI"]
+[editable path="UI/YellowUI"]
+[editable path="UI/OrangeUI"]

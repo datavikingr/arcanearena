@@ -31,7 +31,7 @@ var left_right: float = 0 # Control Input, player_movement()
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
 func is_slide() -> bool: # Called by player_jumps(), variable_force()
-	return is_on_floor() and Input.is_action_pressed("blue_down") and not from_meteor
+	return is_on_floor() and Input.is_action_pressed("player1_down") and not from_meteor
 
 func is_ball_near() -> bool: # Called from player_jump()
 	ball_position = %Ball.position #Get ball position from transform
@@ -45,14 +45,14 @@ func variable_gravity(): # Game feel method. called by player_movement()
 		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
 		return gravity * 2.5 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
-	if Input.is_action_pressed("blue_up"): # If the player is holding up
+	if Input.is_action_pressed("player1_up"): # If the player is holding up
 		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
 func variable_force(): # How hard we punch the ball, called by physics_collisions() controller.
 	if from_meteor == true: # If we're down+A,
 		return meteor_force # hit the ball extra hard @ 1000
-	elif is_slide() and Input.is_action_pressed("blue_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
+	elif is_slide() and Input.is_action_pressed("player1_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
 		return push_force * 2 # 400
 	else: # If we're just running
 		return push_force # 200
@@ -74,28 +74,28 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	pass
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
-	if Input.is_action_just_released("blue_jump") and velocity.y < 0: # If we let go of jump
+	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
 		velocity.y = jump_speed / 4 # Let gravity overtake us faster, by skrinking upward velocity, pulling us to the earth sooner.
 
 func _physics_process(delta: float) -> void: # Called every frame. We're gonna collect input and execute control-functions here. Separate thread from _process().
-	left_right = Input.get_axis("blue_left", "blue_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
+	left_right = Input.get_axis("player1_left", "player1_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
 	player_movement(delta) # Left/right/idle
-	if Input.is_action_just_pressed("blue_jump"): # what it says on the can
+	if Input.is_action_just_pressed("player1_jump"): # what it says on the can
 		player_jump(delta) # Execute jump
-	if Input.is_action_pressed("blue_jump") and Input.is_action_pressed("blue_down"): # This is a slide
+	if Input.is_action_pressed("player1_jump") and Input.is_action_pressed("player1_down"): # This is a slide
 		if is_on_floor() or is_on_ramp(): #Places we're allowed to slide
 			player_slide(delta) # Execute jump
 		else: # if we're not on the floor or a ramp, we're in the air
 			player_meteor(delta) # METEOR TIME
-	if Input.is_action_just_released("blue_jump"): # This catch is to prevent auto-slide after a meteor. Gotta release jump to slide again (except on ramps).
+	if Input.is_action_just_released("player1_jump"): # This catch is to prevent auto-slide after a meteor. Gotta release jump to slide again (except on ramps).
 		from_meteor = false #Reset our flag
 		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
-	if Input.is_action_just_pressed("blue_attack"):
+	if Input.is_action_just_pressed("player1_attack"):
 		player_attack(delta)
-	if Input.is_action_just_pressed("blue_special"):
-		player_special(delta)
-	if Input.is_action_just_pressed("blue_block"):
+	if Input.is_action_just_pressed("player1_block"):
 		player_block(delta)
+	if Input.is_action_just_pressed("player1_special"):
+		player_special(delta)
 	animation_controller() # Change Animations
 	move_and_slide() # Execute movement accumulated above
 	physics_collisions() # React to Physics, as per the movement.
@@ -196,9 +196,9 @@ func run_slide_animation() -> void:
 		player.play("slide")
 
 func idle_squat_stretch() -> void:
-	if Input.is_action_pressed("blue_down"):
+	if Input.is_action_pressed("player1_down"):
 		player.play("squat")
-	elif Input.is_action_pressed("blue_up"):
+	elif Input.is_action_pressed("player1_up"):
 		player.play("stretch")
 	else:
 		player.play("idle")

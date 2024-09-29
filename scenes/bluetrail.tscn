@@ -1,17 +1,17 @@
-[gd_scene load_steps=4 format=3 uid="uid://uskrmwhqnjx5"]
+[gd_scene load_steps=4 format=3 uid="uid://bpxp5gre4bcut"]
 
-[ext_resource type="Script" path="res://scripts/trail.gd" id="1_57rb8"]
+[ext_resource type="Script" path="res://scripts/trail.gd" id="1_q3ru7"]
 
 [sub_resource type="Curve" id="Curve_7ob05"]
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.498182, 0.496274), -1.29597, -1.29597, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
 [sub_resource type="Gradient" id="Gradient_8ojfb"]
-colors = PackedColorArray(1, 0, 0, 0.894118, 1, 0, 0, 0)
+colors = PackedColorArray(0, 1, 1, 0.894118, 1, 0, 0, 0)
 
-[node name="Trail" type="Line2D"]
+[node name="BlueTrail" type="Line2D"]
 width = 1.0
 width_curve = SubResource("Curve_7ob05")
-default_color = Color(1, 0, 0, 1)
+default_color = Color(0, 1, 1, 1)
 gradient = SubResource("Gradient_8ojfb")
-script = ExtResource("1_57rb8")
+script = ExtResource("1_q3ru7")

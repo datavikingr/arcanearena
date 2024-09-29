@@ -1,9 +1,9 @@
-[gd_scene load_steps=16 format=3 uid="uid://ce2uy5xg6tka4"]
+[gd_scene load_steps=18 format=3 uid="uid://ce2uy5xg6tka4"]
 
 [ext_resource type="Script" path="res://scripts/test_player_controller.gd" id="1_1k1h6"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_vjnan"]
 [ext_resource type="PackedScene" uid="uid://uskrmwhqnjx5" path="res://scenes/trail.tscn" id="3_3ieya"]
-[ext_resource type="Script" path="res://scenes/playereyetrail.gd" id="4_nwkyb"]
+[ext_resource type="Script" path="res://scripts/playereyetrail.gd" id="4_nwkyb"]
 
 [sub_resource type="Animation" id="Animation_lokpq"]
 length = 0.001
@@ -543,6 +543,13 @@ _data = {
 "stretch": SubResource("Animation_cktr5")
 }
 
+[sub_resource type="Curve" id="Curve_7ob05"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.498182, 0.496274), -1.29597, -1.29597, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 3
+
+[sub_resource type="Gradient" id="Gradient_8ojfb"]
+colors = PackedColorArray(1, 0, 0, 0.894118, 1, 0, 0, 0)
+
 [node name="TestPlayer" type="CharacterBody2D"]
 collision_layer = 40
 collision_mask = 13
@@ -573,9 +580,13 @@ collision_mask = 68
 [node name="TrailLeft" parent="." instance=ExtResource("3_3ieya")]
 top_level = true
 position = Vector2(0, -2.5)
+width_curve = SubResource("Curve_7ob05")
+gradient = SubResource("Gradient_8ojfb")
 script = ExtResource("4_nwkyb")
 
 [node name="TrailRight" parent="." instance=ExtResource("3_3ieya")]
 top_level = true
 position = Vector2(2.5, -2.5)
+width_curve = SubResource("Curve_7ob05")
+gradient = SubResource("Gradient_8ojfb")
 script = ExtResource("4_nwkyb")
