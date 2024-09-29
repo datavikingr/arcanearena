@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddpahkgu138ly"
-path="res://.godot/imported/map_bg_void.png-4a1020ca4987e7cc8d96db601ffa5d78.ctex"
+uid="uid://b4no5474kragd"
+path="res://.godot/imported/thedoorsbetwixtworlds.png-039be35b2c34628b199c6ab9e72dbeb6.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://assets/map_bg_void.png"
-dest_files=["res://.godot/imported/map_bg_void.png-4a1020ca4987e7cc8d96db601ffa5d78.ctex"]
+source_file="res://assets/bgs/thedoorsbetwixtworlds.png"
+dest_files=["res://.godot/imported/thedoorsbetwixtworlds.png-039be35b2c34628b199c6ab9e72dbeb6.ctex"]
 
 [params]
 

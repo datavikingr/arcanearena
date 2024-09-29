@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=3 uid="uid://c70wfwmqcvgy2"]
 
-[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/map_bg_void.png" id="1_ary4n"]
+[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_ary4n"]
 
 [node name="BlockCoverSprite" type="Sprite2D"]
 scale = Vector2(0.1, 0.1)
