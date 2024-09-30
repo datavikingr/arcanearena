@@ -34,7 +34,7 @@ frame = 10
 [node name="PlayerSprite" type="Sprite2D" parent="."]
 texture = ExtResource("2_x03g6")
 hframes = 8
-vframes = 12
+vframes = 18
 
 [node name="GoalsSprite" type="Sprite2D" parent="."]
 position = Vector2(0, 16)

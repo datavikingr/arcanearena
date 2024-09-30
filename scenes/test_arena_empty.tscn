@@ -96,35 +96,35 @@ position = Vector2(12, 160)
 script = ExtResource("8_q2urm")
 
 [node name="PlayerSprite" parent="UI/GreenUI" index="1"]
-frame = 16
+frame = 24
 
 [node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
 position = Vector2(12, 297)
 script = ExtResource("9_gc17j")
 
 [node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
-frame = 32
+frame = 48
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 position = Vector2(627, 26)
 script = ExtResource("10_8sjcl")
 
 [node name="PlayerSprite" parent="UI/RedUI" index="1"]
-frame = 48
+frame = 72
 
 [node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
 position = Vector2(627, 160)
 script = ExtResource("11_n8n62")
 
 [node name="PlayerSprite" parent="UI/YellowUI" index="1"]
-frame = 64
+frame = 96
 
 [node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
 position = Vector2(627, 297)
 script = ExtResource("12_vnq04")
 
 [node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
-frame = 80
+frame = 120
 
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
