@@ -1,0 +1,24 @@
+[gd_scene load_steps=4 format=3 uid="uid://d6k5n61qtd2"]
+
+[ext_resource type="Script" path="res://scripts/player_attack.gd" id="1_c41aa"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_aeg3t"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ktpgn"]
+radius = 2.0
+height = 10.0
+
+[node name="PlayerAttack" type="StaticBody2D"]
+script = ExtResource("1_c41aa")
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_ktpgn")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_aeg3t")
+hframes = 8
+vframes = 18
+frame = 16
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+root_node = NodePath("../Sprite")

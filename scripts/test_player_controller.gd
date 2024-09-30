@@ -6,6 +6,7 @@ extends CharacterBody2D
 @onready var sprite: Sprite2D = get_node("Sprite") # Sprite, player_movement()
 @onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
 @onready var raycast:RayCast2D = get_node("RayCast") # Ball detector, used in physics_collisions()
+@onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 # Exports
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
@@ -141,6 +142,10 @@ func player_meteor(_delta: float) -> void: 	# Meteor strike downward
 
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Attack!") # Log
+	var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
+	add_child(new_attack) # Add the new instance as a child of the current node
+	var spawn_offset = Vector2(32, 0) # Adjust as needed to push the child outside
+	new_attack.position += spawn_offset # Assuming your player is at the center, place the new child outside your body
 
 func player_special(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Special!") # Log
