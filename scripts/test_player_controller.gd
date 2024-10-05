@@ -8,6 +8,7 @@ extends CharacterBody2D
 @onready var raycast:RayCast2D = get_node("RayCast") # Ball detector, used in physics_collisions()
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 # Exports
+@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
 @export var meteor_speed: int = 800 # 2x jump speed
@@ -26,6 +27,8 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity") # g
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
+# Animation Controls
+var purple_frames: Array[int] = [] # TODO: This is going to be heavily motherfucking expanded, this is just a placeholder
 # Input
 var left_right: float = 0 # Control Input, player_movement()
 
@@ -72,7 +75,8 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
-	pass
+	player_color = "Purple"
+	self.name = player_color
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
 	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
