@@ -19,7 +19,7 @@ extends CharacterBody2D
 @export var near_range: Vector2 = Vector2( 37 , 25 ) # Nearness range in x and y for the ground, is_ball_near() & player_jump()
 @export var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
 @export var pinch_threshold: int = 900 # Lower threshold of delta v to trigger pinch state in _physics_collisions()
-@export var max_pinch_force: float = 3000.0 # Upper threshold of pinch force applied in _physics_collisions()
+@export var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in _physics_collisions()
 # Local
 var collision: KinematicCollision2D # Used in physics_collisions()
 var collider: Object # Used in physics_collisions()
@@ -76,7 +76,6 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
-	player_color = "Purple"
 	self.name = player_color
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
