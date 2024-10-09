@@ -332,6 +332,7 @@ player6_special={
 2d_physics/layer_5="Red Team"
 2d_physics/layer_6="Blue Team"
 2d_physics/layer_7="Ramps"
+2d_physics/layer_8="Magic"
 
 [rendering]
 

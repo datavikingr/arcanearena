@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c70wfwmqcvgy2" path="res://scenes/block_cover_sprite.tscn" id="5_fkke6"]
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
 [ext_resource type="PackedScene" uid="uid://bwl56ve1rsnkn" path="res://scenes/player_ui.tscn" id="6_e3s0m"]
-[ext_resource type="Script" path="res://scenes/blue_ui.gd" id="7_87kly"]
+[ext_resource type="Script" path="res://scripts/blue_ui.gd" id="7_87kly"]
 [ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/test_player.tscn" id="7_nqmyx"]
 [ext_resource type="Script" path="res://scripts/green_ui.gd" id="8_q2urm"]
 [ext_resource type="Script" path="res://scripts/purple_ui.gd" id="9_gc17j"]
@@ -132,6 +132,9 @@ position = Vector2(314, 267)
 
 [node name="TestPlayer" parent="." instance=ExtResource("7_nqmyx")]
 position = Vector2(183, 267)
+
+[node name="MagicLayer" type="Node2D" parent="."]
+unique_name_in_owner = true
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

@@ -7,6 +7,7 @@ extends CharacterBody2D
 @onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
 @onready var raycast:RayCast2D = get_node("RayCast") # Ball detector, used in physics_collisions()
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
+@onready var magic_layer: Node2D = %MagicLayer
 # Exports
 @export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
@@ -147,9 +148,12 @@ func player_meteor(_delta: float) -> void: 	# Meteor strike downward
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Attack!") # Log
 	var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
-	add_child(new_attack) # Add the new instance as a child of the current node
-	var spawn_offset = Vector2(32, 0) # Adjust as needed to push the child outside
-	new_attack.position += spawn_offset # Assuming your player is at the center, place the new child outside your body
+	if sprite.flip_h == false: # If the wiz is facing right.
+		new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
+	else: # Then the wizard's facing left
+		new_attack.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
+	new_attack.set("player_color", player_color) # I hope this works.
+	magic_layer.add_child(new_attack) # Add the new instance as a child of the current node
 
 func player_special(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Special!") # Log
@@ -197,7 +201,7 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 		# #TODO: Generate those sprites
 
 #######################################################################################################################################################
-## SPECIFIC ANIMATIONS
+## SPECIFIC ANIMATION LOGIC
 func run_slide_animation() -> void:
 	if abs(velocity.x) == 200: # If we're running
 		player.play("run") # moving animation

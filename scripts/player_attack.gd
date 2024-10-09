@@ -22,7 +22,7 @@ var anim: Animation
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
-	player_color = instantiator.name
+	#player_color = instantiator.name
 	print("Instantiated by:", player_color)
 	match player_color: # omfg - I'm so glad I figured this match syntax out, this is gonna save my life, if this works right
 		"Blue": attack_frames = blue_attack

@@ -1,6 +1,6 @@
 extends RigidBody2D
 
-const MAX_VELOCITY = 3000.0  # Set this to a value that feels right for your game
+const MAX_VELOCITY = 4000.0  # Set this to a value that feels right for your game
 
 func _ready(): # Called when the node enters the scene tree for the first time.
 	pass # Replace with function body.
@@ -10,7 +10,7 @@ func _process(_delta): # Called every frame. 'delta' is the elapsed time since t
 	pass
 
 func _integrate_forces(state) -> void:
-	velocity_clamp(state)
+	#velocity_clamp(state)
 	pass
 
 func velocity_clamp(state) -> void:
