@@ -532,11 +532,11 @@ point_count = 3
 colors = PackedColorArray(1, 0, 0, 0.894118, 1, 0, 0, 0)
 
 [node name="TestPlayer" type="CharacterBody2D"]
-collision_layer = 40
-collision_mask = 13
+collision_layer = 32
+collision_mask = 191
 floor_max_angle = 1.48353
 platform_on_leave = 2
-platform_floor_layers = 4294967291
+platform_floor_layers = 4294901763
 script = ExtResource("1_1k1h6")
 
 [node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
@@ -555,7 +555,7 @@ libraries = {
 "": SubResource("AnimationLibrary_b06bv")
 }
 
-[node name="RayCast" type="RayCast2D" parent="."]
+[node name="TremorSense" type="RayCast2D" parent="."]
 target_position = Vector2(0, 20)
 collision_mask = 68
 
@@ -572,3 +572,7 @@ position = Vector2(2.5, -2.5)
 width_curve = SubResource("Curve_7ob05")
 gradient = SubResource("Gradient_8ojfb")
 script = ExtResource("4_nwkyb")
+
+[node name="AttackCooldown" type="Timer" parent="."]
+wait_time = 0.75
+one_shot = true

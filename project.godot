@@ -13,6 +13,7 @@ config_version=5
 config/name="Arcane Arena"
 config/description="Wizards playing arcane soccer."
 config/version="0.1"
+run/main_scene="res://scenes/test_arena_empty.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 
@@ -325,14 +326,22 @@ player6_special={
 
 [layer_names]
 
-2d_physics/layer_1="Map and Platforms"
-2d_physics/layer_2="Goal"
+2d_physics/layer_1="Map"
+2d_physics/layer_2="Ramps and Platforms"
 2d_physics/layer_3="Ball"
-2d_physics/layer_4="Player"
-2d_physics/layer_5="Red Team"
-2d_physics/layer_6="Blue Team"
-2d_physics/layer_7="Ramps"
-2d_physics/layer_8="Magic"
+2d_physics/layer_4="Hazards"
+2d_physics/layer_5="Goals"
+2d_physics/layer_6="Players"
+2d_physics/layer_7="Attack"
+2d_physics/layer_8="Block"
+2d_physics/layer_9="Cold Team"
+2d_physics/layer_10="Blue"
+2d_physics/layer_11="Green"
+2d_physics/layer_12="Purple"
+2d_physics/layer_13="Hot Team"
+2d_physics/layer_14="Red"
+2d_physics/layer_15="Yellow"
+2d_physics/layer_16="Orange"
 
 [rendering]
 

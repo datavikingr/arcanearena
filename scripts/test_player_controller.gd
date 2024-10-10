@@ -2,14 +2,16 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
+@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 # Nodes
 @onready var sprite: Sprite2D = get_node("Sprite") # Sprite, player_movement()
 @onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
-@onready var raycast:RayCast2D = get_node("RayCast") # Ball detector, used in physics_collisions()
+@onready var raycast:RayCast2D = get_node("TremorSense") # Ball detector, used in physics_collisions()
+@onready var attack_cooldown = get_node("AttackCooldown") # Keeps from spamming attacks too bad.
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
+@onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
 @onready var magic_layer: Node2D = %MagicLayer
 # Exports
-@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
 @export var meteor_speed: int = 800 # 2x jump speed
@@ -77,6 +79,14 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = player_color
+	if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
+		self.add_to_group("ColdTeam")
+		#collision_layer = 1 << 9
+		#collision_mask = 1 << 13
+	else:
+		self.add_to_group("HotTeam")
+		#collision_layer = 1 << 13
+		#collision_mask = 1 << 9
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
 	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
@@ -97,7 +107,7 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
 	if Input.is_action_just_pressed("player1_attack"):
 		player_attack(delta)
-	if Input.is_action_just_pressed("player1_block"):
+	if Input.is_action_just_pressed("player1_block") and is_on_floor():
 		player_block(delta)
 	if Input.is_action_just_pressed("player1_special"):
 		player_special(delta)
@@ -145,20 +155,49 @@ func player_meteor(_delta: float) -> void: 	# Meteor strike downward
 	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
-	print("Attack!") # Log
-	var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
-	if sprite.flip_h == false: # If the wiz is facing right.
-		new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
-	else: # Then the wizard's facing left
-		new_attack.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
-	new_attack.set("player_color", player_color) # I hope this works.
-	magic_layer.add_child(new_attack) # Add the new instance as a child of the current node
-
-func player_special(_delta: float) -> void: # Called by player input from _physics_process()
-	print("Special!") # Log
+	if attack_cooldown.is_stopped():
+		attack_cooldown.start()
+		print("Attack!") # Log
+		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
+		if sprite.flip_h == false: # If the wiz is facing right.
+			new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
+		else: # Then the wizard's facing left
+			new_attack.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
+		new_attack.set("player_color", player_color) # I hope this works.
+		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
+			new_attack.add_to_group("ColdTeam")
+			#new_attack.collision_layer = 1 << 9
+			#new_attack.collision_mask = 1 << 13
+		else:
+			new_attack.add_to_group("HotTeam")
+			#new_attack.collision_layer = 1 << 13
+			#new_attack.collision_mask = 1 << 9
+		magic_layer.add_child(new_attack) # Add the new instance as a child of the current node
 
 func player_block(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Block!") # Log
+	var block_name = "PlayerBlock_" + player_color # Search for existing blocks with the same name
+	for child in magic_layer.get_children(): # Check the magic layer
+		if child.name == block_name: # If we already one of these spawned,
+			child.free() # Free the existing block and kill it, so we can make the new one.
+	var new_block = player_block_scene.instantiate() # Instantiate the preloaded scene
+	if sprite.flip_h == false: # If the wiz is facing right.
+		new_block.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
+	else: # Then the wizard's facing left
+		new_block.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
+	new_block.set("player_color", player_color) # I hope this works.
+	if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
+		new_block.add_to_group("ColdTeam")
+		#new_block.collision_layer = 1 << 9
+		#new_block.collision_mask = 1 << 13
+	else:
+		new_block.add_to_group("HotTeam")
+		#new_block.collision_layer = 1 << 13
+		#new_block.collision_mask = 1 << 9
+	magic_layer.add_child(new_block) # Add the new instance as a child of the current node
+
+func player_special(_delta: float) -> void: # Called by player input from _physics_process()
+	print("Special!") # Log
 
 #######################################################################################################################################################
 ## CONTROLLERS

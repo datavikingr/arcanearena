@@ -1,9 +1,10 @@
-[gd_scene load_steps=16 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=17 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
 [ext_resource type="Texture2D" uid="uid://b4no5474kragd" path="res://assets/bgs/thedoorsbetwixtworlds.png" id="3_su0j7"]
 [ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="4_6qjae"]
+[ext_resource type="Script" path="res://scripts/bg_random.gd" id="4_75k05"]
 [ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="5_35l2g"]
 [ext_resource type="PackedScene" uid="uid://c70wfwmqcvgy2" path="res://scenes/block_cover_sprite.tscn" id="5_fkke6"]
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
@@ -29,10 +30,12 @@ position = Vector2(57, -9)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("2_8a7vy")
 
-[node name="BgDoors" type="Sprite2D" parent="BGs"]
+[node name="BgRandom" type="Sprite2D" parent="BGs"]
+visible = false
 position = Vector2(8, 3.5)
 scale = Vector2(1.6, 1.634)
 texture = ExtResource("3_su0j7")
+script = ExtResource("4_75k05")
 
 [node name="Map" type="Node2D" parent="."]
 
@@ -72,6 +75,30 @@ scale = Vector2(1, 2)
 position = Vector2(349, -10)
 rotation = -1.5708
 scale = Vector2(1, 2)
+
+[node name="Map Border Wall NW" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+visible = false
+position = Vector2(-1405, -1533)
+rotation = -5.49779
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall NE" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+visible = false
+position = Vector2(2019, -1560)
+rotation = -3.92699
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall SE" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+visible = false
+position = Vector2(2072, 1865)
+rotation = -2.35619
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall SW" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+visible = false
+position = Vector2(-1643, 1683)
+rotation = -7.06858
+scale = Vector2(1, 4)
 
 [node name="BlockCoverSprite_SW" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
 position = Vector2(-7, 351)
@@ -130,7 +157,7 @@ frame = 120
 unique_name_in_owner = true
 position = Vector2(314, 267)
 
-[node name="TestPlayer" parent="." instance=ExtResource("7_nqmyx")]
+[node name="TestPlayer" parent="." groups=["players"] instance=ExtResource("7_nqmyx")]
 position = Vector2(183, 267)
 
 [node name="MagicLayer" type="Node2D" parent="."]
