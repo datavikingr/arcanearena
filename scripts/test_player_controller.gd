@@ -10,6 +10,7 @@ extends CharacterBody2D
 @onready var attack_cooldown = get_node("AttackCooldown") # Keeps from spamming attacks too bad.
 @onready var reticle: Sprite2D = get_node("AimReticle") # Gotta aim somehow
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
+@onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
 @onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
 @onready var magic_layer: Node2D = %MagicLayer
 # Exports
@@ -76,7 +77,7 @@ func is_on_top_of_ball() -> bool: # called by physics_collisions()
 
 func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _physics_process()
 	if raycast.is_colliding(): # what is says on the can - is it touching anything?
-		var collider = raycast.get_collider()  # Get the collider object
+		collider = raycast.get_collider()  # Get the collider object
 		if collider and collider.is_in_group("ramps"):  # Check if the collider exists and is in the 'ramps' group
 			return true  # Return true if the collider is in the 'ramps' group
 	return false #false if not
@@ -103,7 +104,7 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 	player_movement(delta) # Left/right/idle
 	aim_left_right = Input.get_joy_axis(0,JOY_AXIS_RIGHT_X) # Right Joystick X
 	aim_up_down = Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y) # Right Joystick X
-	player_aim()
+	player_aim(delta)
 	if Input.is_action_just_pressed("player1_jump"): # what it says on the can
 		player_jump(delta) # Execute jump
 	if Input.is_action_pressed("player1_jump") and Input.is_action_pressed("player1_down"): # This is a slide
@@ -142,7 +143,7 @@ func player_movement(delta: float) -> void: # Player Controller, called by _phys
 	else: #Standing Still
 		velocity.x = 0 # don't move
 
-func player_aim() ->void:
+func player_aim(delta: float) ->void:
 	if abs(aim_left_right) < 0.25 and abs(aim_up_down) < 0.25:
 		reticle.visible = false
 	else:
@@ -150,6 +151,8 @@ func player_aim() ->void:
 		aim_direction = atan2(aim_left_right, -aim_up_down)
 		reticle = get_node("AimReticle")
 		reticle.rotation = aim_direction
+		if Input.is_action_just_pressed("player1_attack"):
+			player_missile(delta)
 
 func player_jump(_delta: float) -> void: # Called by player input from _physics_process()
 	if !is_slide(): #Make sure we're not sliding
@@ -170,22 +173,22 @@ func player_slide(_delta: float) -> void:
 		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
 
 func player_meteor(_delta: float) -> void: 	# Meteor strike downward
-	#print("Meteor!") # Log
+	#print("Meteor!") # Debug
 	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
 	velocity.y = meteor_speed # Drop really fast; 800
 	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
 func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
 	# NOTE: Players do not collide with melee attacks by default - rather, the attack colides with them. This lets players move their melee attack.
-	if attack_cooldown.is_stopped():
-		attack_cooldown.start()
-		print("Attack!") # Log
+	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
+		attack_cooldown.start() # Start cooldown timer
+		print("Attack!") # Debug
 		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
 		if sprite.flip_h == false: # If the wiz is facing right.
 			new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
 		else: # Then the wizard's facing left
 			new_attack.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
-		new_attack.set("player_color", player_color) # I hope this works.
+		new_attack.set("player_color", player_color) # I hope this works. // It totally worked!
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
 			new_attack.add_to_group("ColdTeam") # for easier get_collisions() logic
 			new_attack.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
@@ -195,7 +198,27 @@ func player_attack(_delta: float) -> void: # Called by player input from _physic
 			new_attack.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			new_attack.collision_mask |= 1 << 9 # Collide with Cold Team layer
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
-		magic_layer.add_child(new_attack) # Add the new instance as a child of the current node
+		magic_layer.add_child(new_attack) # Add the new instance as a child of the magic layer node
+
+func player_missile(_delta: float) -> void:
+	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
+		attack_cooldown.start() # Start cooldown timer
+		var new_missile = player_missile_scene.instantiate() # Instantiate the preloaded scene
+		var projectile_start_pos = global_position + Vector2(cos(aim_direction - PI / 2), sin(aim_direction - PI / 2)) * 24
+		new_missile.global_position = projectile_start_pos # place it in the world
+		new_missile.set("direction", Vector2(cos(aim_direction- PI / 2), sin(aim_direction - PI / 2))) #.normalized()) # Set the direction of the projectile
+		new_missile.set("player_color", player_color) # I hope this works. // It totally worked!
+		new_missile.rotation = aim_direction - PI / 2
+		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
+			new_missile.add_to_group("ColdTeam") # for easier get_collisions() logic
+			new_missile.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+			new_missile.collision_mask |= 1 << 13 # Collide with Hot Team layer
+		else:
+			new_missile.add_to_group("HotTeam") # for easier get_collisions() logic
+			new_missile.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+			new_missile.collision_mask |= 1 << 9 # Collide with Cold Team layer
+	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
+		magic_layer.add_child(new_missile) # Add the new instance as a child of the magic layer node
 
 func player_block(_delta: float) -> void: # Called by player input from _physics_process()
 	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
@@ -218,7 +241,7 @@ func player_block(_delta: float) -> void: # Called by player input from _physics
 		new_block.add_to_group("HotTeam") # for easier get_collisions() logic
 		new_block.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 		new_block.collision_mask |= 1 << 9 # Look on Cold Team collision layer
-	magic_layer.add_child(new_block) # Add the new instance as a child of the current node
+	magic_layer.add_child(new_block) # Add the new instance as a child of the magic layer node
 
 func player_special(_delta: float) -> void: # Called by player input from _physics_process()
 	print("Special!") # Log

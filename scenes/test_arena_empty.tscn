@@ -39,7 +39,7 @@ script = ExtResource("4_75k05")
 
 [node name="Map" type="Node2D" parent="."]
 
-[node name="Ramps" type="Node2D" parent="Map"]
+[node name="Ramps" type="Node2D" parent="Map" groups=["ramps"]]
 position = Vector2(65, 60)
 
 [node name="MapRamp_TL" parent="Map/Ramps" instance=ExtResource("5_35l2g")]
@@ -157,7 +157,7 @@ frame = 120
 unique_name_in_owner = true
 position = Vector2(314, 267)
 
-[node name="TestPlayer" parent="." groups=["players"] instance=ExtResource("7_nqmyx")]
+[node name="TestPlayer" parent="." instance=ExtResource("7_nqmyx")]
 position = Vector2(183, 267)
 
 [node name="MagicLayer" type="Node2D" parent="."]

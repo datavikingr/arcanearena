@@ -531,7 +531,7 @@ point_count = 3
 [sub_resource type="Gradient" id="Gradient_8ojfb"]
 colors = PackedColorArray(1, 0, 0, 0.894118, 1, 0, 0, 0)
 
-[node name="TestPlayer" type="CharacterBody2D"]
+[node name="TestPlayer" type="CharacterBody2D" groups=["players"]]
 collision_layer = 32
 collision_mask = 191
 floor_max_angle = 1.48353
@@ -579,7 +579,6 @@ one_shot = true
 
 [node name="AimReticle" type="Sprite2D" parent="."]
 position = Vector2(0.0157413, -2.04272)
-rotation = 1.5708
 texture = ExtResource("2_vjnan")
 offset = Vector2(0.0427215, -11.9843)
 hframes = 8

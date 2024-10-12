@@ -26,9 +26,9 @@ var background_images = [
 func _ready() -> void:
 	visible = true
 	var random_index = randi() % background_images.size() # Get a random index
-	var texture = load(background_images[random_index]) # Load the texture from the random image
-	self.texture = texture # Set the texture to the sprite
+	var background = load(background_images[random_index]) # Load the texture from the random image
+	self.texture = background # Set the texture to the sprite
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass

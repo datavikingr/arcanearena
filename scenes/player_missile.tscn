@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://qm52leh4s6qu"]
+
+[ext_resource type="Script" path="res://scripts/player_missile.gd" id="1_2g17r"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="1_stmj2"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_au8t3"]
+radius = 4.0
+height = 16.0
+
+[node name="PlayerMissile" type="RigidBody2D"]
+collision_layer = 128
+collision_mask = 255
+gravity_scale = 0.0
+contact_monitor = true
+max_contacts_reported = 10
+script = ExtResource("1_2g17r")
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_au8t3")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(0, 1)
+texture = ExtResource("1_stmj2")
+hframes = 8
+vframes = 18
+frame = 143
