@@ -23,18 +23,13 @@ var anim: Animation
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
-func has_common_group(other_body: Node) -> bool:
-	for group in get_groups():
-		if other_body.is_in_group(group):
-			return true
-	return false
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = "PlayerBlock_"+player_color
 	#print("Instantiated by:", player_color)
-	animation_length = timer.wait_time
+	animation_length = timer.wait_time # Pull the time from the node, so we don't have to edit multiple places for one change.
 	match player_color: # omfg - I'm so glad I figured this match syntax out, this is gonna save my life, if this works right
 		"Blue": block_frames = blue_block
 		"Green": block_frames = green_block
@@ -42,14 +37,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 		"Red": block_frames = red_block
 		"Yellow": block_frames = yellow_block
 		"Orange": block_frames = orange_block
-	play_block_animation()
+	play_block_animation() # After Init(), call Main()
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
-	pass
+	pass # We don't need a second thread here yet.
 
 func play_block_animation():
 	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("block")
+	anim = animation_player.get_animation("block") # Get the animation we want to set up
 	if anim: # Check if the animation exists
 		#print("found the animation")
 		var sprite_track_index = anim.find_track(".:frame", Animation.TYPE_VALUE) # Get the specific track for the sprite frame and collision shape size
@@ -57,24 +52,24 @@ func play_block_animation():
 		var size_track_index = anim.find_track("../PhysicsShape:shape:size", Animation.TYPE_VALUE) # Get the specific track for the sprite frame and collision shape size
 		#print(size_track_index)
 		var key_zero = 0.0 # Start frame. Why? Consistency.
-		var key_one = animation_length * 0.15
-		var key_two = animation_length * 0.85
+		var key_one = animation_length * 0.15 # 15%
+		var key_two = animation_length * 0.85 # 85%
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			#print("we found the sprite track")
 			anim.track_insert_key(sprite_track_index, key_zero, block_frames[0]) # Frame 0 at 0 seconds
 			anim.track_insert_key(sprite_track_index, key_one, block_frames[1]) # Frame 1 at 0.5 seconds
 			anim.track_insert_key(sprite_track_index, key_two, block_frames[0]) # Frame 0 at 2.5 seconds
-		if size_track_index != -1:
+		if size_track_index != -1: # If we found the track
 			#print("we found the hitbox track")
-			var start_size: Vector2 = Vector2(6,11)
-			var big_size: Vector2 = Vector2(14,7)
+			var start_size: Vector2 = Vector2(6,11) # smaller
+			var big_size: Vector2 = Vector2(14,7) # bigger
 			anim.track_insert_key(size_track_index, key_zero, start_size)   # Start radius
 			anim.track_insert_key(size_track_index, key_one, big_size)   # Larger radius for Frame[1]
 			anim.track_insert_key(size_track_index, key_two, start_size)   # Return to start radius
 	# else: #print("Animation 'block' not found.")
-	animation_player.play("block")
+	animation_player.play("block") # run the animation we just set up
 
 #######################################################################################################################################################
 ## SINGALS
 func _on_timer_timeout() -> void:
-	queue_free()
+	queue_free() # on timeout, die.

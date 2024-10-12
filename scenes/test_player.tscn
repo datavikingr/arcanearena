@@ -576,3 +576,12 @@ script = ExtResource("4_nwkyb")
 [node name="AttackCooldown" type="Timer" parent="."]
 wait_time = 0.75
 one_shot = true
+
+[node name="AimReticle" type="Sprite2D" parent="."]
+position = Vector2(0.0157413, -2.04272)
+rotation = 1.5708
+texture = ExtResource("2_vjnan")
+offset = Vector2(0.0427215, -11.9843)
+hframes = 8
+vframes = 18
+frame = 70
