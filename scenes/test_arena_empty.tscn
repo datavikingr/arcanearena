@@ -23,6 +23,8 @@
 position = Vector2(320, 180)
 
 [node name="BgBlack" type="Sprite2D" parent="BGs"]
+position = Vector2(0, 0.499939)
+scale = Vector2(7.54688, 12.7417)
 texture = ExtResource("1_a1h4a")
 
 [node name="BgForest" type="Sprite2D" parent="BGs"]
@@ -116,12 +118,12 @@ position = Vector2(647, 12)
 
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(12, 26)
+position = Vector2(12, 129)
 script = ExtResource("7_87kly")
 
 [node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(12, 160)
+position = Vector2(12, 213)
 script = ExtResource("8_q2urm")
 
 [node name="PlayerSprite" parent="UI/GreenUI" index="1"]
@@ -137,7 +139,7 @@ frame = 48
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(627, 26)
+position = Vector2(627, 129)
 script = ExtResource("10_8sjcl")
 
 [node name="PlayerSprite" parent="UI/RedUI" index="1"]
@@ -145,7 +147,7 @@ frame = 72
 
 [node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(627, 160)
+position = Vector2(627, 213)
 script = ExtResource("11_n8n62")
 
 [node name="PlayerSprite" parent="UI/YellowUI" index="1"]
