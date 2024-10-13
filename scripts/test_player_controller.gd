@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+@export var player_color: String = "Orange" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 # Nodes
 @onready var sprite: Sprite2D = get_node("Sprite") # Sprite, player_movement()
 @onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
@@ -13,7 +13,17 @@ extends CharacterBody2D
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
 @onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
 @onready var magic_layer: Node2D = %MagicLayer
+@onready var blue_ui: Node2D = %BlueUI
+@onready var green_ui: Node2D = %GreenUI
+@onready var purple_ui: Node2D = %PurpleUI
+@onready var red_ui: Node2D = %RedUI
+@onready var yellow_ui: Node2D = %YellowUI
+@onready var orange_ui: Node2D = %OrangeUI
 # Exports
+@export var hp: int = 3 # Players spawn in with 3 HP.
+@export var goals: int = 0
+@export var kills: int = 0
+@export var deaths: int = 0
 @export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 @export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
 @export var meteor_speed: int = 800 # 2x jump speed
@@ -25,6 +35,7 @@ extends CharacterBody2D
 @export var pinch_threshold: int = 900 # Lower threshold of delta v to trigger pinch state in _physics_collisions()
 @export var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in _physics_collisions()
 # Local
+var ui_layer: Node2D
 var collision: KinematicCollision2D # Used in physics_collisions()
 var collider: Object # Used in physics_collisions()
 var pinch_multiplier: float = 1.15 # Used in physics_collisions()
@@ -86,18 +97,42 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = player_color
-	if player_color=="Blue" or player_color=="Green" or player_color=="Purple": # Cold Team
-		self.add_to_group("ColdTeam") # for easier get_collisions() logic later
-		collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-		collision_mask |= 1 << 13 # Collide with Hot Team layer
-	else: # Hot Team
-		self.add_to_group("HotTeam") # for easier get_collisions() logic later
-		collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-		collision_mask |= 1 << 9 # Collide with Cold Team layer
+	match player_color:
+		"Blue":
+			ui_layer = blue_ui
+			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+			collision_mask |= 1 << 13 # Collide with Hot Team layer
+		"Green":
+			ui_layer = green_ui
+			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+			collision_mask |= 1 << 13 # Collide with Hot Team layer
+		"Purple":
+			ui_layer = purple_ui
+			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+			collision_mask |= 1 << 13 # Collide with Hot Team layer
+		"Red:":
+			ui_layer = red_ui
+			self.add_to_group("HotTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+			collision_mask |= 1 << 9 # Collide with Cold Team layer
+		"Yellow":
+			ui_layer = yellow_ui
+			self.add_to_group("HotTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+			collision_mask |= 1 << 9 # Collide with Cold Team layer
+		"Orange":
+			ui_layer = orange_ui
+			self.add_to_group("HotTeam") # for easier get_collisions() logic later
+			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+			collision_mask |= 1 << 9 # Collide with Cold Team layer
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
 	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
 		velocity.y = jump_speed / 4 # Let gravity overtake us faster, by skrinking upward velocity, pulling us to the earth sooner.
+	update_ui()
 
 func _physics_process(delta: float) -> void: # Called every frame. We're gonna collect input and execute control-functions here. Separate thread from _process().
 	left_right = Input.get_axis("player1_left", "player1_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
@@ -248,6 +283,13 @@ func player_special(_delta: float) -> void: # Called by player input from _physi
 
 #######################################################################################################################################################
 ## CONTROLLERS
+func update_ui() -> void: # called from _process()
+	ui_layer.set("hp", hp)
+	ui_layer.set("goals", goals)
+	ui_layer.set("kills", kills)
+	ui_layer.set("deaths", deaths)
+	pass
+
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()
 	for i in range(get_slide_collision_count()): # Get collisions #, loop

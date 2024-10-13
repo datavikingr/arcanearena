@@ -115,10 +115,12 @@ position = Vector2(647, 12)
 [node name="UI" type="Node2D" parent="."]
 
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(12, 26)
 script = ExtResource("7_87kly")
 
 [node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(12, 160)
 script = ExtResource("8_q2urm")
 
@@ -126,6 +128,7 @@ script = ExtResource("8_q2urm")
 frame = 24
 
 [node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(12, 297)
 script = ExtResource("9_gc17j")
 
@@ -133,6 +136,7 @@ script = ExtResource("9_gc17j")
 frame = 48
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(627, 26)
 script = ExtResource("10_8sjcl")
 
@@ -140,6 +144,7 @@ script = ExtResource("10_8sjcl")
 frame = 72
 
 [node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(627, 160)
 script = ExtResource("11_n8n62")
 
@@ -147,6 +152,7 @@ script = ExtResource("11_n8n62")
 frame = 96
 
 [node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
 position = Vector2(627, 297)
 script = ExtResource("12_vnq04")
 
