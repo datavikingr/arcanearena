@@ -12,6 +12,7 @@ extends CharacterBody2D
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
 @onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
+@onready var animation_player: AnimationPlayer = $AnimationPlayer
 @onready var magic_layer: Node2D = %MagicLayer
 @onready var blue_ui: Node2D = %BlueUI
 @onready var green_ui: Node2D = %GreenUI
@@ -43,8 +44,80 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity") # g
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
+var anim_name: String
+var anim: Animation
 # Animation Controls
-var purple_frames: Array[int] = [] # TODO: This is going to be heavily motherfucking expanded, this is just a placeholder
+var player_start = {"Blue": 0, "Green": 24, "Purple": 48, "Red": 72, "Yellow": 96, "Orange": 120}
+# Generics
+var idle_frames
+var run_frames
+var jump_frames
+var fall_frames
+var side_fall_frames
+var slide_frames
+var death_frames
+var special_frames
+var meteor_sprite
+# Blue
+var blue_idle_frames: Array[int] = [0,1]
+var blue_run_frames: Array[int] = [2,3]
+var blue_jump_frames: Array[int] = [4,5]
+var blue_fall_frames: Array[int] = [6,7]
+var blue_side_fall_frames: Array[int] = [8,9]
+var blue_slide_frames: Array[int] = [10,11]
+var blue_death_frames: Array[int] = [12,13]
+var blue_special_frames: Array[int] = [14,15]
+var blue_meteor_sprite: int = 20
+# Green
+var green_idle_frames: Array[int] = blue_idle_frames.map(func(x): return x + player_start["Green"])
+var green_run_frames: Array[int] = blue_run_frames.map(func(x): return x + player_start["Green"])
+var green_jump_frames: Array[int] = blue_jump_frames.map(func(x): return x + player_start["Green"])
+var green_fall_frames: Array[int] = blue_fall_frames.map(func(x): return x + player_start["Green"])
+var green_side_fall_frames: Array[int] = blue_side_fall_frames.map(func(x): return x + player_start["Green"])
+var green_slide_frames: Array[int] = blue_slide_frames.map(func(x): return x + player_start["Green"])
+var green_death_frames: Array[int] = blue_death_frames.map(func(x): return x + player_start["Green"])
+var green_special_frames: Array[int] = blue_special_frames.map(func(x): return x + player_start["Green"])
+var green_meteor_sprite: int = blue_meteor_sprite + player_start["Green"]
+# Purple
+var purple_idle_frames: Array[int] = blue_idle_frames.map(func(x): return x + player_start["Purple"])
+var purple_run_frames: Array[int] = blue_run_frames.map(func(x): return x + player_start["Purple"])
+var purple_jump_frames: Array[int] = blue_jump_frames.map(func(x): return x + player_start["Purple"])
+var purple_fall_frames: Array[int] = blue_fall_frames.map(func(x): return x + player_start["Purple"])
+var purple_side_fall_frames: Array[int] = blue_side_fall_frames.map(func(x): return x + player_start["Purple"])
+var purple_slide_frames: Array[int] = blue_slide_frames.map(func(x): return x + player_start["Purple"])
+var purple_death_frames: Array[int] = blue_death_frames.map(func(x): return x + player_start["Purple"])
+var purple_special_frames: Array[int] = blue_special_frames.map(func(x): return x + player_start["Purple"])
+var purple_meteor_sprite: int = blue_meteor_sprite + player_start["Purple"]
+# Red
+var red_idle_frames: Array[int] = blue_idle_frames.map(func(x): return x + player_start["Red"])
+var red_run_frames: Array[int] = blue_run_frames.map(func(x): return x + player_start["Red"])
+var red_jump_frames: Array[int] = blue_jump_frames.map(func(x): return x + player_start["Red"])
+var red_fall_frames: Array[int] = blue_fall_frames.map(func(x): return x + player_start["Red"])
+var red_side_fall_frames: Array[int] = blue_side_fall_frames.map(func(x): return x + player_start["Red"])
+var red_slide_frames: Array[int] = blue_slide_frames.map(func(x): return x + player_start["Red"])
+var red_death_frames: Array[int] = blue_death_frames.map(func(x): return x + player_start["Red"])
+var red_special_frames: Array[int] = blue_special_frames.map(func(x): return x + player_start["Red"])
+var red_meteor_sprite: int = blue_meteor_sprite + player_start["Red"]
+# Yellow
+var yellow_idle_frames: Array[int] = blue_idle_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_run_frames: Array[int] = blue_run_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_jump_frames: Array[int] = blue_jump_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_fall_frames: Array[int] = blue_fall_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_side_fall_frames: Array[int] = blue_side_fall_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_slide_frames: Array[int] = blue_slide_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_death_frames: Array[int] = blue_death_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_special_frames: Array[int] = blue_special_frames.map(func(x): return x + player_start["Yellow"])
+var yellow_meteor_sprite: int = blue_meteor_sprite + player_start["Yellow"]
+# Orange
+var orange_idle_frames: Array[int] = blue_idle_frames.map(func(x): return x + player_start["Orange"])
+var orange_run_frames: Array[int] = blue_run_frames.map(func(x): return x + player_start["Orange"])
+var orange_jump_frames: Array[int] = blue_jump_frames.map(func(x): return x + player_start["Orange"])
+var orange_fall_frames : Array[int]= blue_fall_frames.map(func(x): return x + player_start["Orange"])
+var orange_side_fall_frames: Array[int] = blue_side_fall_frames.map(func(x): return x + player_start["Orange"])
+var orange_slide_frames: Array[int] = blue_slide_frames.map(func(x): return x + player_start["Orange"])
+var orange_death_frames: Array[int] = blue_death_frames.map(func(x): return x + player_start["Orange"])
+var orange_special_frames: Array[int] = blue_special_frames.map(func(x): return x + player_start["Orange"])
+var orange_meteor_sprite: int= blue_meteor_sprite + player_start["Orange"]
 # Input
 var left_right: float = 0 # Control Input, player_movement()
 var aim_left_right: float = 0 # Control Input, player_aim()
@@ -94,6 +167,11 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 	return false #false if not
 
 #######################################################################################################################################################
+## CONSTRUCTORS
+func set_up_animations() -> void:
+	pass
+
+#######################################################################################################################################################
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = player_color
@@ -103,31 +181,85 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
+			idle_frames = blue_idle_frames
+			run_frames = blue_run_frames
+			jump_frames = blue_jump_frames
+			fall_frames = blue_fall_frames
+			side_fall_frames = blue_side_fall_frames
+			slide_frames = blue_slide_frames
+			death_frames = blue_death_frames
+			special_frames = blue_special_frames
+			meteor_sprite = blue_meteor_sprite
 		"Green":
 			ui_layer = green_ui
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
+			idle_frames = green_idle_frames
+			run_frames = green_run_frames
+			jump_frames = green_jump_frames
+			fall_frames = green_fall_frames
+			side_fall_frames = green_side_fall_frames
+			slide_frames = green_slide_frames
+			death_frames = green_death_frames
+			special_frames = green_special_frames
+			meteor_sprite = green_meteor_sprite
 		"Purple":
 			ui_layer = purple_ui
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
+			idle_frames = purple_idle_frames
+			run_frames = blue_run_frames
+			jump_frames = blue_jump_frames
+			fall_frames = blue_fall_frames
+			side_fall_frames = blue_side_fall_frames
+			slide_frames = blue_slide_frames
+			death_frames = blue_death_frames
+			special_frames = blue_special_frames
+			meteor_sprite = blue_meteor_sprite
 		"Red:":
 			ui_layer = red_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
+			idle_frames = red_idle_frames
+			run_frames = red_run_frames
+			jump_frames = red_jump_frames
+			fall_frames = red_fall_frames
+			side_fall_frames = red_side_fall_frames
+			slide_frames = red_slide_frames
+			death_frames = red_death_frames
+			special_frames = red_special_frames
+			meteor_sprite = red_meteor_sprite
 		"Yellow":
 			ui_layer = yellow_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
+			idle_frames = yellow_idle_frames
+			run_frames = yellow_run_frames
+			jump_frames = yellow_jump_frames
+			fall_frames = yellow_fall_frames
+			side_fall_frames = yellow_side_fall_frames
+			slide_frames = yellow_slide_frames
+			death_frames = yellow_death_frames
+			special_frames = yellow_special_frames
+			meteor_sprite = yellow_meteor_sprite
 		"Orange":
 			ui_layer = orange_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
+			idle_frames = orange_idle_frames
+			run_frames = orange_run_frames
+			jump_frames = orange_jump_frames
+			fall_frames = orange_fall_frames
+			side_fall_frames = orange_side_fall_frames
+			slide_frames = orange_slide_frames
+			death_frames = orange_death_frames
+			special_frames = orange_special_frames
+			meteor_sprite = orange_meteor_sprite
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
 	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
@@ -328,7 +460,7 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 		# #TODO: Generate those sprites
 
 #######################################################################################################################################################
-## SPECIFIC ANIMATION LOGIC
+## DIFFERENTIATION OF RELATED ANIMATIONS LOGIC
 func run_slide_animation() -> void:
 	if abs(velocity.x) == 200: # If we're running
 		player.play("run") # moving animation
@@ -360,3 +492,77 @@ func jump_fall_meteor() -> void:
 		sprite.flip_v = false
 		player.play("jump")
 	pass
+
+#######################################################################################################################################################
+## ANIMATIONS
+func play_idle_animation():
+	#NOTE: 1 second length, half-periodicity
+	animation_player.stop()  # Stop any current animations
+	anim = animation_player.get_animation("idle") # Get the thing we'd like to play
+	if anim: # Check if the animation exists
+		# Get the specific track for the sprite frame and collision shape size
+		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
+		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(sprite_track_index, 0.00, idle_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_track_index, 0.5, idle_frames[1]) # Frame 1 at 0.5 seconds
+		if spritepos_track_index != -1:
+			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
+			anim.track_insert_key(spritepos_track_index, 0.5, Vector2(0,7)) # Frame 1 at 0.5 seconds
+		if trailleft_track_index != -1:
+			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailleft_track_index, 0.5, Vector2(0.5,-3.5)) # Frame 1 at 0.5 seconds
+		if trailright_track_index != -1:
+			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailright_track_index, 0.5, Vector2(2.5,-3.5)) # Frame 1 at 0.5 seconds
+	animation_player.play("idle") # Play what we just assembled
+
+func play_run_animation():
+	#NOTE: .4 second length, half-periodicity
+	animation_player.stop()  # Stop any current animations
+	anim = animation_player.get_animation("run") # Get the thing we'd like to play
+	if anim: # Check if the animation exists
+		# Get the specific track for the sprite frame and collision shape size
+		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
+		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(sprite_track_index, 0.00, run_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_track_index, 0.5, run_frames[1]) # Frame 1 at 0.5 seconds
+		if spritepos_track_index != -1:
+			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
+			anim.track_insert_key(spritepos_track_index, 0.5, Vector2(0,8)) # Frame 1 at 0.5 seconds
+		if trailleft_track_index != -1:
+			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailleft_track_index, 0.5, Vector2(0.5,-0.5)) # Frame 1 at 0.5 seconds
+		if trailright_track_index != -1:
+			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailright_track_index, 0.5, Vector2(2.5,-0.5)) # Frame 1 at 0.5 seconds
+	animation_player.play("run") # Play what we just assembled
+
+func play_jump_animation():
+	#NOTE: 5 second length, no periodicity
+	animation_player.stop()  # Stop any current animations
+	anim = animation_player.get_animation("jump") # Get the thing we'd like to play
+	if anim: # Check if the animation exists
+		# Get the specific track for the sprite frame and collision shape size
+		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
+		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(sprite_track_index, 0.00, run_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_track_index, 0.5, run_frames[1]) # Frame 1 at 0.5 seconds
+		if spritepos_track_index != -1:
+			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
+			anim.track_insert_key(spritepos_track_index, 0.5, Vector2(0,8)) # Frame 1 at 0.5 seconds
+		if trailleft_track_index != -1:
+			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailleft_track_index, 0.5, Vector2(0.5,-0.5)) # Frame 1 at 0.5 seconds
+		if trailright_track_index != -1:
+			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailright_track_index, 0.5, Vector2(2.5,-0.5)) # Frame 1 at 0.5 seconds
+	animation_player.play("run") # Play what we just assembled
