@@ -39,9 +39,10 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 		"Red": attack_frames = red_attack
 		"Yellow": attack_frames = yellow_attack
 		"Orange": attack_frames = orange_attack
-	play_melee_animation() # Now that we've set everything up, proceed to the animation.
+	melee_animation() # Now that we've set everything up, proceed to the animation.
+	animation_player.play("melee_attack") # Play what we just assembled
 
-func play_melee_animation(): # The main point
+func melee_animation(): # The main point
 	animation_player.stop()  # Stop any current animations
 	anim = animation_player.get_animation("melee_attack") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
@@ -56,19 +57,18 @@ func play_melee_animation(): # The main point
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			#print("we found the sprite track") # Debug
 			anim.track_insert_key(sprite_track_index, 0.00, attack_frames[0]) # Frame 0 at 0 seconds
-			anim.track_insert_key(sprite_track_index, 0.10, attack_frames[1]) # Frame 1 at 0.5 seconds
-			anim.track_insert_key(sprite_track_index, 0.65, attack_frames[0]) # Frame 0 at 2.5 seconds
+			anim.track_insert_key(sprite_track_index, 0.15, attack_frames[1]) # Frame 1 at 0.5 seconds
+			anim.track_insert_key(sprite_track_index, 0.85, attack_frames[0]) # Frame 0 at 2.5 seconds
 		if shape_radius_track_index != -1 and shape_height_track_index != -1: # If we found the animation tracks
 			#print("we found the hitbox track") # Debug
 			anim.track_insert_key(shape_radius_track_index, 0.00, 4) # Start radius
-			anim.track_insert_key(shape_radius_track_index, 0.10, 8) # Larger radius for Frame[1]
-			anim.track_insert_key(shape_radius_track_index, 0.65, 4) # Return to start radius
+			anim.track_insert_key(shape_radius_track_index, 0.15, 8) # Larger radius for Frame[1]
+			anim.track_insert_key(shape_radius_track_index, 0.85, 4) # Return to start radius
 			anim.track_insert_key(shape_height_track_index, 0.00, 8) # Start height
-			anim.track_insert_key(shape_height_track_index, 0.10, 16)# Larger height for Frame[1]
-			anim.track_insert_key(shape_height_track_index, 0.65, 8) # Return to start height
+			anim.track_insert_key(shape_height_track_index, 0.15, 16)# Larger height for Frame[1]
+			anim.track_insert_key(shape_height_track_index, 0.85, 8) # Return to start height
 	else:
 		print("Animation 'melee_attack' not found.")
-	animation_player.play("melee_attack") # Play what we just assembled
 	#print("played the animation") # Debug
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
