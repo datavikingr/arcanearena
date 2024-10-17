@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Green" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+@export var player_color: String = "Orange" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 # Nodes
 @onready var sprite: Sprite2D = get_node("Sprite") # Sprite, player_movement()
 @onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
@@ -20,6 +20,8 @@ extends CharacterBody2D
 @onready var red_ui: Node2D = %RedUI
 @onready var yellow_ui: Node2D = %YellowUI
 @onready var orange_ui: Node2D = %OrangeUI
+@onready var trail_left: Trails = $TrailLeft
+@onready var trail_right: Trails = $TrailRight
 # Exports
 @export var hp: int = 3 # Players spawn in with 3 HP.
 @export var goals: int = 0
@@ -556,7 +558,7 @@ func stretch_animation():
 func cast_animation():
 	#NOTE: 0.6 second length, half periodicity
 	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("special") # Get the thing we'd like to play
+	anim = animation_player.get_animation("cast") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -606,6 +608,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = blue_death_frames
 			special_frames = blue_special_frames
 			meteor_sprite = blue_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 		"Green":
 			ui_layer = green_ui
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
@@ -621,6 +628,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = green_death_frames
 			special_frames = green_special_frames
 			meteor_sprite = green_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 		"Purple":
 			ui_layer = purple_ui
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
@@ -636,6 +648,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = purple_death_frames
 			special_frames = purple_special_frames
 			meteor_sprite = purple_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 		"Red":
 			ui_layer = red_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
@@ -651,6 +668,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = red_death_frames
 			special_frames = red_special_frames
 			meteor_sprite = red_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 		"Yellow":
 			ui_layer = yellow_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
@@ -666,6 +688,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = yellow_death_frames
 			special_frames = yellow_special_frames
 			meteor_sprite = yellow_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 		"Orange":
 			ui_layer = orange_ui
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
@@ -681,6 +708,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = orange_death_frames
 			special_frames = orange_special_frames
 			meteor_sprite = orange_meteor_sprite
+			var gradient = Gradient.new() # Create a new gradient
+			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
+			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
+			trail_left.gradient = gradient # Assign to the trail's gradient property
+			trail_right.gradient = gradient # Assign to the trail's gradient property
 	set_up_animations()
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
@@ -903,6 +935,8 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 				player.play("run") # moving animation
 			elif abs(velocity.x) == 400: # If we're sliding
 				player.play("slide")
+		if Input.is_action_pressed("player1_attack") or Input.is_action_pressed("player1_block"):
+			pass
 	else: #when the player is not on the floor
 		if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
 			sprite.flip_v = true
