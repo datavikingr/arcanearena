@@ -2,24 +2,32 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Orange" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
-# Nodes
-@onready var sprite: Sprite2D = get_node("Sprite") # Sprite, player_movement()
-@onready var player: AnimationPlayer = get_node("AnimationPlayer") # What it says on the can, player_movement() & player_jump() $ etc.
-@onready var raycast:RayCast2D = get_node("TremorSense") # Ball detector, used in physics_collisions()
-@onready var attack_cooldown = get_node("AttackCooldown") # Keeps from spamming attacks too bad.
-@onready var reticle: Sprite2D = get_node("AimReticle") # Gotta aim somehow
+@export var player_color: String = "Green" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+# Scenes/Resources
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
 @onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
-@onready var animation_player: AnimationPlayer = $AnimationPlayer
+@onready var red_gradient = preload("res://resources/red_gradient.tres")
+@onready var cyan_gradient = preload("res://resources/cyan_gradient.tres")
+# Nodes
+@onready var sprite: Sprite2D = $Sprite # Sprite, player_movement()
+@onready var player: AnimationPlayer = $AnimationPlayer # What it says on the can, player_movement() & player_jump() $ etc.
+@onready var raycast:RayCast2D = $TremorSense # Ball detector, used in physics_collisions()
+@onready var attack_cooldown = $AttackCooldown # Keeps from spamming attacks too bad.
+@onready var reticle: Sprite2D = $AimReticle # Gotta aim somehow
 @onready var magic_layer: Node2D = %MagicLayer
 @onready var blue_ui: Node2D = %BlueUI
+@onready var blue_ui_sprite: Sprite2D = blue_ui.get_node("PlayerSprite")
 @onready var green_ui: Node2D = %GreenUI
+@onready var green_ui_sprite: Sprite2D = green_ui.get_node("PlayerSprite")
 @onready var purple_ui: Node2D = %PurpleUI
+@onready var purple_ui_sprite: Sprite2D = purple_ui.get_node("PlayerSprite")
 @onready var red_ui: Node2D = %RedUI
+@onready var red_ui_sprite: Sprite2D = red_ui.get_node("PlayerSprite")
 @onready var yellow_ui: Node2D = %YellowUI
+@onready var yellow_ui_sprite: Sprite2D = yellow_ui.get_node("PlayerSprite")
 @onready var orange_ui: Node2D = %OrangeUI
+@onready var orange_ui_sprite: Sprite2D = orange_ui.get_node("PlayerSprite")
 @onready var trail_left: Trails = $TrailLeft
 @onready var trail_right: Trails = $TrailRight
 # Exports
@@ -39,6 +47,7 @@ extends CharacterBody2D
 @export var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in _physics_collisions()
 # Local
 var ui_layer: Node2D
+var ui_sprite: Sprite2D
 var collision: KinematicCollision2D # Used in physics_collisions()
 var collider: Object # Used in physics_collisions()
 var pinch_multiplier: float = 1.15 # Used in physics_collisions()
@@ -187,8 +196,8 @@ func set_up_animations() -> void:
 
 func idle_animation():
 	#NOTE: 1 second length, half-periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("idle") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("idle") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -219,12 +228,12 @@ func idle_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("idle") # Play what we just assembled
+	#player.play("idle") # Play what we just assembled
 
 func run_animation():
 	#NOTE: .4 second length, half-periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("run") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("run") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -255,12 +264,12 @@ func run_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("run") # Play what we just assembled
+	#player.play("run") # Play what we just assembled
 
 func jump_animation():
 	#NOTE: 5 second length, no periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("jump") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("jump") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -291,12 +300,12 @@ func jump_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("jump") # Play what we just assembled
+	#player.play("jump") # Play what we just assembled
 
 func fall_animation():
 	#NOTE: .5 second length, half periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("falldown") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("falldown") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -324,12 +333,12 @@ func fall_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("falldown") # Play what we just assembled
+	#player.play("falldown") # Play what we just assembled
 
 func side_fall_animation():
 	#NOTE: .5 second length, half periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("fallsideways") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("fallsideways") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -357,12 +366,12 @@ func side_fall_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("fallsideways") # Play what we just assembled
+	#player.play("fallsideways") # Play what we just assembled
 
 func slide_animation():
 	#NOTE: 0.5 second length, half periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("slide") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("slide") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -390,12 +399,12 @@ func slide_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("slide") # Play what we just assembled
+	#player.play("slide") # Play what we just assembled
 
 func death_animation():
 	#NOTE: 0.5 second length, half periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("death") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("death") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -423,12 +432,12 @@ func death_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("death") # Play what we just assembled
+	#player.play("death") # Play what we just assembled
 
 func special_animation():
 	#NOTE: 0.9 second length, third periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("special") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("special") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -457,12 +466,12 @@ func special_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("special") # Play what we just assembled
+	#player.play("special") # Play what we just assembled
 
 func meteor_animation():
 	#NOTE: 5 second length, no periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("meteor") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("meteor") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -489,12 +498,12 @@ func meteor_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("meteor") # Play what we just assembled
+	#player.play("meteor") # Play what we just assembled
 
 func squat_animation():
 	#NOTE: 5 second length, no periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("squat") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("squat") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -521,12 +530,12 @@ func squat_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("squat") # Play what we just assembled
+	#player.play("squat") # Play what we just assembled
 
 func stretch_animation():
 	#NOTE: 5 second length, no periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("stretch") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("stretch") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
@@ -553,18 +562,18 @@ func stretch_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("stretch") # Play what we just assembled
+	#player.play("stretch") # Play what we just assembled
 
 func cast_animation():
 	#NOTE: 0.6 second length, half periodicity
-	animation_player.stop()  # Stop any current animations
-	anim = animation_player.get_animation("cast") # Get the thing we'd like to play
+	player.stop()  # Stop any current animations
+	anim = player.get_animation("cast") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(sprite_track_index, 0.00, jump_frames[1]) # Frame 0 at 0 seconds
-			anim.track_insert_key(sprite_track_index, 0.30, special_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_track_index, 0.00, special_frames[0]) # jump_frames[0] Frame 0 at 0 seconds
+			#anim.track_insert_key(sprite_track_index, 0.10, special_frames[0]) # Frame 0 at 0 seconds
 		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
 		if spritepos_track_index != -1:
 			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
@@ -586,7 +595,7 @@ func cast_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#animation_player.play("special") # Play what we just assembled
+	#player.play("special") # Play what we just assembled
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
@@ -595,6 +604,7 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	match player_color:
 		"Blue":
 			ui_layer = blue_ui
+			ui_sprite = blue_ui_sprite
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
@@ -608,13 +618,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = blue_death_frames
 			special_frames = blue_special_frames
 			meteor_sprite = blue_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if red_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = red_gradient
+				trail_right.gradient = red_gradient
+			else:
+				print("Failed to load red_gradient")
 		"Green":
 			ui_layer = green_ui
+			ui_sprite = green_ui_sprite
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
@@ -628,13 +639,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = green_death_frames
 			special_frames = green_special_frames
 			meteor_sprite = green_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if red_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = red_gradient
+				trail_right.gradient = red_gradient
+			else:
+				print("Failed to load red_gradient")
 		"Purple":
 			ui_layer = purple_ui
+			ui_sprite = purple_ui_sprite
 			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 			collision_mask |= 1 << 13 # Collide with Hot Team layer
@@ -648,13 +660,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = purple_death_frames
 			special_frames = purple_special_frames
 			meteor_sprite = purple_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(1, 0, 0, 1))  # Cold teeam has red eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if red_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = red_gradient
+				trail_right.gradient = red_gradient
+			else:
+				print("Failed to load red_gradient")
 		"Red":
 			ui_layer = red_ui
+			ui_sprite = red_ui_sprite
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
@@ -668,13 +681,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = red_death_frames
 			special_frames = red_special_frames
 			meteor_sprite = red_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if cyan_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = cyan_gradient
+				trail_right.gradient = cyan_gradient
+			else:
+				print("Failed to load cyan_gradient")
 		"Yellow":
 			ui_layer = yellow_ui
+			ui_sprite = yellow_ui_sprite
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
@@ -688,13 +702,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = yellow_death_frames
 			special_frames = yellow_special_frames
 			meteor_sprite = yellow_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if cyan_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = cyan_gradient
+				trail_right.gradient = cyan_gradient
+			else:
+				print("Failed to load cyan_gradient")
 		"Orange":
 			ui_layer = orange_ui
+			ui_sprite = orange_ui_sprite
 			self.add_to_group("HotTeam") # for easier get_collisions() logic later
 			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			collision_mask |= 1 << 9 # Collide with Cold Team layer
@@ -708,11 +723,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			death_frames = orange_death_frames
 			special_frames = orange_special_frames
 			meteor_sprite = orange_meteor_sprite
-			var gradient = Gradient.new() # Create a new gradient
-			gradient.add_point(0.0, Color(0, 1, 1, 1))  # Hot Team teeam has cyan eyes.
-			gradient.add_point(1.0, Color(0, 0, 0, 0))  # transparent
-			trail_left.gradient = gradient # Assign to the trail's gradient property
-			trail_right.gradient = gradient # Assign to the trail's gradient property
+			if cyan_gradient: # Check if the gradient was successfully loaded
+				trail_left.gradient = cyan_gradient
+				trail_right.gradient = cyan_gradient
+			else:
+				print("Failed to load cyan_gradient")
 	set_up_animations()
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
@@ -804,7 +819,6 @@ func player_attack(_delta: float) -> void: # Called by player input from _physic
 	# NOTE: Players do not collide with melee attacks by default - rather, the attack colides with them. This lets players move their melee attack.
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
 		attack_cooldown.start() # Start cooldown timer
-		player.play("cast")
 		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
 		if sprite.flip_h == false: # If the wiz is facing right.
 			new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
@@ -825,7 +839,6 @@ func player_attack(_delta: float) -> void: # Called by player input from _physic
 func player_missile(_delta: float) -> void:
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
 		attack_cooldown.start() # Start cooldown timer
-		player.play("cast")
 		var new_missile = player_missile_scene.instantiate() # Instantiate the preloaded scene
 		var projectile_start_pos = global_position + Vector2(cos(aim_direction - PI / 2), sin(aim_direction - PI / 2)) * 24
 		new_missile.global_position = projectile_start_pos # place it in the world
@@ -845,7 +858,6 @@ func player_missile(_delta: float) -> void:
 
 func player_block(_delta: float) -> void: # Called by player input from _physics_process()
 	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
-	player.play("cast")
 	var block_name = "PlayerBlock_" + player_color # Search for existing blocks with the same name
 	for child in magic_layer.get_children(): # Check the magic layer
 		if child.name == block_name: # If we already one of these spawned,
@@ -889,7 +901,8 @@ func update_ui() -> void: # called from _process()
 	ui_layer.set("goals", goals)
 	ui_layer.set("kills", kills)
 	ui_layer.set("deaths", deaths)
-	pass
+	var current_frame = sprite.frame
+	ui_sprite.frame = current_frame
 
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()
@@ -936,7 +949,7 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 			elif abs(velocity.x) == 400: # If we're sliding
 				player.play("slide")
 		if Input.is_action_pressed("player1_attack") or Input.is_action_pressed("player1_block"):
-			pass
+			player.play("cast")
 	else: #when the player is not on the floor
 		if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
 			sprite.flip_v = true
