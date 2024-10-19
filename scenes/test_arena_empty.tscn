@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=18 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://scripts/red_ui.gd" id="10_8sjcl"]
 [ext_resource type="Script" path="res://scripts/yellow_ui.gd" id="11_n8n62"]
 [ext_resource type="Script" path="res://scripts/orange_ui.gd" id="12_vnq04"]
+[ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="17_8ypjd"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 
@@ -170,6 +171,8 @@ position = Vector2(183, 267)
 
 [node name="MagicLayer" type="Node2D" parent="."]
 unique_name_in_owner = true
+
+[node name="TimeControl" parent="MagicLayer" instance=ExtResource("17_8ypjd")]
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Green" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+@export var player_color: String = "Red" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 # Scenes/Resources
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
@@ -228,7 +228,6 @@ func idle_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("idle") # Play what we just assembled
 
 func run_animation():
 	#NOTE: .4 second length, half-periodicity
@@ -247,11 +246,11 @@ func run_animation():
 		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
 		if trailleft_track_index != -1:
 			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
-			anim.track_insert_key(trailleft_track_index, 0.20, Vector2(0.5,-0.5)) # Frame 1 at 0.5 seconds
+			anim.track_insert_key(trailleft_track_index, 0.20, Vector2(0.5,-1.5)) # Frame 1 at 0.5 seconds
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
-			anim.track_insert_key(trailright_track_index, 0.20, Vector2(2.5,-0.5)) # Frame 1 at 0.5 seconds
+			anim.track_insert_key(trailright_track_index, 0.20, Vector2(2.5,-1.5)) # Frame 1 at 0.5 seconds
 		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
 		if trailleftvis_track_index != -1:
 			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
@@ -264,7 +263,37 @@ func run_animation():
 		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
 		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("run") # Play what we just assembled
+	anim = player.get_animation("run_left") # Get the thing we'd like to play
+	if anim: # Check if the animation exists
+		# Get the specific track for the sprite frame and collision shape size
+		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
+		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(sprite_track_index, 0.00, run_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_track_index, 0.20, run_frames[1]) # Frame 1 at 0.5 seconds
+		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		if spritepos_track_index != -1:
+			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
+			anim.track_insert_key(spritepos_track_index, 0.20, Vector2(0,8)) # Frame 1 at 0.5 seconds
+		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		if trailleft_track_index != -1:
+			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(-0.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailleft_track_index, 0.20, Vector2(-0.5,-1.5)) # Frame 1 at 0.5 seconds
+		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		if trailright_track_index != -1:
+			anim.track_insert_key(trailright_track_index, 0.00, Vector2(-2.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailright_track_index, 0.20, Vector2(-2.5,-1.5)) # Frame 1 at 0.5 seconds
+		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
+		if trailleftvis_track_index != -1:
+			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
+		var trailrightvis_track_index = anim.find_track("TrailRight:visibile", Animation.TYPE_VALUE)
+		if trailrightvis_track_index != -1:
+			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
+		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
+		if meteorspike_track_index != -1:
+			anim.track_insert_key(meteorspike_track_index, 0.00, false)
+		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
+		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 
 func jump_animation():
 	#NOTE: 5 second length, no periodicity
@@ -834,6 +863,8 @@ func player_attack(_delta: float) -> void: # Called by player input from _physic
 			new_attack.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 			new_attack.collision_mask |= 1 << 9 # Collide with Cold Team layer
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
+		var attacksprite = new_attack.get_node("Sprite")
+		attacksprite.flip_h = sprite.flip_h
 		magic_layer.add_child(new_attack) # Add the new instance as a child of the magic layer node
 
 func player_missile(_delta: float) -> void:
@@ -939,7 +970,7 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 		elif left_right < -0.25: # Pressed Left, inner 25% deadzone
 			sprite.flip_h = true # toggles mirror on; faces left
 			if abs(velocity.x) == 200: # If we're running
-				player.play("run") # moving animation
+				player.play("run_left") # moving animation
 			elif abs(velocity.x) == 400: # If we're sliding
 				player.play("slide")
 		elif left_right > .25:
@@ -952,7 +983,7 @@ func animation_controller() -> void: # called by _physics_process(), left_right 
 			player.play("cast")
 	else: #when the player is not on the floor
 		if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
-			sprite.flip_v = true
+			#sprite.flip_v = true
 			player.play("meteor")
 		elif velocity.y > 0 and abs(left_right) < .25 : # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but idle
 			player.play("falldown")
