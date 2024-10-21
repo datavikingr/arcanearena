@@ -57,79 +57,22 @@ var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & pla
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
 var anim_name: String
 var anim: Animation
-# Animation Controls
+# Animation Data
 var player_start = {"Blue": 0, "Green": 24, "Purple": 48, "Red": 72, "Yellow": 96, "Orange": 120}
-# Generics
-var reticle_frame
-var idle_frames
-var run_frames
-var jump_frames
-var fall_frames
-var side_fall_frames
-var slide_frames
-var death_frames
-var special_frames
-var meteor_sprite
-# Blue
-var blue_idle_frames: Array[int] = [0,1]
-var blue_run_frames: Array[int] = [2,3]
-var blue_jump_frames: Array[int] = [4,5]
-var blue_fall_frames: Array[int] = [6,7]
-var blue_side_fall_frames: Array[int] = [8,9]
-var blue_slide_frames: Array[int] = [10,11]
-var blue_death_frames: Array[int] = [12,13]
-var blue_special_frames: Array[int] = [14,15]
-var blue_meteor_sprite: int = 20
-# Green
-var green_idle_frames: Array = blue_idle_frames.map(func(x): return x + player_start["Green"])
-var green_run_frames: Array = blue_run_frames.map(func(x): return x + player_start["Green"])
-var green_jump_frames: Array = blue_jump_frames.map(func(x): return x + player_start["Green"])
-var green_fall_frames: Array = blue_fall_frames.map(func(x): return x + player_start["Green"])
-var green_side_fall_frames: Array = blue_side_fall_frames.map(func(x): return x + player_start["Green"])
-var green_slide_frames: Array = blue_slide_frames.map(func(x): return x + player_start["Green"])
-var green_death_frames: Array = blue_death_frames.map(func(x): return x + player_start["Green"])
-var green_special_frames: Array = blue_special_frames.map(func(x): return x + player_start["Green"])
-var green_meteor_sprite: int = blue_meteor_sprite + player_start["Green"]
-# Purple
-var purple_idle_frames: Array = blue_idle_frames.map(func(x): return x + player_start["Purple"])
-var purple_run_frames: Array = blue_run_frames.map(func(x): return x + player_start["Purple"])
-var purple_jump_frames: Array = blue_jump_frames.map(func(x): return x + player_start["Purple"])
-var purple_fall_frames: Array = blue_fall_frames.map(func(x): return x + player_start["Purple"])
-var purple_side_fall_frames: Array = blue_side_fall_frames.map(func(x): return x + player_start["Purple"])
-var purple_slide_frames: Array = blue_slide_frames.map(func(x): return x + player_start["Purple"])
-var purple_death_frames: Array = blue_death_frames.map(func(x): return x + player_start["Purple"])
-var purple_special_frames: Array = blue_special_frames.map(func(x): return x + player_start["Purple"])
-var purple_meteor_sprite: int = blue_meteor_sprite + player_start["Purple"]
-# Red
-var red_idle_frames: Array = blue_idle_frames.map(func(x): return x + player_start["Red"])
-var red_run_frames: Array = blue_run_frames.map(func(x): return x + player_start["Red"])
-var red_jump_frames: Array = blue_jump_frames.map(func(x): return x + player_start["Red"])
-var red_fall_frames: Array = blue_fall_frames.map(func(x): return x + player_start["Red"])
-var red_side_fall_frames: Array = blue_side_fall_frames.map(func(x): return x + player_start["Red"])
-var red_slide_frames: Array = blue_slide_frames.map(func(x): return x + player_start["Red"])
-var red_death_frames: Array = blue_death_frames.map(func(x): return x + player_start["Red"])
-var red_special_frames: Array = blue_special_frames.map(func(x): return x + player_start["Red"])
-var red_meteor_sprite: int = blue_meteor_sprite + player_start["Red"]
-# Yellow
-var yellow_idle_frames: Array = blue_idle_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_run_frames: Array = blue_run_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_jump_frames: Array = blue_jump_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_fall_frames: Array = blue_fall_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_side_fall_frames: Array = blue_side_fall_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_slide_frames: Array = blue_slide_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_death_frames: Array = blue_death_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_special_frames: Array = blue_special_frames.map(func(x): return x + player_start["Yellow"])
-var yellow_meteor_sprite: int = blue_meteor_sprite + player_start["Yellow"]
-# Orange
-var orange_idle_frames: Array = blue_idle_frames.map(func(x): return x + player_start["Orange"])
-var orange_run_frames: Array = blue_run_frames.map(func(x): return x + player_start["Orange"])
-var orange_jump_frames: Array = blue_jump_frames.map(func(x): return x + player_start["Orange"])
-var orange_fall_frames : Array= blue_fall_frames.map(func(x): return x + player_start["Orange"])
-var orange_side_fall_frames: Array = blue_side_fall_frames.map(func(x): return x + player_start["Orange"])
-var orange_slide_frames: Array = blue_slide_frames.map(func(x): return x + player_start["Orange"])
-var orange_death_frames: Array = blue_death_frames.map(func(x): return x + player_start["Orange"])
-var orange_special_frames: Array = blue_special_frames.map(func(x): return x + player_start["Orange"])
-var orange_meteor_sprite: int= blue_meteor_sprite + player_start["Orange"]
+var idle_frames: Array = [0,1]
+var run_frames: Array = [2,3]
+var jump_frames: Array = [4,5]
+var fall_frames: Array = [6,7]
+var side_fall_frames: Array = [8,9]
+var slide_frames: Array = [10,11]
+var death_frames: Array = [12,13]
+var special_frames: Array = [14,15]
+var attack_frames: Array = [16, 17]
+var block_frames: Array = [18,19]
+var meteor_sprite: int = 20
+var meteor_spike: int = 21
+var reticle_frame: int = 22
+var ranged_attack: int = 23
 # Input
 var left_right: float = 0 # Control Input, player_movement()
 var aim_left_right: float = 0 # Control Input, player_aim()
@@ -180,6 +123,38 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 
 #######################################################################################################################################################
 ## CONSTRUCTORS
+func build_frames() -> void:
+	idle_frames = idle_frames.map(func(x): return x + player_start[player_color])
+	run_frames = run_frames.map(func(x): return x + player_start[player_color])
+	jump_frames = jump_frames.map(func(x): return x + player_start[player_color])
+	fall_frames = fall_frames.map(func(x): return x + player_start[player_color])
+	side_fall_frames = side_fall_frames.map(func(x): return x + player_start[player_color])
+	slide_frames = slide_frames.map(func(x): return x + player_start[player_color])
+	death_frames = death_frames.map(func(x): return x + player_start[player_color])
+	special_frames = special_frames.map(func(x): return x + player_start[player_color])
+	attack_frames = attack_frames.map(func(x): return x + player_start[player_color])
+	block_frames = block_frames.map(func(x): return x + player_start[player_color])
+	meteor_sprite = meteor_sprite + player_start[player_color]
+	meteor_spike = meteor_spike + player_start[player_color]
+	reticle_frame = reticle_frame + player_start[player_color]
+	ranged_attack = ranged_attack + player_start[player_color]
+
+func build_cold(object) -> void:
+	object.add_to_group("ColdTeam") # for easier get_collisions() logic later
+	object.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+	object.collision_mask |= 1 << 13 # Collide with Hot Team layer
+	if object == self:
+		trail_left.gradient = red_gradient
+		trail_right.gradient = red_gradient
+
+func build_hot(object) -> void:
+	object.add_to_group("HotTeam") # for easier get_collisions() logic later
+	object.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+	object.collision_mask |= 1 << 9 # Collide with Cold Team layer
+	if object == self:
+		trail_left.gradient = cyan_gradient
+		trail_right.gradient = cyan_gradient
+
 func set_up_animations() -> void:
 	idle_animation()
 	run_animation()
@@ -630,133 +605,39 @@ func cast_animation():
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = player_color
+	#var data_node
+	#var player_data =
 	match player_color:
 		"Blue":
 			ui_layer = blue_ui
 			ui_sprite = blue_ui_sprite
-			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-			collision_mask |= 1 << 13 # Collide with Hot Team layer
-			reticle_frame = 22
-			idle_frames = blue_idle_frames
-			run_frames = blue_run_frames
-			jump_frames = blue_jump_frames
-			fall_frames = blue_fall_frames
-			side_fall_frames = blue_side_fall_frames
-			slide_frames = blue_slide_frames
-			death_frames = blue_death_frames
-			special_frames = blue_special_frames
-			meteor_sprite = blue_meteor_sprite
-			if red_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = red_gradient
-				trail_right.gradient = red_gradient
-			else:
-				print("Failed to load red_gradient")
+			build_cold(self)
+			build_frames()
 		"Green":
 			ui_layer = green_ui
 			ui_sprite = green_ui_sprite
-			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-			collision_mask |= 1 << 13 # Collide with Hot Team layer
-			reticle_frame = 22 + (24 * 1)
-			idle_frames = green_idle_frames
-			run_frames = green_run_frames
-			jump_frames = green_jump_frames
-			fall_frames = green_fall_frames
-			side_fall_frames = green_side_fall_frames
-			slide_frames = green_slide_frames
-			death_frames = green_death_frames
-			special_frames = green_special_frames
-			meteor_sprite = green_meteor_sprite
-			if red_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = red_gradient
-				trail_right.gradient = red_gradient
-			else:
-				print("Failed to load red_gradient")
+			build_cold(self)
+			build_frames()
 		"Purple":
 			ui_layer = purple_ui
 			ui_sprite = purple_ui_sprite
-			self.add_to_group("ColdTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-			collision_mask |= 1 << 13 # Collide with Hot Team layer
-			reticle_frame = 22 + (24 * 2)
-			idle_frames = purple_idle_frames
-			run_frames = purple_run_frames
-			jump_frames = purple_jump_frames
-			fall_frames = purple_fall_frames
-			side_fall_frames = purple_side_fall_frames
-			slide_frames = purple_slide_frames
-			death_frames = purple_death_frames
-			special_frames = purple_special_frames
-			meteor_sprite = purple_meteor_sprite
-			if red_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = red_gradient
-				trail_right.gradient = red_gradient
-			else:
-				print("Failed to load red_gradient")
+			build_cold(self)
+			build_frames()
 		"Red":
 			ui_layer = red_ui
 			ui_sprite = red_ui_sprite
-			self.add_to_group("HotTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-			collision_mask |= 1 << 9 # Collide with Cold Team layer
-			reticle_frame = 22 + (24 * 3)
-			idle_frames = red_idle_frames
-			run_frames = red_run_frames
-			jump_frames = red_jump_frames
-			fall_frames = red_fall_frames
-			side_fall_frames = red_side_fall_frames
-			slide_frames = red_slide_frames
-			death_frames = red_death_frames
-			special_frames = red_special_frames
-			meteor_sprite = red_meteor_sprite
-			if cyan_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = cyan_gradient
-				trail_right.gradient = cyan_gradient
-			else:
-				print("Failed to load cyan_gradient")
+			build_hot(self)
+			build_frames()
 		"Yellow":
 			ui_layer = yellow_ui
 			ui_sprite = yellow_ui_sprite
-			self.add_to_group("HotTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-			collision_mask |= 1 << 9 # Collide with Cold Team layer
-			reticle_frame = 22 + (24 * 4)
-			idle_frames = yellow_idle_frames
-			run_frames = yellow_run_frames
-			jump_frames = yellow_jump_frames
-			fall_frames = yellow_fall_frames
-			side_fall_frames = yellow_side_fall_frames
-			slide_frames = yellow_slide_frames
-			death_frames = yellow_death_frames
-			special_frames = yellow_special_frames
-			meteor_sprite = yellow_meteor_sprite
-			if cyan_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = cyan_gradient
-				trail_right.gradient = cyan_gradient
-			else:
-				print("Failed to load cyan_gradient")
+			build_hot(self)
+			build_frames()
 		"Orange":
 			ui_layer = orange_ui
 			ui_sprite = orange_ui_sprite
-			self.add_to_group("HotTeam") # for easier get_collisions() logic later
-			collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-			collision_mask |= 1 << 9 # Collide with Cold Team layer
-			reticle_frame = 22 + (24 * 5)
-			idle_frames = orange_idle_frames
-			run_frames = orange_run_frames
-			jump_frames = orange_jump_frames
-			fall_frames = orange_fall_frames
-			side_fall_frames = orange_side_fall_frames
-			slide_frames = orange_slide_frames
-			death_frames = orange_death_frames
-			special_frames = orange_special_frames
-			meteor_sprite = orange_meteor_sprite
-			if cyan_gradient: # Check if the gradient was successfully loaded
-				trail_left.gradient = cyan_gradient
-				trail_right.gradient = cyan_gradient
-			else:
-				print("Failed to load cyan_gradient")
+			build_hot(self)
+			build_frames()
 	set_up_animations()
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
@@ -849,19 +730,17 @@ func player_attack(_delta: float) -> void: # Called by player input from _physic
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
 		attack_cooldown.start() # Start cooldown timer
 		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
+		var face_direction: int
 		if sprite.flip_h == false: # If the wiz is facing right.
-			new_attack.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
-		else: # Then the wizard's facing left
-			new_attack.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
+			face_direction = 1
+		else:
+			face_direction = -1
+		new_attack.global_position = get_global_position() + Vector2(16 * face_direction, 0) # Small offset, makes sure it appears outside the player body, on the correct side.
 		new_attack.set("player_color", player_color) # I hope this works. // It totally worked!
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-			new_attack.add_to_group("ColdTeam") # for easier get_collisions() logic
-			new_attack.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-			new_attack.collision_mask |= 1 << 13 # Collide with Hot Team layer
+			build_cold(new_attack)
 		else:
-			new_attack.add_to_group("HotTeam") # for easier get_collisions() logic
-			new_attack.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-			new_attack.collision_mask |= 1 << 9 # Collide with Cold Team layer
+			build_hot(new_attack)
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
 		var attacksprite = new_attack.get_node("Sprite")
 		attacksprite.flip_h = sprite.flip_h
@@ -877,13 +756,9 @@ func player_missile(_delta: float) -> void:
 		new_missile.set("player_color", player_color) # I hope this works. // It totally worked!
 		new_missile.rotation = aim_direction - PI / 2
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-			new_missile.add_to_group("ColdTeam") # for easier get_collisions() logic
-			new_missile.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-			new_missile.collision_mask |= 1 << 13 # Collide with Hot Team layer
+			build_cold(new_missile)
 		else:
-			new_missile.add_to_group("HotTeam") # for easier get_collisions() logic
-			new_missile.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-			new_missile.collision_mask |= 1 << 9 # Collide with Cold Team layer
+			build_hot(new_missile)
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
 		magic_layer.add_child(new_missile) # Add the new instance as a child of the magic layer node
 
@@ -894,26 +769,24 @@ func player_block(_delta: float) -> void: # Called by player input from _physics
 		if child.name == block_name: # If we already one of these spawned,
 			child.free() # Free the existing block and kill it, so we can make the new one.
 	var new_block = player_block_scene.instantiate() # Instantiate the preloaded scene
+	var face_direction: int
 	if sprite.flip_h == false: # If the wiz is facing right.
-		new_block.global_position = get_global_position() + Vector2(16, 0) # Small offset, makes sure it appears outside the player body, on the right side.
-	else: # Then the wizard's facing left
-		new_block.global_position = get_global_position() + Vector2(-16, 0) # Small offset, makes sure it appears outside the player body, on the left side.
+		face_direction = 1
+	else:
+		face_direction = -1
+	new_block.global_position = get_global_position() + Vector2(16 * face_direction, 0) # Small offset, makes sure it appears outside the player body, on the correct side.
 	new_block.set("player_color", player_color) # I hope this works. // It totally worked!
 	if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-		new_block.add_to_group("ColdTeam") # for easier get_collisions() logic
-		new_block.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-		new_block.collision_mask |= 1 << 13 # Look on Hot Team collision layer
+		build_cold(new_block)
 	else:
-		new_block.add_to_group("HotTeam") # for easier get_collisions() logic
-		new_block.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-		new_block.collision_mask |= 1 << 9 # Look on Cold Team collision layer
+		build_hot(new_block)
 	magic_layer.add_child(new_block) # Add the new instance as a child of the magic layer node
 
 func player_special(_delta: float) -> void: # TODO Called by player input from _physics_process()
 	print("Special!") # Log
 	player.play("special")
 
-func player_kockback() -> void: # TODO
+func player_knockback() -> void: # TODO
 	pass
 
 func player_score() -> void: # TODO
