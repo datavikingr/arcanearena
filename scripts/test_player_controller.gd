@@ -91,7 +91,7 @@ func is_ball_near() -> bool: # Called from player_jump()
 		return abs(ball_position.x - player_position.x) < near_range.x and abs(ball_position.y - player_position.y) < near_range.y # If player and ball are within near_range of each other in x and y, return true
 	return abs(ball_position.x - player_position.x) < far_range.x and abs(ball_position.y - player_position.y) < far_range.y
 
-func variable_gravity(): # Game feel method. called by player_movement()
+func variable_gravity() -> float: # Game feel method. called by player_movement()
 	if velocity.y > 0: # If we're falling
 		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
@@ -100,7 +100,7 @@ func variable_gravity(): # Game feel method. called by player_movement()
 		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
-func variable_force(): # How hard we punch the ball, called by physics_collisions() controller.
+func variable_force() -> float: # How hard we punch the ball, called by physics_collisions() controller.
 	if from_meteor == true: # If we're down+A,
 		return meteor_force # hit the ball extra hard @ 1000
 	elif is_slide() and Input.is_action_pressed("player1_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
@@ -155,26 +155,28 @@ func build_hot(object) -> void:
 		trail_left.gradient = cyan_gradient
 		trail_right.gradient = cyan_gradient
 
-func set_up_animations() -> void:
-	idle_animation()
-	run_animation()
-	jump_animation()
-	fall_animation()
-	side_fall_animation()
-	slide_animation()
-	death_animation()
-	special_animation()
-	meteor_animation()
-	squat_animation()
-	stretch_animation()
-	cast_animation()
+func default_vis(anim) -> Animation:
+	var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
+	if trailleftvis_track_index != -1:
+		anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
+	var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
+	if trailrightvis_track_index != -1:
+		anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
+	var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
+	if meteorspike_track_index != -1:
+		anim.track_insert_key(meteorspike_track_index, 0.00, false)
+	var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
+	if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+		anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_spike) # Frame 0 at 0 seconds
+	return anim
 
-func idle_animation():
+func idle_animation() -> void:
 	#NOTE: 1 second length, half-periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("idle") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, idle_frames[0]) # Frame 0 at 0 seconds
@@ -191,25 +193,14 @@ func idle_animation():
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
 			anim.track_insert_key(trailright_track_index, 0.5, Vector2(2.5,-3.5)) # Frame 1 at 0.5 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 
-func run_animation():
+func run_animation() -> void:
 	#NOTE: .4 second length, half-periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("run") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, run_frames[0]) # Frame 0 at 0 seconds
@@ -226,21 +217,10 @@ func run_animation():
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
 			anim.track_insert_key(trailright_track_index, 0.20, Vector2(2.5,-1.5)) # Frame 1 at 0.5 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visibile", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 	anim = player.get_animation("run_left") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, run_frames[0]) # Frame 0 at 0 seconds
@@ -257,25 +237,14 @@ func run_animation():
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(-2.5,-2.5)) # Frame 0 at 0 seconds
 			anim.track_insert_key(trailright_track_index, 0.20, Vector2(-2.5,-1.5)) # Frame 1 at 0.5 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visibile", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 
-func jump_animation():
+func jump_animation() -> void:
 	#NOTE: 5 second length, no periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("jump") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, jump_frames[0]) # Frame 0 at 0 seconds
@@ -292,26 +261,14 @@ func jump_animation():
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,1.5)) # Frame 0 at 0 seconds
 			anim.track_insert_key(trailright_track_index, 0.10, Vector2(0.5,-5.5)) # Frame 1 at 0.5 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("jump") # Play what we just assembled
 
-func fall_animation():
+func fall_animation() -> void:
 	#NOTE: .5 second length, half periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("falldown") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, fall_frames[0]) # Frame 0 at 0 seconds
@@ -325,26 +282,14 @@ func fall_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,5.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("falldown") # Play what we just assembled
 
-func side_fall_animation():
+func side_fall_animation() -> void:
 	#NOTE: .5 second length, half periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("fallsideways") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, side_fall_frames[0]) # Frame 0 at 0 seconds
@@ -358,26 +303,14 @@ func side_fall_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(5.5,4.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("fallsideways") # Play what we just assembled
 
-func slide_animation():
+func slide_animation() -> void:
 	#NOTE: 0.5 second length, half periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("slide") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, slide_frames[0]) # Frame 0 at 0 seconds
@@ -391,21 +324,8 @@ func slide_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(4.5,5.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("slide") # Play what we just assembled
 
-func death_animation():
+func death_animation() -> void:
 	#NOTE: 0.5 second length, half periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("death") # Get the thing we'd like to play
@@ -438,12 +358,13 @@ func death_animation():
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 	#player.play("death") # Play what we just assembled
 
-func special_animation():
+func special_animation() -> void:
 	#NOTE: 0.9 second length, third periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("special") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, jump_frames[1]) # Frame 0 at 0 seconds
@@ -458,21 +379,8 @@ func special_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,-5.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("special") # Play what we just assembled
 
-func meteor_animation():
+func meteor_animation() -> void:
 	#NOTE: 5 second length, no periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("meteor") # Get the thing we'd like to play
@@ -504,12 +412,13 @@ func meteor_animation():
 			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
 	#player.play("meteor") # Play what we just assembled
 
-func squat_animation():
+func squat_animation() -> void:
 	#NOTE: 5 second length, no periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("squat") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, jump_frames[0]) # Frame 0 at 0 seconds
@@ -522,26 +431,14 @@ func squat_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,1.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("squat") # Play what we just assembled
 
-func stretch_animation():
+func stretch_animation() -> void:
 	#NOTE: 5 second length, no periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("stretch") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, jump_frames[1]) # Frame 0 at 0 seconds
@@ -554,26 +451,14 @@ func stretch_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,-6.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("stretch") # Play what we just assembled
 
-func cast_animation():
+func cast_animation() -> void:
 	#NOTE: 0.6 second length, half periodicity
 	player.stop()  # Stop any current animations
 	anim = player.get_animation("cast") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
+		anim = default_vis(anim)
 		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
 			anim.track_insert_key(sprite_track_index, 0.00, special_frames[0]) # jump_frames[0] Frame 0 at 0 seconds
@@ -587,19 +472,6 @@ func cast_animation():
 		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
 		if trailright_track_index != -1:
 			anim.track_insert_key(trailright_track_index, 0.00, Vector2(0.5,-5.5)) # Frame 0 at 0 seconds
-		var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
-		if trailleftvis_track_index != -1:
-			anim.track_insert_key(trailleftvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var trailrightvis_track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
-		if trailrightvis_track_index != -1:
-			anim.track_insert_key(trailrightvis_track_index, 0.00, true) # Frame 0 at 0 seconds
-		var meteorspike_track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
-		if meteorspike_track_index != -1:
-			anim.track_insert_key(meteorspike_track_index, 0.00, false)
-		var meteorsprite_track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
-		if meteorsprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(meteorsprite_track_index, 0.00, meteor_sprite + 1) # Frame 0 at 0 seconds
-	#player.play("special") # Play what we just assembled
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
@@ -638,7 +510,18 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			ui_sprite = orange_ui_sprite
 			build_hot(self)
 			build_frames()
-	set_up_animations()
+	idle_animation()
+	run_animation()
+	jump_animation()
+	fall_animation()
+	side_fall_animation()
+	slide_animation()
+	death_animation()
+	special_animation()
+	meteor_animation()
+	squat_animation()
+	stretch_animation()
+	cast_animation()
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
 	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
