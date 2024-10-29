@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Red" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
 # Scenes/Resources
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
@@ -57,7 +57,7 @@ var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & pla
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
 var anim_name: String
 var anim: Animation
-# Animation Data
+# Sprite Frame Data
 var player_start = {"Blue": 0, "Green": 24, "Purple": 48, "Red": 72, "Yellow": 96, "Orange": 120}
 var idle_frames: Array = [0,1]
 var run_frames: Array = [2,3]
@@ -73,6 +73,27 @@ var meteor_sprite: int = 20
 var meteor_spike: int = 21
 var reticle_frame: int = 22
 var ranged_attack: int = 23
+var anim_tracks: Array = [
+	"Sprite:frame",
+	"Sprite:position",
+	"TrailLeft:visible",
+	"TrailLeft:position",
+	"TrailRight:visible",
+	"TrailRight:position",
+	"MeteorSpike:visible",
+	"MeteorSpike:frame"]
+var animation_data: Dictionary = {
+	"default_anim_data": {
+			"frame_timings": [0,0.25],
+			"sprite_frames": [idle_frames[0], idle_frames[1]],
+			"sprite_positions": [Vector2(0, 7), Vector2(0, 7)],
+			"trail_left_vis": true,
+			"trail_left_positions": [Vector2(0.5, -2.5), Vector2(0.5, -2.5)],
+			"trail_right_vis": true,
+			"trail_right_positions": [Vector2(2.5, -2.5), Vector2(2.5, -2.5)],
+			"meteor_spike_vis": false,
+			"meteor_spike_sprite": meteor_spike
+		}}
 # Input
 var left_right: float = 0 # Control Input, player_movement()
 var aim_left_right: float = 0 # Control Input, player_aim()
@@ -123,6 +144,22 @@ func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _phys
 
 #######################################################################################################################################################
 ## CONSTRUCTORS
+func build_cold(object) -> void:
+	object.add_to_group("ColdTeam") # for easier get_collisions() logic later
+	object.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
+	object.collision_mask |= 1 << 13 # Collide with Hot Team layer
+	if object == self:
+		trail_left.gradient = red_gradient
+		trail_right.gradient = red_gradient
+
+func build_hot(object) -> void:
+	object.add_to_group("HotTeam") # for easier get_collisions() logic later
+	object.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
+	object.collision_mask |= 1 << 9 # Collide with Cold Team layer
+	if object == self:
+		trail_left.gradient = cyan_gradient
+		trail_right.gradient = cyan_gradient
+
 func build_frames() -> void:
 	idle_frames = idle_frames.map(func(x): return x + player_start[player_color])
 	run_frames = run_frames.map(func(x): return x + player_start[player_color])
@@ -139,21 +176,158 @@ func build_frames() -> void:
 	reticle_frame = reticle_frame + player_start[player_color]
 	ranged_attack = ranged_attack + player_start[player_color]
 
-func build_cold(object) -> void:
-	object.add_to_group("ColdTeam") # for easier get_collisions() logic later
-	object.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
-	object.collision_mask |= 1 << 13 # Collide with Hot Team layer
-	if object == self:
-		trail_left.gradient = red_gradient
-		trail_right.gradient = red_gradient
-
-func build_hot(object) -> void:
-	object.add_to_group("HotTeam") # for easier get_collisions() logic later
-	object.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
-	object.collision_mask |= 1 << 9 # Collide with Cold Team layer
-	if object == self:
-		trail_left.gradient = cyan_gradient
-		trail_right.gradient = cyan_gradient
+func construct_animations():
+	animation_data["default_anim_data"]["meteor_spike_sprite"] = meteor_spike
+	var track_index
+	# Idle
+	animation_data["idle"] = animation_data["default_anim_data"].duplicate()
+	animation_data["idle"]["frame_timings"] = [0,0.5]
+	animation_data["idle"]["sprite_frames"] = [idle_frames[0], idle_frames[1]]
+	animation_data["idle"]["trail_left_positions"] = [Vector2(0.5, -2.5), Vector2(0.5, -3.5)]
+	animation_data["idle"]["trail_right_positions"] = [Vector2(2.5, -2.5), Vector2(2.5, -3.5)]
+	# Run
+	animation_data["run"] = animation_data["default_anim_data"].duplicate()
+	animation_data["run"]["sprite_frames"] = [run_frames[0], run_frames[1]]
+	animation_data["run"]["trail_left_positions"] = [Vector2(0.5,-2.5), Vector2(0.5,-1.5)]
+	animation_data["run"]["trail_right_positions"] = [Vector2(2.5,-2.5), Vector2(2.5,-1.5)]
+	# Run left
+	animation_data["run_left"] = animation_data["run"].duplicate()
+	animation_data["run_left"]["trail_left_positions"] = [Vector2(-0.5,-2.5), Vector2(-0.5,-1.5)]
+	animation_data["run_left"]["trail_right_positions"] = [Vector2(-2.5,-2.5), Vector2(-2.5,-1.5)]
+	# Jump
+	animation_data["jump"] = animation_data["default_anim_data"].duplicate()
+	animation_data["jump"]["frame_timings"] = [0,0.1]
+	animation_data["jump"]["sprite_frames"] = [jump_frames[0],jump_frames[1]]
+	animation_data["jump"]["sprite_positions"] = [Vector2(0, 9), Vector2(0, 7)]
+	animation_data["jump"]["trail_left_positions"] = [Vector2(-1.5,1.5), Vector2(-1.5,-5.5)]
+	animation_data["jump"]["trail_right_positions"] = [Vector2(0.5,1.5), Vector2(0.5,-5.5)]
+	# Jump, but Left
+	animation_data["jump_left"] = animation_data["jump"].duplicate()
+	animation_data["jump_left"]["trail_left_positions"] = [Vector2(-0.5,1.5), Vector2(-0.5,-5.5)]
+	animation_data["jump_left"]["trail_right_positions"] = [Vector2(1.5,1.5), Vector2(1.5,-5.5)]
+	# Fall down
+	animation_data["falldown"] = animation_data["default_anim_data"].duplicate()
+	animation_data["falldown"]["sprite_frames"] = [fall_frames[0],fall_frames[1]]
+	animation_data["falldown"]["trail_left_positions"]  = [Vector2(-1.5,5.5), Vector2(-1.5,5.5)]
+	animation_data["falldown"]["trail_right_positions"]  = [Vector2(0.5,5.5), Vector2(0.5,5.5)]
+	# Fall down, Left
+	animation_data["falldown_left"] = animation_data["falldown"].duplicate()
+	animation_data["falldown_left"]["trail_left_positions"] = [Vector2(-0.5,5.5), Vector2(-0.5,5.5)]
+	animation_data["falldown_left"]["trail_right_positions"] = [Vector2(1.5,5.5), Vector2(1.5,5.5)]
+	# Fall Sideways
+	animation_data["fallsideways"] = animation_data["default_anim_data"].duplicate()
+	animation_data["fallsideways"]["sprite_frames"] = [side_fall_frames[0],side_fall_frames[1]]
+	animation_data["fallsideways"]["trail_left_positions"] = [Vector2(5.5,6.5), Vector2(5.5,6.5)]
+	animation_data["fallsideways"]["trail_right_positions"] = [Vector2(5.5,4.5), Vector2(5.5,4.5)]
+	# Fall Sideways, but Left
+	animation_data["fallsideways_left"] = animation_data["fallsideways"].duplicate()
+	animation_data["fallsideways_left"]["trail_left_positions"] = [Vector2(-5.5,6.5), Vector2(-5.5,6.5)]
+	animation_data["fallsideways_left"]["trail_right_positions"] = [Vector2(-5.5,4.5), Vector2(-5.5,4.5)]
+	# Slide
+	animation_data["slide"] = animation_data["default_anim_data"].duplicate()
+	animation_data["slide"]["sprite_frames"] = [slide_frames[0], slide_frames[1]]
+	animation_data["slide"]["trail_left_positions"] = [Vector2(4.5,3.5), Vector2(4.5,3.5)]
+	animation_data["slide"]["trail_right_positions"] = [Vector2(4.5,5.5), Vector2(4.5,5.5)]
+	# Slide Left
+	animation_data["slide_left"] = animation_data["slide"].duplicate()
+	animation_data["slide_left"]["trail_left_positions"] = [Vector2(-4.5,3.5), Vector2(-4.5,3.5)]
+	animation_data["slide_left"]["trail_right_positions"] = [Vector2(-4.5,5.5), Vector2(-4.5,5.5)]
+	# Death
+	animation_data["death"] = animation_data["default_anim_data"].duplicate()
+	animation_data["death"]["sprite_frames"] = [death_frames[0], death_frames[1]]
+	animation_data["death"]["trail_left_vis"] = false
+	animation_data["death"]["trail_right_vis"] = false
+	# Special
+	animation_data["special"] = animation_data["default_anim_data"].duplicate()
+	animation_data["special"]["frame_timings"] = [0,0.3,0.6]
+	animation_data["special"]["sprite_frames"] = [jump_frames[1], special_frames[0], special_frames[1]]
+	animation_data["special"]["sprite_positions"] = [Vector2(0, 7), Vector2(0, 7), Vector2(0, 7)]
+	animation_data["special"]["trail_left_positions"] = [Vector2(-1.5, -5.5), Vector2(-1.5, -5.5), Vector2(-1.5, -5.5)]
+	animation_data["special"]["trail_right_positions"] = [Vector2(0.5, -2.5), Vector2(0.5, -2.5), Vector2(0.5, -2.5)]
+	# Special Left
+	animation_data["special_left"] = animation_data["special"].duplicate()
+	animation_data["special_left"]["trail_left_positions"] = [Vector2(1.5, -5.5), Vector2(1.5, -5.5), Vector2(1.5, -5.5)]
+	animation_data["special_left"]["trail_right_positions"] = [Vector2(-0.5, -2.5), Vector2(-0.5, -2.5), Vector2(-0.5, -2.5)]
+	# Meteor
+	animation_data["meteor"] = animation_data["default_anim_data"].duplicate()
+	animation_data["meteor"]["frame_timings"] = [0]
+	animation_data["meteor"]["sprite_frames"] = [meteor_sprite]
+	animation_data["meteor"]["sprite_positions"] = [Vector2(0, 9)]
+	animation_data["meteor"]["trail_left_positions"] = [Vector2(-1.5, -1.5)]
+	animation_data["meteor"]["trail_right_positions"] = [Vector2(0.5, -1.5)]
+	animation_data["meteor"]["meteor_spike_vis"] = true
+	# Meteor Left
+	animation_data["meteor_left"] = animation_data["meteor"].duplicate()
+	animation_data["meteor_left"]["trail_left_positions"] = [Vector2(1.5, -1.5)]
+	animation_data["meteor_left"]["trail_right_positions"] = [Vector2(-0.5, -1.5)]
+	# Squat
+	animation_data["squat"] = animation_data["default_anim_data"].duplicate()
+	animation_data["squat"]["frame_timings"] = [0]
+	animation_data["squat"]["sprite_frames"] = [jump_frames[0]]
+	animation_data["squat"]["sprite_positions"] = [Vector2(0, 9)]
+	animation_data["squat"]["trail_left_positions"] = [Vector2(-1.5, 1.5)]
+	animation_data["squat"]["trail_right_positions"] = [Vector2(0.5,1.5)]
+	# Squat Left
+	animation_data["squat_left"] = animation_data["squat"].duplicate()
+	animation_data["squat_left"]["trail_left_positions"] = [Vector2(1.5, 1.5)]
+	animation_data["squat_left"]["trail_right_positions"] = [Vector2(-0.5,1.5)]
+	# Stretch
+	animation_data["stretch"] = animation_data["default_anim_data"].duplicate()
+	animation_data["stretch"]["frame_timings"] = [0]
+	animation_data["stretch"]["sprite_frames"] = [jump_frames[1]]
+	animation_data["stretch"]["sprite_positions"] = [Vector2(0, 6)]
+	animation_data["stretch"]["trail_left_positions"] = [Vector2(-1.5,-6.5)]
+	animation_data["stretch"]["trail_right_positions"] = [Vector2(0.5,-6.5)]
+	# Stretch Left
+	animation_data["stretch_left"] = animation_data["stretch"].duplicate()
+	animation_data["stretch_left"]["trail_left_positions"] = [Vector2(1.5, -6.5)]
+	animation_data["stretch_left"]["trail_right_positions"] = [Vector2(-0.5,-6.5)]
+	# Cast
+	animation_data["cast"] = animation_data["default_anim_data"].duplicate()
+	animation_data["cast"]["frame_timings"] = [0]
+	animation_data["cast"]["sprite_frames"] = [special_frames[0]]
+	animation_data["cast"]["trail_left_positions"] = [Vector2(-1.5,-5.5)]
+	animation_data["cast"]["trail_right_positions"] = [Vector2(0.5,-5.5)]
+	# Cast Left
+	animation_data["cast_left"] = animation_data["cast"].duplicate()
+	animation_data["cast_left"]["trail_left_positions"] = [Vector2(1.5, -5.5)]
+	animation_data["cast_left"]["trail_right_positions"] = [Vector2(-0.5,-5.5)]
+	for animation in animation_data.keys(): #idle, et al
+		print(animation)
+		if animation == "default_anim_data":
+			continue
+		anim = player.get_animation(animation) #get_animation("idle")
+		var number_of_frames = animation_data[animation]["frame_timings"].size() #scoop number of frames
+		#frame_timings - 			for each for # of frames; involved in everything else's timing
+		#sprite_frames - 			Sprite:frame
+		track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE) # How many frames are there?
+		for frame in number_of_frames: # Iterate over each frame presented in the animation data
+			anim.track_insert_key(track_index, animation_data[animation]["frame_timings"][frame], animation_data[animation]["sprite_frames"][frame])
+		#sprite_positions - 		Sprite:position
+		track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		for frame in number_of_frames: # Iterate over each frame presented in the animation data
+			anim.track_insert_key(track_index, animation_data[animation]["frame_timings"][frame], animation_data[animation]["sprite_positions"][frame])
+		#trail_left_vis - 			TrailLeft:visible
+		track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
+		anim.track_insert_key(track_index, 0, animation_data[animation]["trail_left_vis"])
+		#trail_left_positions -		TrailLeft:position
+		track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		for frame in number_of_frames: # Iterate over each frame presented in the animation data
+			anim.track_insert_key(track_index, animation_data[animation]["frame_timings"][frame], animation_data[animation]["trail_left_positions"][frame])
+		#trail_right_vis - 			TrailRight:visible
+		track_index = anim.find_track("TrailRight:visible", Animation.TYPE_VALUE)
+		anim.track_insert_key(track_index, 0, animation_data[animation]["trail_right_vis"])
+		#trail_right_positions -	TrailRight:position
+		track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		for frame in number_of_frames: # Iterate over each frame presented in the animation data
+			anim.track_insert_key(track_index, animation_data[animation]["frame_timings"][frame], animation_data[animation]["trail_right_positions"][frame])
+		#meteor_spike_vis - 		MeteorSpike:visible
+		track_index = anim.find_track("MeteorSpike:visible", Animation.TYPE_VALUE)
+		anim.track_insert_key(track_index, 0, animation_data[animation]["meteor_spike_vis"])
+		#meteor_spike_sprite - 		MeteorSpike:frame
+		track_index = anim.find_track("MeteorSpike:frame", Animation.TYPE_VALUE)
+		for frame in number_of_frames: # Iterate over each frame presented in the animation data
+			anim.track_insert_key(track_index, 0, animation_data[animation]["meteor_spike_sprite"])
 
 func default_vis(anim) -> Animation:
 	var trailleftvis_track_index = anim.find_track("TrailLeft:visible", Animation.TYPE_VALUE)
@@ -177,22 +351,22 @@ func idle_animation() -> void:
 	if anim: # Check if the animation exists
 		# Get the specific track for the sprite frame and collision shape size
 		anim = default_vis(anim)
-		var sprite_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
-		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			anim.track_insert_key(sprite_track_index, 0.00, idle_frames[0]) # Frame 0 at 0 seconds
-			anim.track_insert_key(sprite_track_index, 0.5, idle_frames[1]) # Frame 1 at 0.5 seconds
-		var spritepos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
-		if spritepos_track_index != -1:
-			anim.track_insert_key(spritepos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
-			anim.track_insert_key(spritepos_track_index, 0.5, Vector2(0,7)) # Frame 1 at 0.5 seconds
-		var trailleft_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
-		if trailleft_track_index != -1:
-			anim.track_insert_key(trailleft_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
-			anim.track_insert_key(trailleft_track_index, 0.5, Vector2(0.5,-3.5)) # Frame 1 at 0.5 seconds
-		var trailright_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
-		if trailright_track_index != -1:
-			anim.track_insert_key(trailright_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
-			anim.track_insert_key(trailright_track_index, 0.5, Vector2(2.5,-3.5)) # Frame 1 at 0.5 seconds
+		var sprite_frame_track_index = anim.find_track("Sprite:frame", Animation.TYPE_VALUE)
+		if sprite_frame_track_index != -1: # Modify the tracks or insert keyframes, if necessary
+			anim.track_insert_key(sprite_frame_track_index, 0.00, idle_frames[0]) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_frame_track_index, 0.5, idle_frames[1]) # Frame 1 at 0.5 seconds
+		var sprite_pos_track_index = anim.find_track("Sprite:position", Animation.TYPE_VALUE)
+		if sprite_pos_track_index != -1:
+			anim.track_insert_key(sprite_pos_track_index, 0.00, Vector2(0,7)) # Frame 0 at 0 seconds
+			anim.track_insert_key(sprite_pos_track_index, 0.5, Vector2(0,7)) # Frame 1 at 0.5 seconds
+		var trailleft_pos_track_index = anim.find_track("TrailLeft:position", Animation.TYPE_VALUE)
+		if trailleft_pos_track_index != -1:
+			anim.track_insert_key(trailleft_pos_track_index, 0.00, Vector2(0.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailleft_pos_track_index, 0.5, Vector2(0.5,-3.5)) # Frame 1 at 0.5 seconds
+		var trailright_pos_track_index = anim.find_track("TrailRight:position", Animation.TYPE_VALUE)
+		if trailright_pos_track_index != -1:
+			anim.track_insert_key(trailright_pos_track_index, 0.00, Vector2(2.5,-2.5)) # Frame 0 at 0 seconds
+			anim.track_insert_key(trailright_pos_track_index, 0.5, Vector2(2.5,-3.5)) # Frame 1 at 0.5 seconds
 
 func run_animation() -> void:
 	#NOTE: .4 second length, half-periodicity
@@ -477,8 +651,6 @@ func cast_animation() -> void:
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = player_color
-	#var data_node
-	#var player_data =
 	match player_color:
 		"Blue":
 			ui_layer = blue_ui
@@ -510,6 +682,10 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			ui_sprite = orange_ui_sprite
 			build_hot(self)
 			build_frames()
+	construct_animations()
+	#manual_animations_construction()
+
+func manual_animations_construction():
 	idle_animation()
 	run_animation()
 	jump_animation()
