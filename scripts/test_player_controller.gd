@@ -2,20 +2,40 @@ extends CharacterBody2D
 
 #######################################################################################################################################################
 ## DECLARATIONS
-@export var player_color: String = "Purple" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+# User settings on Player
+@export var player_color: String = "Orange" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+var player_index: int = 0 # Player 1's script gets device 0, required for player_aim() in input_handling()
+var player_setting_deadzone: float = 0.25 # Player-tuned arcade-style on/off stick's deadzone
+# Admin settings on Player
+var hp: int = 3 # Players spawn in with 3 HP, die after 3 hits.
+var goals: int = 0 # Player goals, for UI & game score
+var kills: int = 0 # Player Kills, for UI & bragging rights
+var deaths: int = 0 # Player Deaths, for UI & shame
+var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
+var jump_speed: float = -400.0 # 400 is a little too high for the maps. 300 feels good. player_jump()
+var meteor_speed: int = 800 # 2x jump speed
+var slide_speed: int = 400 # Twice as fast as the old run value, player_slide()
+var push_force: float = 200.0 # This represents the player's inertia, physics_collisions()
+var meteor_force: float = 1000.0 # This represents player inertia when meteor-striking
+var near_range: Vector2 = Vector2( 37 , 25 ) # Nearness range in x and y for the ground, is_ball_near() & player_jump()
+var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
+var pinch_threshold: int = 900 # Lower threshold of delta v to trigger pinch state in _physics_collisions()
+var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in _physics_collisions()
 # Scenes/Resources
 @onready var player_attack_scene = preload("res://scenes/player_attack.tscn") # preload the player attack scene for instantiation later.
 @onready var player_missile_scene = preload("res://scenes/player_missile.tscn") # preload the player missile scene for instantiation later.
 @onready var player_block_scene = preload("res://scenes/player_block.tscn") # preload the player block scene for instantiation later.
-@onready var red_gradient = preload("res://resources/red_gradient.tres")
-@onready var cyan_gradient = preload("res://resources/cyan_gradient.tres")
+@onready var player_platform_scene = preload("res://scenes/player_platform.tscn") # preload the player platform scene for instantiation later.
+@onready var red_gradient = preload("res://resources/red_gradient.tres") # preload the player eye trail gradient resource for assignment later.
+@onready var cyan_gradient = preload("res://resources/cyan_gradient.tres") # preload the player eye trail gradient resource for assignment later.
 # Nodes
 @onready var sprite: Sprite2D = $Sprite # Sprite, player_movement()
 @onready var player: AnimationPlayer = $AnimationPlayer # What it says on the can, player_movement() & player_jump() $ etc.
 @onready var raycast:RayCast2D = $TremorSense # Ball detector, used in physics_collisions()
 @onready var attack_cooldown = $AttackCooldown # Keeps from spamming attacks too bad.
-@onready var reticle: Sprite2D = $AimReticle # Gotta aim somehow
-@onready var magic_layer: Node2D = %MagicLayer
+@onready var cast_anim_timer = $CastAnimationTimer # Let's Cast animation play out used in input_handling() and state_machine()
+@onready var reticle: Sprite2D = $AimReticle # Gotta aim somehow. player_aim(). Sprite object
+@onready var magic_layer: Node2D = %MagicLayer # Magic home layer, for the sake of having somewhere objective to put them all
 @onready var blue_ui: Node2D = %BlueUI
 @onready var blue_ui_sprite: Sprite2D = blue_ui.get_node("PlayerSprite")
 @onready var green_ui: Node2D = %GreenUI
@@ -30,22 +50,9 @@ extends CharacterBody2D
 @onready var orange_ui_sprite: Sprite2D = orange_ui.get_node("PlayerSprite")
 @onready var trail_left: Trails = $TrailLeft
 @onready var trail_right: Trails = $TrailRight
-# Exports
-@export var hp: int = 3 # Players spawn in with 3 HP.
-@export var goals: int = 0
-@export var kills: int = 0
-@export var deaths: int = 0
-@export var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
-@export var jump_speed: int = -400 # 400 is a little too high for the maps. 300 feels good. player_jump()
-@export var meteor_speed: int = 800 # 2x jump speed
-@export var slide_speed: int = 400 # Twice as fast as the old run value, player_slide()
-@export var push_force: float = 200.0 # This represents the player's inertia, physics_collisions()
-@export var meteor_force: float = 1000.0 # This represents player inertia when meteor-striking
-@export var near_range: Vector2 = Vector2( 37 , 25 ) # Nearness range in x and y for the ground, is_ball_near() & player_jump()
-@export var far_range: Vector2 = Vector2( 40 , 35 ) # Nearness range in x and y for the air, is_ball_near() & player_jump()
-@export var pinch_threshold: int = 900 # Lower threshold of delta v to trigger pinch state in _physics_collisions()
-@export var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in _physics_collisions()
-# Local
+# Misc
+enum State {IDLE, SQUAT, STRETCH, DEATH, SPECIAL, RUN, RUN_LEFT, ASCEND, ASCEND_LEFT, JUMP, JUMP_LEFT, FALL, FALL_LEFT, FALLSIDE, FALLSIDE_LEFT, SLIDE, SLIDE_LEFT, METEOR, METEOR_LEFT, ATTACK, ATTACK_LEFT, MISSILE, MISSILE_LEFT, BLOCK, BLOCK_LEFT, PLATFORM, PLATFORM_LEFT, CASTING, CASTING_LEFT}
+var current_state: State
 var ui_layer: Node2D
 var ui_sprite: Sprite2D
 var collision: KinematicCollision2D # Used in physics_collisions()
@@ -55,7 +62,8 @@ var gravity: int = ProjectSettings.get_setting("physics/2d/default_gravity") # g
 var ball_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var player_position: Vector2 = Vector2.ZERO # For nearness, is_ball_near() & player_jump()
 var from_meteor: bool = false # Status flag for preventing automatically triggering player_slide after hitting ground from player_meteor()
-var anim_name: String
+var last_facing: String # Flag to maintain correct idle directionality after ceasing input Assigned in construct_X_team(), used in state_machine() and sprite_flip()
+var anim_name: String # Used in animation construction
 var anim: Animation
 # Sprite Frame Data
 var player_start = {"Blue": 0, "Green": 24, "Purple": 48, "Red": 72, "Yellow": 96, "Orange": 120}
@@ -95,24 +103,72 @@ var animation_data: Dictionary = {
 			"meteor_spike_sprite": meteor_spike
 		}}
 # Input
-var left_right: float = 0 # Control Input, player_movement()
-var aim_left_right: float = 0 # Control Input, player_aim()
-var aim_up_down: float = 0 # Control Input, player_aim()
-var aim_direction: float = 0 # Control Input, player_aim()
+var move_left_right: float = 0 # Used by input_handling(); Player input variable
+var move_up_down: float = 0 # Used by input_handling(); Player input variable
+var aim_left_right: float = 0 # Used by input_handling, player_is_aiming(), player_aim(), player_missile()
+var aim_up_down: float = 0 # Used by input_handling, player_is_aiming(), player_aim(), player_missile()
+var aim_direction: float = 0 # Used by player_aim(); Trigonometry for missile casting
+var input_jump: bool = false # Used by input_handling(); Player input variable
+var input_jump_hold: bool = false # Used by input_handling(); Player input variable
+var input_jump_released: bool = false # Used by input_handling(); Player input variable
+var input_attack: bool = false # Used by input_handling(); Player input variable
+var input_block: bool = false # Used by input_handling(); Player input variable
+var input_special: bool = false # Used by input_handling(); Player input variable
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
-func is_slide() -> bool: # Called by player_jumps(), variable_force()
+func is_slide() -> bool: # Called by player_jump(), variable_force() #TODO Needs rework, dupliactive
 	return is_on_floor() and Input.is_action_pressed("player1_down") and not from_meteor
 
-func is_ball_near() -> bool: # Called from player_jump()
+func get_state_directionality(action: State) -> State: #Called by input_handling(); Checks left/right, returns correct state
+	if last_facing == "left": # If pointed left
+		match action:
+			State.RUN: return State.RUN_LEFT
+			State.ASCEND: return State.ASCEND_LEFT
+			State.JUMP: return State.JUMP_LEFT
+			State.FALL: return State.FALL_LEFT
+			State.FALLSIDE: return State.FALLSIDE_LEFT
+			State.SLIDE: return State.SLIDE_LEFT
+			State.METEOR: return State.METEOR_LEFT
+			State.ATTACK: return State.ATTACK_LEFT
+			State.MISSILE: return State.MISSILE_LEFT
+			State.BLOCK: return State.BLOCK_LEFT
+			State.PLATFORM: return State.PLATFORM_LEFT
+			State.CASTING: return State.CASTING_LEFT
+			State.IDLE: return State.IDLE
+			State.DEATH: return State.DEATH
+			State.SPECIAL: return State.SPECIAL
+			State.SQUAT: return State.SQUAT
+			State.STRETCH: return State.STRETCH
+	return action
+
+func player_is_aiming(): #Called by input_handling, player_aim(); Input detector for aim reticle, melee/missile casting
+	return not (abs(aim_left_right) < 0.25 and abs(aim_up_down) < 0.25)
+
+func is_ball_near() -> bool: # Called from player_jump(); Ball radar for 'ball-possession' in air
 	ball_position = %Ball.position #Get ball position from transform
 	player_position = self.position #Get self position from transform
 	if is_on_floor():
 		return abs(ball_position.x - player_position.x) < near_range.x and abs(ball_position.y - player_position.y) < near_range.y # If player and ball are within near_range of each other in x and y, return true
 	return abs(ball_position.x - player_position.x) < far_range.x and abs(ball_position.y - player_position.y) < far_range.y
 
-func variable_gravity() -> float: # Game feel method. called by player_movement()
+func is_on_top_of_ball() -> bool: # called by physics_collisions(); we don't want to pinch due to gravity
+	if raycast.is_colliding(): # what is says on the can - is it touching anything?
+		#print("RayCast hit the ball!") # Logs
+		return raycast.get_collider().is_in_group("balls")
+	return false # false if not
+
+func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _physics_process(); required for proper sliding mechanics
+	if raycast.is_colliding(): # what is says on the can - is it touching anything?
+		collider = raycast.get_collider()  # Get the collider object
+		if collider and collider.is_in_group("ramps"):  # Check if the collider exists and is in the 'ramps' group
+			return true  # Return true if the collider is in the 'ramps' group
+	return false #false if not
+
+func is_in_air() -> bool:
+	return not is_on_floor() and not is_on_ramp()
+
+func variable_gravity() -> float: # called by player_movement(); Game feel.
 	if velocity.y > 0: # If we're falling
 		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
@@ -121,7 +177,7 @@ func variable_gravity() -> float: # Game feel method. called by player_movement(
 		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
-func variable_force() -> float: # How hard we punch the ball, called by physics_collisions() controller.
+func variable_force() -> float: # called by physics_collisions() controller; How hard we punch the ball.
 	if from_meteor == true: # If we're down+A,
 		return meteor_force # hit the ball extra hard @ 1000
 	elif is_slide() and Input.is_action_pressed("player1_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
@@ -129,38 +185,60 @@ func variable_force() -> float: # How hard we punch the ball, called by physics_
 	else: # If we're just running
 		return push_force # 200
 
-func is_on_top_of_ball() -> bool: # called by physics_collisions()
-	if raycast.is_colliding(): # what is says on the can - is it touching anything?
-		#print("RayCast hit the ball!") # Logs
-		return raycast.get_collider().is_in_group("balls")
-	return false # false if not
-
-func is_on_ramp() -> bool: # called by player_slide(), variable_gravity(), _physics_process()
-	if raycast.is_colliding(): # what is says on the can - is it touching anything?
-		collider = raycast.get_collider()  # Get the collider object
-		if collider and collider.is_in_group("ramps"):  # Check if the collider exists and is in the 'ramps' group
-			return true  # Return true if the collider is in the 'ramps' group
-	return false #false if not
-
 #######################################################################################################################################################
-## CONSTRUCTORS
-func build_cold(object) -> void:
+## INIT
+func _ready() -> void: # Called when the node enters the scene tree for the first time.
+	construct_player() # Calls construct_cold/hot_team, as required
+	construct_animations() # builds sprite, animation data
+	current_state = State.IDLE # Initialize the state as idle
+
+func construct_player() -> void: # Called by ready(); Dynanmic-player assignment set up.
+	self.name = player_color
+	match player_color:
+		"Blue":
+			ui_layer = blue_ui
+			ui_sprite = blue_ui_sprite
+			construct_cold_team(self)
+		"Green":
+			ui_layer = green_ui
+			ui_sprite = green_ui_sprite
+			construct_cold_team(self)
+		"Purple":
+			ui_layer = purple_ui
+			ui_sprite = purple_ui_sprite
+			construct_cold_team(self)
+		"Red":
+			ui_layer = red_ui
+			ui_sprite = red_ui_sprite
+			construct_hot_team(self)
+		"Yellow":
+			ui_layer = yellow_ui
+			ui_sprite = yellow_ui_sprite
+			construct_hot_team(self)
+		"Orange":
+			ui_layer = orange_ui
+			ui_sprite = orange_ui_sprite
+			construct_hot_team(self)
+
+func construct_cold_team(object) -> void: # Called by construct_player(); continuing player assignments, but for team-relations.
 	object.add_to_group("ColdTeam") # for easier get_collisions() logic later
 	object.collision_layer |= 1 << 9 # Exist on Cold Team collision layer
 	object.collision_mask |= 1 << 13 # Collide with Hot Team layer
 	if object == self:
 		trail_left.gradient = red_gradient
 		trail_right.gradient = red_gradient
+		last_facing = "right"
 
-func build_hot(object) -> void:
+func construct_hot_team(object) -> void: # Called by construct_player(); continuing player assignments, but for team-relations.
 	object.add_to_group("HotTeam") # for easier get_collisions() logic later
 	object.collision_layer |= 1 << 13 # Exist on Hot Team collision layer
 	object.collision_mask |= 1 << 9 # Collide with Cold Team layer
 	if object == self:
 		trail_left.gradient = cyan_gradient
 		trail_right.gradient = cyan_gradient
+		last_facing = "left"
 
-func construct_animations() -> void:
+func construct_animations() -> void: # Called by ready(); Dynamic-player assignment means Dynamic Animations. (Unfortunately, this was a slog.)
 	# Sprites, per color
 	idle_frames = idle_frames.map(func(x): return x + player_start[player_color])
 	run_frames = run_frames.map(func(x): return x + player_start[player_color])
@@ -243,10 +321,6 @@ func construct_animations() -> void:
 	animation_data["special"]["sprite_positions"] = [Vector2(0, 7), Vector2(0, 7), Vector2(0, 7)]
 	animation_data["special"]["trail_left_positions"] = [Vector2(-1.5, -5.5), Vector2(-1.5, -5.5), Vector2(-1.5, -5.5)]
 	animation_data["special"]["trail_right_positions"] = [Vector2(0.5, -2.5), Vector2(0.5, -2.5), Vector2(0.5, -2.5)]
-	# Special Left
-	animation_data["special_left"] = animation_data["special"].duplicate()
-	animation_data["special_left"]["trail_left_positions"] = [Vector2(1.5, -5.5), Vector2(1.5, -5.5), Vector2(1.5, -5.5)]
-	animation_data["special_left"]["trail_right_positions"] = [Vector2(-0.5, -2.5), Vector2(-0.5, -2.5), Vector2(-0.5, -2.5)]
 	# Meteor
 	animation_data["meteor"] = animation_data["default_anim_data"].duplicate()
 	animation_data["meteor"]["frame_timings"] = [0]
@@ -266,10 +340,6 @@ func construct_animations() -> void:
 	animation_data["squat"]["sprite_positions"] = [Vector2(0, 9)]
 	animation_data["squat"]["trail_left_positions"] = [Vector2(-1.5, 1.5)]
 	animation_data["squat"]["trail_right_positions"] = [Vector2(0.5,1.5)]
-	# Squat Left
-	animation_data["squat_left"] = animation_data["squat"].duplicate()
-	animation_data["squat_left"]["trail_left_positions"] = [Vector2(1.5, 1.5)]
-	animation_data["squat_left"]["trail_right_positions"] = [Vector2(-0.5,1.5)]
 	# Stretch
 	animation_data["stretch"] = animation_data["default_anim_data"].duplicate()
 	animation_data["stretch"]["frame_timings"] = [0]
@@ -277,10 +347,6 @@ func construct_animations() -> void:
 	animation_data["stretch"]["sprite_positions"] = [Vector2(0, 6)]
 	animation_data["stretch"]["trail_left_positions"] = [Vector2(-1.5,-6.5)]
 	animation_data["stretch"]["trail_right_positions"] = [Vector2(0.5,-6.5)]
-	# Stretch Left
-	animation_data["stretch_left"] = animation_data["stretch"].duplicate()
-	animation_data["stretch_left"]["trail_left_positions"] = [Vector2(1.5, -6.5)]
-	animation_data["stretch_left"]["trail_right_positions"] = [Vector2(-0.5,-6.5)]
 	# Cast
 	animation_data["cast"] = animation_data["default_anim_data"].duplicate()
 	animation_data["cast"]["frame_timings"] = [0]
@@ -293,7 +359,6 @@ func construct_animations() -> void:
 	animation_data["cast_left"]["trail_right_positions"] = [Vector2(-0.5,-5.5)]
 	var track_index # Place holder var for track-objects we'll use a bunch here.
 	for animation in animation_data.keys(): #idle, et al
-		print(animation)
 		if animation == "default_anim_data":
 			continue
 		anim = player.get_animation(animation) #get_animation("idle")
@@ -331,86 +396,214 @@ func construct_animations() -> void:
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
-func _ready() -> void: # Called when the node enters the scene tree for the first time.
-	self.name = player_color
-	match player_color:
-		"Blue":
-			ui_layer = blue_ui
-			ui_sprite = blue_ui_sprite
-			build_cold(self)
-		"Green":
-			ui_layer = green_ui
-			ui_sprite = green_ui_sprite
-			build_cold(self)
-		"Purple":
-			ui_layer = purple_ui
-			ui_sprite = purple_ui_sprite
-			build_cold(self)
-		"Red":
-			ui_layer = red_ui
-			ui_sprite = red_ui_sprite
-			build_hot(self)
-		"Yellow":
-			ui_layer = yellow_ui
-			ui_sprite = yellow_ui_sprite
-			build_hot(self)
-		"Orange":
-			ui_layer = orange_ui
-			ui_sprite = orange_ui_sprite
-			build_hot(self)
-	construct_animations()
-
-func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame. Separate thread from _physics_process()
-	if Input.is_action_just_released("player1_jump") and velocity.y < 0: # If we let go of jump
-		velocity.y = jump_speed / 4 # Let gravity overtake us faster, by shrinking upward velocity, pulling us to the earth sooner.
-	update_ui()
-
 func _physics_process(delta: float) -> void: # Called every frame. We're gonna collect input and execute control-functions here. Separate thread from _process().
-	left_right = Input.get_axis("player1_left", "player1_right") # Joystick; -1 for left, 1 for right, passing to player_movement() and animation_controller()
-	player_movement(delta) # Left/right/idle
-	aim_left_right = Input.get_joy_axis(0,JOY_AXIS_RIGHT_X) # Right Joystick X
-	aim_up_down = Input.get_joy_axis(0,JOY_AXIS_RIGHT_Y) # Right Joystick X
-	player_aim(delta)
-	if Input.is_action_just_pressed("player1_jump"): # what it says on the can
-		player_jump(delta) # Execute jump
-	if Input.is_action_pressed("player1_jump") and Input.is_action_pressed("player1_down"): # This is a slide
-		if is_on_floor() or is_on_ramp(): #Places we're allowed to slide
-			player_slide(delta) # Execute jump
-		else: # if we're not on the floor or a ramp, we're in the air
-			player_meteor(delta) # METEOR TIME
-	if Input.is_action_just_released("player1_jump"): # This catch is to prevent auto-slide after a meteor. Gotta release jump to slide again (except on ramps).
-		from_meteor = false #Reset our flag
-		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
-	if Input.is_action_just_pressed("player1_attack") and abs(aim_left_right) < 0.25 and abs(aim_up_down) < 0.25:
-		player_attack(delta)
-	if Input.is_action_just_pressed("player1_attack") and abs(aim_left_right) >= 0.25 and abs(aim_up_down) >= 0.25:
-		#player_missile() TODO
-		pass
-	if Input.is_action_just_pressed("player1_block") and is_on_floor():
-		player_block(delta)
-	if Input.is_action_just_pressed("player1_special"):
-		player_special(delta)
-	animation_controller() # Change Animations
+	update_ui()
+	# Gravity and variable jump
+	velocity.y += variable_gravity() * delta # apply variable gravity to character, depending on whether falling
+	input_handling(delta)
+	state_machine()
 	move_and_slide() # Execute movement accumulated above
 	physics_collisions() # React to Physics, as per the movement.
 
+func input_handling(delta: float) -> void:
+	# Gathering input data
+	move_left_right = Input.get_axis("player1_left", "player1_right") # D-pad & L-stick X axis
+	move_up_down = Input.get_axis( "player1_down", "player1_up") # D-pad & L-stick Y axis
+	aim_left_right = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_X) # Right Joystick X
+	aim_up_down = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_Y) # Right Joystick Y
+	input_jump = Input.is_action_just_pressed("player1_jump") # A button pulse - for jumps
+	input_jump_hold = Input.is_action_pressed("player1_jump") # A button hold - for slides and meteors
+	input_jump_released = Input.is_action_just_released("player1_jump") # A button release - for variable jump height, resetting after meteor
+	input_attack = Input.is_action_just_pressed("player1_attack") # X Button
+	var input_attack_hold = Input.is_action_pressed("player1_attack") # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_block = Input.is_action_just_pressed("player1_block") # B button
+	var input_block_hold = Input.is_action_pressed("player1_block") # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_special = Input.is_action_just_pressed("player1_special") # Y button
+
+	# This is to establish last facing direction, so when we stop facing left, we can auto-slide that direction instead of defaulting to slide right.
+	if move_left_right > 0:
+		last_facing = "right"
+	elif move_left_right < 0:
+		last_facing = "left"
+
+	# Player movement and aim
+	player_movement(delta) # We want the player to move regardless of state
+	player_aim() # We want the player to aim, regardless of state
+
+	# On-ground States
+	if abs(move_left_right) > player_setting_deadzone and not is_in_air() and cast_anim_timer.is_stopped(): # Pressed left/right on floor, w/ 25% deadzone TODO: Should probably be a player setting
+		current_state = get_state_directionality(State.RUN)
+	else: # We're in the Dead Zone, check for up/down, if none revert to idle
+		if move_up_down < -player_setting_deadzone: # Pressed Down
+			current_state = get_state_directionality(State.SQUAT)
+		elif move_up_down > player_setting_deadzone: # Pressed Up
+			current_state = get_state_directionality(State.STRETCH)
+		else: # Then we're directionally idle. Later if/thens will overwrite this with other states, and is expected/desired.
+			current_state = get_state_directionality(State.IDLE)
+
+	# In-air States
+	if velocity.y >= 0 and not is_on_floor(): # That's falling, because Godot is silly on Y axis
+		if abs(move_left_right) > player_setting_deadzone:
+			current_state = get_state_directionality(State.FALLSIDE)
+		else:
+			current_state = get_state_directionality(State.FALL)
+	elif velocity.y < 0 and not is_on_floor():
+		current_state = get_state_directionality(State.ASCEND)
+
+	# A Button
+	if input_jump: # Pressed A, and NOT-Down
+		current_state = get_state_directionality(State.JUMP)
+	if input_jump_hold and move_up_down <= -player_setting_deadzone: # Pressed A + Down
+		if is_on_floor() or is_on_ramp(): # Is on ground or ramp?
+			current_state = get_state_directionality(State.SLIDE) # Then slide, stupid
+			if from_meteor: # We need to screen for this here now and vent to IDLE when from meteor.
+				current_state = get_state_directionality(State.IDLE)
+		else: #We're in the air, pressing Down+A. METEOR TIME
+			current_state = get_state_directionality(State.METEOR) # LINK! LINK! LINK! LINK! LINK!
+	if input_jump_released: # Player let go of A
+		from_meteor = false # Reset our flag
+		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
+		if velocity.y < 0: # We've released jump, and are still ascending
+			velocity.y = jump_speed / 4 # Quarter our upward velocity, fall faster.
+
+	# X Button - Attack/Missile
+	if input_attack and not player_is_aiming():
+		current_state = get_state_directionality(State.ATTACK) # NOTE CAST animation & player_attack()
+	elif input_attack and player_is_aiming():
+		current_state = get_state_directionality(State.MISSILE) # NOTE CAST animation & player_missile()
+
+	# B Button - Block/Platform
+	if input_block and is_on_floor():
+		current_state = get_state_directionality(State.BLOCK) # NOTE CAST animation & player_block()
+	elif input_block and not is_on_floor():
+		current_state = get_state_directionality(State.PLATFORM) # NOTE CAST animation & player_platform() TODO
+
+	# Casting - Either X or B Buttons
+	if not cast_anim_timer.is_stopped():
+		current_state = get_state_directionality(State.CASTING)
+
+	# Y Button - Special TODO: Needs implementation
+	if input_special:
+		current_state = get_state_directionality(State.SPECIAL)
+
+	# Death
+	if hp <= 0:
+		current_state = get_state_directionality(State.DEATH)
+
+func state_machine() -> void:
+	match current_state:
+		State.IDLE:
+			sprite_flip(last_facing)
+			player.play("idle")
+		State.SQUAT:
+			player.play("squat")
+		State.STRETCH:
+			player.play("stretch")
+		State.DEATH:
+			player.play("death")
+			player_death()
+		State.SPECIAL:
+			sprite_flip("right")
+			player.play("special")
+			player_special()
+		State.RUN:
+			sprite_flip("right")
+			player.play("run")
+		State.RUN_LEFT:
+			sprite_flip("left")
+			player.play("run_left")
+		State.ASCEND:
+			sprite_flip("right")
+			player.play("jump")
+		State.ASCEND_LEFT:
+			sprite_flip("left")
+			player.play("jump_left")
+		State.JUMP:
+			sprite_flip("right")
+			player_jump()
+			player.play("jump")
+		State.JUMP_LEFT:
+			sprite_flip("left")
+			player_jump()
+			player.play("jump_left")
+		State.FALL:
+			sprite_flip("right")
+			player.play("falldown")
+		State.FALL_LEFT:
+			sprite_flip("left")
+			player.play("falldown_left")
+		State.FALLSIDE:
+			sprite_flip("right")
+			player.play("fallsideways")
+		State.FALLSIDE_LEFT:
+			sprite_flip("left")
+			player.play("fallsideways_left")
+		State.SLIDE:
+			sprite_flip("right")
+			player_slide()
+			player.play("slide")
+		State.SLIDE_LEFT:
+			sprite_flip("left")
+			player_slide()
+			player.play("slide_left")
+		State.METEOR:
+			sprite_flip("right")
+			player_meteor()
+			player.play("meteor")
+		State.METEOR_LEFT:
+			sprite_flip("left")
+			player_meteor()
+			player.play("meteor_left")
+		State.ATTACK:
+			sprite_flip("right")
+			player_attack()
+			player.play("cast")
+		State.ATTACK_LEFT:
+			sprite_flip("left")
+			player_attack()
+			player.play("cast_left")
+		State.MISSILE:
+			sprite_flip("right")
+			player_missile()
+			player.play("cast")
+		State.MISSILE_LEFT:
+			sprite_flip("left")
+			player_missile()
+			player.play("cast_left")
+		State.BLOCK:
+			sprite_flip("right")
+			player_block()
+			player.play("cast")
+		State.BLOCK_LEFT:
+			sprite_flip("left")
+			player_block()
+			player.play("cast_left")
+		State.PLATFORM:
+			sprite_flip("right")
+			player_platform()
+			player.play("cast")
+		State.PLATFORM_LEFT:
+			sprite_flip("left")
+			player_platform()
+			player.play("cast_left")
+		State.CASTING:
+			player.play("cast")
+		State.CASTING_LEFT:
+			player.play("cast_left")
+
 #######################################################################################################################################################
 ## PLAYER ACTIONS
-func player_movement(delta: float) -> void: # Player Controller, called by _physics_process()
-	velocity.y += variable_gravity() * delta # apply variable gravity to character, depending on whether falling
+func player_movement(_delta: float) -> void: # Called by input_handling(); Player movement
 	#Perform filter for arcade-like on/off controls
-	# LEFT
-	if left_right < -0.25: #Pressed Left, inner 25% deadzone
+	if move_left_right < -0.25: # Pressed Left w/ 25% deadzone
 		velocity.x = -1 * run_speed # Go Left
-	# RIGHT
-	elif left_right > 0.25: #Pressed Right, inner 25% deadzone
+	elif move_left_right > 0.25: # Pressed Right w/ 25% deadzone
 		velocity.x = run_speed # Go Right
-	# IDLE
-	else: #Standing Still
+	else: # 0 input
 		velocity.x = 0 # don't move
 
-func player_aim(delta: float) ->void:
-	if abs(aim_left_right) < 0.25 and abs(aim_up_down) < 0.25:
+func player_aim() ->void: # Called by input_handling(); Player aim
+	if not player_is_aiming():
 		reticle.visible = false
 	else:
 		reticle.visible = true
@@ -418,57 +611,59 @@ func player_aim(delta: float) ->void:
 		reticle = get_node("AimReticle")
 		reticle.frame = reticle_frame
 		reticle.rotation = aim_direction
-		if Input.is_action_just_pressed("player1_attack"):
-			player_missile(delta)
+		if Input.is_action_just_pressed("player1_attack"): # DEPRECATED
+			player_missile() # DEPRECATED
 
-func player_jump(_delta: float) -> void: # Called by player input from _physics_process()
+func player_jump() -> void: # Called by state_machine(); Jump!
 	if !is_slide(): #Make sure we're not sliding
 		velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh*
-		#print("Jump!") # Log
 		if is_ball_near() and !is_on_top_of_ball(): # If ball is in range, but we're not directly on top of it
 			%Ball.linear_velocity.y = 1.1 * jump_speed # Apply upward force to ball
+	var platform_name = "PlayerPlatform_" + player_color # Search for existing platforms with this name
+	for child in magic_layer.get_children(): # Check the magic layer
+		if child.name == platform_name: # If we already one of these spawned,
+			child.free() # Free the existing platform and kill it, because we kill platforms on jump.
 
-func player_slide(_delta: float) -> void:
-	# Without is_slide() here, this creates an air-dash. I think I like this air dash.
-	# But, Airie says she doesn't. I'm going to test it with. And I leave it only commented, if I hate it, rather than remove it.
+func player_slide() -> void: # Called by state_machine(); Megaman slide!
+	var left_right
 	if (is_slide() and is_on_ramp() and from_meteor) or (is_slide() and not from_meteor):
-		if sprite.flip_h == true: # If player is facing left
+		if last_facing == "left": # If player is facing left
 			left_right = -1 # Tune the forces to the left
 		else: # else, we're facing right
 			left_right = 1 # Keep the forces tuned to the right
-		#print("Slide!") # Log
 		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
 
-func player_meteor(_delta: float) -> void: 	# Meteor strike downward
-	#print("Meteor!") # Debug
+func player_meteor() -> void: 	# Called by state_machine(); Meteor strike downwards from the sky!
 	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
 	velocity.y = meteor_speed # Drop really fast; 800
 	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
-func player_attack(_delta: float) -> void: # Called by player input from _physics_process()
+func player_attack() -> void: # Called by state_machine(); Localized magic ball for melee attacks
 	# NOTE: Players do not collide with melee attacks by default - rather, the attack colides with them. This lets players move their melee attack.
-	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
+	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 1 seconds
 		attack_cooldown.start() # Start cooldown timer
+		if cast_anim_timer.is_stopped():
+			cast_anim_timer.start()
 		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
-		var face_direction: int
-		if sprite.flip_h == false: # If the wiz is facing right.
-			face_direction = 1
-		else:
+		var face_direction: int = 1
+		if sprite.flip_h == true: # If the wiz is facing left.
 			face_direction = -1
 		new_attack.global_position = get_global_position() + Vector2(16 * face_direction, 0) # Small offset, makes sure it appears outside the player body, on the correct side.
 		new_attack.set("player_color", player_color) # I hope this works. // It totally worked!
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-			build_cold(new_attack)
+			construct_cold_team(new_attack)
 		else:
-			build_hot(new_attack)
+			construct_hot_team(new_attack)
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
 		var attacksprite = new_attack.get_node("Sprite")
-		attacksprite.flip_h = sprite.flip_h
+		attacksprite.flip_h = sprite.flip_h # Ensure the attack is the same directionality as the player.
 		magic_layer.add_child(new_attack) # Add the new instance as a child of the magic layer node
 
-func player_missile(_delta: float) -> void:
+func player_missile() -> void: # Called by state_machine(); Ranged dart attack
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
 		attack_cooldown.start() # Start cooldown timer
+		if cast_anim_timer.is_stopped():
+			cast_anim_timer.start()
 		var new_missile = player_missile_scene.instantiate() # Instantiate the preloaded scene
 		var projectile_start_pos = global_position + Vector2(cos(aim_direction - PI / 2), sin(aim_direction - PI / 2)) * 24
 		new_missile.global_position = projectile_start_pos # place it in the world
@@ -476,14 +671,16 @@ func player_missile(_delta: float) -> void:
 		new_missile.set("player_color", player_color) # I hope this works. // It totally worked!
 		new_missile.rotation = aim_direction - PI / 2
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-			build_cold(new_missile)
+			construct_cold_team(new_missile)
 		else:
-			build_hot(new_missile)
+			construct_hot_team(new_missile)
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
 		magic_layer.add_child(new_missile) # Add the new instance as a child of the magic layer node
 
-func player_block(_delta: float) -> void: # Called by player input from _physics_process()
+func player_block() -> void: # Called by state_machine(); Localized magic wall for defense #NOTE/FEEDBACK/TODO: It's been suggested to make the block bigger.
 	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
+	if cast_anim_timer.is_stopped():
+		cast_anim_timer.start()
 	var block_name = "PlayerBlock_" + player_color # Search for existing blocks with the same name
 	for child in magic_layer.get_children(): # Check the magic layer
 		if child.name == block_name: # If we already one of these spawned,
@@ -497,14 +694,30 @@ func player_block(_delta: float) -> void: # Called by player input from _physics
 	new_block.global_position = get_global_position() + Vector2(16 * face_direction, 0) # Small offset, makes sure it appears outside the player body, on the correct side.
 	new_block.set("player_color", player_color) # I hope this works. // It totally worked!
 	if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
-		build_cold(new_block)
+		construct_cold_team(new_block)
 	else:
-		build_hot(new_block)
+		construct_hot_team(new_block)
 	magic_layer.add_child(new_block) # Add the new instance as a child of the magic layer node
 
-func player_special(_delta: float) -> void: # TODO Called by player input from _physics_process()
-	print("Special!") # Log
-	player.play("special")
+func player_platform() -> void: #Called by state_machine(); Localized matgic floor for manuvering
+	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
+	if cast_anim_timer.is_stopped():
+		cast_anim_timer.start()
+	var platform_name = "PlayerPlatform_" + player_color # Search for existing blocks with the same name
+	for child in magic_layer.get_children(): # Check the magic layer
+		if child.name == platform_name: # If we already one of these spawned,
+			child.free() # Free the existing block and kill it, so we can make the new one.
+	var new_platform = player_platform_scene.instantiate() # Instantiate the preloaded scene
+	new_platform.global_position = get_global_position() + Vector2(0, 16) # Small offset, makes sure it appears outside the player body, below the player.
+	new_platform.set("player_color", player_color) # I hope this works. // It totally worked!
+	if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
+		construct_cold_team(new_platform)
+	else:
+		construct_hot_team(new_platform)
+	magic_layer.add_child(new_platform) # Add the new instance as a child of the magic layer node
+
+func player_special() -> void: # TODO Called by state_machine(); The Player is spending their 'smash ball' scroll
+	pass
 
 func player_knockback() -> void: # TODO
 	pass
@@ -515,8 +728,8 @@ func player_score() -> void: # TODO
 func player_kill() -> void: # TODO
 	pass
 
-func player_death() -> void: # TODO
-	pass
+func player_death() -> void: # TODO Called by state_machine();
+	player.play("death")
 
 #######################################################################################################################################################
 ## CONTROLLERS
@@ -527,6 +740,10 @@ func update_ui() -> void: # called from _process()
 	ui_layer.set("deaths", deaths)
 	var current_frame = sprite.frame
 	ui_sprite.frame = current_frame
+	if last_facing == "left":
+		ui_sprite.flip_h = true
+	else:
+		ui_sprite.flip_h = false
 
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()
@@ -549,43 +766,10 @@ func physics_collisions() -> void: # Called from _physics_process()
 			else:
 				collider.apply_central_impulse(-normal * variable_force()) # Apply impulse forces to the ball in the appropriate direction
 
-func animation_controller() -> void: # called by _physics_process(), left_right = input direction
-	if is_on_floor(): # what it says on the can
-		sprite.flip_v = false
-		sprite.rotation = 0
-		if left_right >= -0.25 and left_right <= 0.25: # no horizontal input exceeding deadzone
-			if Input.is_action_pressed("player1_down"): # but we're pressing down
-				player.play("squat") # tea-bag/flapjack
-			elif Input.is_action_pressed("player1_up"):# but we're pressing up
-				player.play("stretch") #reach for the sky
-			else: # no vertical input either
-				player.play("idle")
-		elif left_right < -0.25: # Pressed Left, inner 25% deadzone
-			sprite.flip_h = true # toggles mirror on; faces left
-			if abs(velocity.x) == 200: # If we're running
-				player.play("run_left") # moving animation
-			elif abs(velocity.x) == 400: # If we're sliding
-				player.play("slide")
-		elif left_right > .25:
-			sprite.flip_h = false # toggles mirror off; faces right
-			if abs(velocity.x) == 200: # If we're running
-				player.play("run") # moving animation
-			elif abs(velocity.x) == 400: # If we're sliding
-				player.play("slide")
-		if Input.is_action_pressed("player1_attack") or Input.is_action_pressed("player1_block"):
-			player.play("cast")
-	else: #when the player is not on the floor
-		if velocity.y > 400: # NOTE: Y-inverse; Our y is increasing, meaning we're falling fast - it's a meteor
-			#sprite.flip_v = true
-			player.play("meteor")
-		elif velocity.y > 0 and abs(left_right) < .25 : # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but idle
-			player.play("falldown")
-		elif velocity.y > 0 and left_right > 0.25: # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but directing the fall sideways
-			sprite.flip_h = false # toggles mirror off; faces right
-			player.play("fallsideways")
-		elif velocity.y > 0 and left_right < -0.25: # NOTE: Y-inverse; Our y is increasing, meaning we're falling, but directing the fall sideways
-			sprite.flip_h = true # toggles mirror off; faces right
-			player.play("fallsideways")
-		else: # NOTE: Y-inverse; we're ascending eg, jumping
-			sprite.flip_v = false
-			player.play("jump")
+func sprite_flip(direction: String) -> void: # Called from state_machine()
+	if direction == "right":
+		if sprite.flip_h != false:
+			sprite.flip_h = false
+	elif direction == "left":
+		if sprite.flip_h != true:
+			sprite.flip_h = true

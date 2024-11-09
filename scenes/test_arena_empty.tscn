@@ -173,6 +173,7 @@ position = Vector2(183, 267)
 unique_name_in_owner = true
 
 [node name="TimeControl" parent="MagicLayer" instance=ExtResource("17_8ypjd")]
+visible = false
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

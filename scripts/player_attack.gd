@@ -31,7 +31,6 @@ func has_common_group(other_body: Node) -> bool:
 ## EXECUTION / MAIN
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	self.name = "PlayerAttack_"+player_color # So we can find others when we instantiate the attack.
-	print("Instantiated by:", player_color) # Debug
 	match player_color: # omfg - I'm so glad I figured this match syntax out, this is gonna save my life, if this works right
 		"Blue": attack_frames = blue_attack
 		"Green": attack_frames = green_attack
@@ -46,42 +45,33 @@ func melee_animation(): # The main point
 	animation_player.stop()  # Stop any current animations
 	anim = animation_player.get_animation("melee_attack") # Get the thing we'd like to play
 	if anim: # Check if the animation exists
-		print("found the animation") # Debug
 		# Get the specific track for the sprite frame and collision shape size
 		var sprite_track_index = anim.find_track(".:frame", Animation.TYPE_VALUE) # Get control over the sprite
-		#print(sprite_track_index) # Debug
 		var shape_radius_track_index = anim.find_track("../PhysicsShape:shape:radius", Animation.TYPE_VALUE) # It's a pill shape, describe the circle
-		#print(shape_radius_track_index)
 		var shape_height_track_index = anim.find_track("../PhysicsShape:shape:height", Animation.TYPE_VALUE) # It's a pill shape, describe the length
-		#print(shape_height_track_index)
 		if sprite_track_index != -1: # Modify the tracks or insert keyframes, if necessary
-			#print("we found the sprite track") # Debug
 			anim.track_insert_key(sprite_track_index, 0.00, attack_frames[0]) # Frame 0 at 0 seconds
 			anim.track_insert_key(sprite_track_index, 0.15, attack_frames[1]) # Frame 1 at 0.5 seconds
 			anim.track_insert_key(sprite_track_index, 0.85, attack_frames[0]) # Frame 0 at 2.5 seconds
 		if shape_radius_track_index != -1 and shape_height_track_index != -1: # If we found the animation tracks
-			#print("we found the hitbox track") # Debug
 			anim.track_insert_key(shape_radius_track_index, 0.00, 4) # Start radius
 			anim.track_insert_key(shape_radius_track_index, 0.15, 8) # Larger radius for Frame[1]
 			anim.track_insert_key(shape_radius_track_index, 0.85, 4) # Return to start radius
 			anim.track_insert_key(shape_height_track_index, 0.00, 8) # Start height
 			anim.track_insert_key(shape_height_track_index, 0.15, 16)# Larger height for Frame[1]
 			anim.track_insert_key(shape_height_track_index, 0.85, 8) # Return to start height
-	else:
-		print("Animation 'melee_attack' not found.")
-	#print("played the animation") # Debug
+	else: # Animation not found
+		pass
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass # We don't need a second thread here yet.
 
 func _on_timer_timeout() -> void:
-	queue_free() # gets removed after .75 seconds. See Node:PlayerAttack/Timer
+	queue_free() # gets removed after 1 seconds. See Node:PlayerAttack/Timer
 
 func _on_body_entered(body: Node) -> void:
-	#print("Contact!") # Debug
 	if body.is_in_group("balls"): # Assuming the ball is in a group called "balls"
-		#print("Collision with the ball detected!") # Debug
 		var attack_direction = (body.global_position - global_position).normalized() # Normalize direction
 		var attack = attack_direction * attack_force # Multiply normalized direction by the desired force
 		body.apply_central_impulse(attack) # Apply the force to the ball

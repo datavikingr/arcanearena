@@ -29,7 +29,6 @@ func has_common_group(other_body: Node) -> bool: # Team-check; Used in on_body_e
 func _ready():
 	connect("body_entered", Callable(self, "_on_body_entered"))
 	self.name = "PlayerMissile_"+player_color # So we can find others when we instantiate the attack.
-	print("Instantiated by:", player_color) # Debug
 	match player_color: # omfg - I'm so glad I figured this match syntax out, this is gonna save my life, if this works right
 		"Blue": missile_frame = blue_missile
 		"Green": missile_frame = green_missile
@@ -44,9 +43,7 @@ func _physics_process(_delta: float) -> void:
 
 func _on_body_entered(body: Node) -> void:
 	#disconnect("body_entered", Callable(self, "_on_body_entered"))
-	print("Missile contact!")
 	if body.is_in_group("balls"):
-		print("We found the ball")
 		var force_vector = direction * speed # Multiply direction by the desired force
 		body.apply_central_impulse(force_vector) # Apply the force to the ball
 		disconnect("body_entered", Callable(self, "_on_body_entered"))
@@ -65,7 +62,6 @@ func _on_body_entered(body: Node) -> void:
 				print("Friendly Fire!") # Debug
 				disconnect("body_entered", Callable(self, "_on_body_entered"))
 				queue_free()
-	else:
-		print("We have non-ball, non-player contact.")
+	else: #Non-ball, non-player contact, likely a wall
 		disconnect("body_entered", Callable(self, "_on_body_entered"))
 		queue_free() # Destroy the projectile after collision
