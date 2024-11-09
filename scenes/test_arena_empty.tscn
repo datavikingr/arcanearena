@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=19 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -10,12 +10,13 @@
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
 [ext_resource type="PackedScene" uid="uid://bwl56ve1rsnkn" path="res://scenes/player_ui.tscn" id="6_e3s0m"]
 [ext_resource type="Script" path="res://scripts/blue_ui.gd" id="7_87kly"]
-[ext_resource type="PackedScene" uid="uid://ce2uy5xg6tka4" path="res://scenes/test_player.tscn" id="7_nqmyx"]
 [ext_resource type="Script" path="res://scripts/green_ui.gd" id="8_q2urm"]
 [ext_resource type="Script" path="res://scripts/purple_ui.gd" id="9_gc17j"]
 [ext_resource type="Script" path="res://scripts/red_ui.gd" id="10_8sjcl"]
 [ext_resource type="Script" path="res://scripts/yellow_ui.gd" id="11_n8n62"]
 [ext_resource type="Script" path="res://scripts/orange_ui.gd" id="12_vnq04"]
+[ext_resource type="PackedScene" uid="uid://x1l6ji4xxc3x" path="res://scenes/player2.tscn" id="15_d1dub"]
+[ext_resource type="PackedScene" uid="uid://cdvp5lryb85dh" path="res://scenes/player1.tscn" id="16_xo7ig"]
 [ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="17_8ypjd"]
 
 [node name="TestArenaEmpty" type="Node2D"]
@@ -162,12 +163,15 @@ script = ExtResource("12_vnq04")
 [node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
 frame = 120
 
+[node name="Player2" parent="UI" instance=ExtResource("15_d1dub")]
+position = Vector2(501, 304)
+
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
 position = Vector2(314, 267)
 
-[node name="TestPlayer" parent="." instance=ExtResource("7_nqmyx")]
-position = Vector2(183, 267)
+[node name="Player1" parent="." instance=ExtResource("16_xo7ig")]
+position = Vector2(156, 326)
 
 [node name="MagicLayer" type="Node2D" parent="."]
 unique_name_in_owner = true

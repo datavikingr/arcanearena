@@ -1,11 +1,11 @@
-[gd_scene load_steps=29 format=3 uid="uid://ce2uy5xg6tka4"]
+[gd_scene load_steps=29 format=3 uid="uid://x1l6ji4xxc3x"]
 
-[ext_resource type="Script" path="res://scripts/test_player_controller.gd" id="1_1k1h6"]
-[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_vjnan"]
-[ext_resource type="PackedScene" uid="uid://uskrmwhqnjx5" path="res://scenes/trail.tscn" id="3_3ieya"]
-[ext_resource type="Gradient" uid="uid://cxpxqrpnsj4hk" path="res://resources/red_gradient.tres" id="4_4mlsg"]
-[ext_resource type="Gradient" uid="uid://l2lj34l012p2" path="res://resources/cyan_gradient.tres" id="4_l6ual"]
-[ext_resource type="Script" path="res://scripts/playereyetrail.gd" id="4_nwkyb"]
+[ext_resource type="Script" path="res://scripts/player2.gd" id="1_q64lh"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_83qg3"]
+[ext_resource type="PackedScene" uid="uid://uskrmwhqnjx5" path="res://scenes/trail.tscn" id="3_7f7fi"]
+[ext_resource type="Gradient" uid="uid://cxpxqrpnsj4hk" path="res://resources/red_gradient.tres" id="4_vi0t1"]
+[ext_resource type="Script" path="res://scripts/playereyetrail.gd" id="5_u8riw"]
+[ext_resource type="Gradient" uid="uid://l2lj34l012p2" path="res://resources/cyan_gradient.tres" id="6_uy8sj"]
 
 [sub_resource type="Animation" id="Animation_lokpq"]
 length = 0.001
@@ -2056,20 +2056,20 @@ _data = {
 _data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(0.498182, 0.496274), -1.29597, -1.29597, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 3
 
-[node name="TestPlayer" type="CharacterBody2D" groups=["players"]]
+[node name="Player2" type="CharacterBody2D" groups=["players"]]
 collision_layer = 32
 collision_mask = 191
 floor_max_angle = 1.48353
 platform_on_leave = 2
 platform_floor_layers = 4294901763
-script = ExtResource("1_1k1h6")
+script = ExtResource("1_q64lh")
 
 [node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
 polygon = PackedVector2Array(-6, 5, -6, 5, -6, 1, -6, -5, -5, -7, -3, -8, 2, -8, 4, -7, 5, -5, 5, -2, 5, 3, 5, 6, 4, 8, 1, 9, 0, 9, -1, 9, -4, 8)
 
 [node name="Sprite" type="Sprite2D" parent="." groups=["players"]]
 position = Vector2(0, 7)
-texture = ExtResource("2_vjnan")
+texture = ExtResource("2_83qg3")
 offset = Vector2(0, -7)
 hframes = 8
 vframes = 18
@@ -2084,19 +2084,19 @@ libraries = {
 target_position = Vector2(0, 20)
 collision_mask = 68
 
-[node name="TrailLeft" parent="." instance=ExtResource("3_3ieya")]
+[node name="TrailLeft" parent="." instance=ExtResource("3_7f7fi")]
 top_level = true
 position = Vector2(0, -2.5)
 width_curve = SubResource("Curve_7ob05")
-gradient = ExtResource("4_4mlsg")
-script = ExtResource("4_nwkyb")
+gradient = ExtResource("4_vi0t1")
+script = ExtResource("5_u8riw")
 
-[node name="TrailRight" parent="." instance=ExtResource("3_3ieya")]
+[node name="TrailRight" parent="." instance=ExtResource("3_7f7fi")]
 top_level = true
 position = Vector2(2.5, -2.5)
 width_curve = SubResource("Curve_7ob05")
-gradient = ExtResource("4_l6ual")
-script = ExtResource("4_nwkyb")
+gradient = ExtResource("6_uy8sj")
+script = ExtResource("5_u8riw")
 
 [node name="AttackCooldown" type="Timer" parent="."]
 one_shot = true
@@ -2104,7 +2104,7 @@ one_shot = true
 [node name="AimReticle" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(0.0157413, -2.04272)
-texture = ExtResource("2_vjnan")
+texture = ExtResource("2_83qg3")
 offset = Vector2(0.0427215, -11.9843)
 hframes = 8
 vframes = 18
@@ -2113,7 +2113,7 @@ frame = 70
 [node name="MeteorSpike" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(0, 16)
-texture = ExtResource("2_vjnan")
+texture = ExtResource("2_83qg3")
 hframes = 8
 vframes = 18
 frame = 69

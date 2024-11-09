@@ -3,14 +3,14 @@ extends CharacterBody2D
 #######################################################################################################################################################
 ## DECLARATIONS
 # User settings on Player
-@export var player_color: String = "Orange" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
-var player_index: int = 0 # Player 1's script gets device 0, required for player_aim() in input_handling()
+@export var player_color: String = "Red" # This is how we're going to assign players to characters, and a lot of the sprite/animation controls.
+var player_index: int = 1 # Player 1's script gets device 0, required for player_aim() in input_handling()
 var player_setting_deadzone: float = 0.25 # Player-tuned arcade-style on/off stick's deadzone
 # Admin settings on Player
 var hp: int = 3 # Players spawn in with 3 HP, die after 3 hits.
-var goals: int = 0 # Player goals, for UI & game score
-var kills: int = 0 # Player Kills, for UI & bragging rights
-var deaths: int = 0 # Player Deaths, for UI & shame
+@export var goals: int = 0 # Player goals, for UI & game score
+@export var kills: int = 0 # Player Kills, for UI & bragging rights
+@export var deaths: int = 0 # Player Deaths, for UI & shame
 var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 var jump_speed: float = -400.0 # 400 is a little too high for the maps. 300 feels good. player_jump()
 var meteor_speed: int = 800 # 2x jump speed
@@ -30,6 +30,7 @@ var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in 
 @onready var cyan_gradient = preload("res://resources/cyan_gradient.tres") # preload the player eye trail gradient resource for assignment later.
 # Nodes
 @onready var sprite: Sprite2D = $Sprite # Sprite, player_movement()
+@onready var spike: Sprite2D = $MeteorSpike # Sprite, update_ui()
 @onready var player: AnimationPlayer = $AnimationPlayer # What it says on the can, player_movement() & player_jump() $ etc.
 @onready var raycast:RayCast2D = $TremorSense # Ball detector, used in physics_collisions()
 @onready var attack_cooldown = $AttackCooldown # Keeps from spamming attacks too bad.
@@ -38,16 +39,22 @@ var max_pinch_force: float = 5000.0 # Upper threshold of pinch force applied in 
 @onready var magic_layer: Node2D = %MagicLayer # Magic home layer, for the sake of having somewhere objective to put them all
 @onready var blue_ui: Node2D = %BlueUI
 @onready var blue_ui_sprite: Sprite2D = blue_ui.get_node("PlayerSprite")
+@onready var blue_ui_spike: Sprite2D = blue_ui.get_node("PlayerSpike")
 @onready var green_ui: Node2D = %GreenUI
 @onready var green_ui_sprite: Sprite2D = green_ui.get_node("PlayerSprite")
+@onready var green_ui_spike: Sprite2D = green_ui.get_node("PlayerSpike")
 @onready var purple_ui: Node2D = %PurpleUI
 @onready var purple_ui_sprite: Sprite2D = purple_ui.get_node("PlayerSprite")
+@onready var purple_ui_spike: Sprite2D = purple_ui.get_node("PlayerSpike")
 @onready var red_ui: Node2D = %RedUI
 @onready var red_ui_sprite: Sprite2D = red_ui.get_node("PlayerSprite")
+@onready var red_ui_spike: Sprite2D = red_ui.get_node("PlayerSpike")
 @onready var yellow_ui: Node2D = %YellowUI
 @onready var yellow_ui_sprite: Sprite2D = yellow_ui.get_node("PlayerSprite")
+@onready var yellow_ui_spike: Sprite2D = yellow_ui.get_node("PlayerSpike")
 @onready var orange_ui: Node2D = %OrangeUI
 @onready var orange_ui_sprite: Sprite2D = orange_ui.get_node("PlayerSprite")
+@onready var orange_ui_spike: Sprite2D = orange_ui.get_node("PlayerSpike")
 @onready var trail_left: Trails = $TrailLeft
 @onready var trail_right: Trails = $TrailRight
 # Misc
@@ -55,6 +62,7 @@ enum State {IDLE, SQUAT, STRETCH, DEATH, SPECIAL, RUN, RUN_LEFT, ASCEND, ASCEND_
 var current_state: State
 var ui_layer: Node2D
 var ui_sprite: Sprite2D
+var ui_spike: Sprite2D
 var collision: KinematicCollision2D # Used in physics_collisions()
 var collider: Object # Used in physics_collisions()
 var pinch_multiplier: float = 1.15 # Used in physics_collisions()
@@ -118,7 +126,7 @@ var input_special: bool = false # Used by input_handling(); Player input variabl
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
 func is_slide() -> bool: # Called by player_jump(), variable_force() #TODO Needs rework, dupliactive
-	return is_on_floor() and Input.is_action_pressed("player1_down") and not from_meteor
+	return is_on_floor() and Input.is_action_pressed("player2_down") and not from_meteor
 
 func get_state_directionality(action: State) -> State: #Called by input_handling(); Checks left/right, returns correct state
 	if last_facing == "left": # If pointed left
@@ -173,14 +181,14 @@ func variable_gravity() -> float: # called by player_movement(); Game feel.
 		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
 		return gravity * 2.5 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
-	if Input.is_action_pressed("player1_up"): # If the player is holding up
+	if Input.is_action_pressed("player2_up"): # If the player is holding up
 		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
 func variable_force() -> float: # called by physics_collisions() controller; How hard we punch the ball.
 	if from_meteor == true: # If we're down+A,
 		return meteor_force # hit the ball extra hard @ 1000
-	elif is_slide() and Input.is_action_pressed("player1_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
+	elif is_slide() and Input.is_action_pressed("player2_jump"): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
 		return push_force * 2 # 400
 	else: # If we're just running
 		return push_force # 200
@@ -198,26 +206,32 @@ func construct_player() -> void: # Called by ready(); Dynanmic-player assignment
 		"Blue":
 			ui_layer = blue_ui
 			ui_sprite = blue_ui_sprite
+			ui_spike = blue_ui_spike
 			construct_cold_team(self)
 		"Green":
 			ui_layer = green_ui
 			ui_sprite = green_ui_sprite
+			ui_spike = green_ui_spike
 			construct_cold_team(self)
 		"Purple":
 			ui_layer = purple_ui
 			ui_sprite = purple_ui_sprite
+			ui_spike = purple_ui_spike
 			construct_cold_team(self)
 		"Red":
 			ui_layer = red_ui
 			ui_sprite = red_ui_sprite
+			ui_spike = red_ui_spike
 			construct_hot_team(self)
 		"Yellow":
 			ui_layer = yellow_ui
 			ui_sprite = yellow_ui_sprite
+			ui_spike = yellow_ui_spike
 			construct_hot_team(self)
 		"Orange":
 			ui_layer = orange_ui
 			ui_sprite = orange_ui_sprite
+			ui_spike = orange_ui_spike
 			construct_hot_team(self)
 
 func construct_cold_team(object) -> void: # Called by construct_player(); continuing player assignments, but for team-relations.
@@ -407,18 +421,18 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 
 func input_handling(delta: float) -> void:
 	# Gathering input data
-	move_left_right = Input.get_axis("player1_left", "player1_right") # D-pad & L-stick X axis
-	move_up_down = Input.get_axis( "player1_down", "player1_up") # D-pad & L-stick Y axis
+	move_left_right = Input.get_axis("player2_left", "player2_right") # D-pad & L-stick X axis
+	move_up_down = Input.get_axis( "player2_down", "player2_up") # D-pad & L-stick Y axis
 	aim_left_right = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_X) # Right Joystick X
 	aim_up_down = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_Y) # Right Joystick Y
-	input_jump = Input.is_action_just_pressed("player1_jump") # A button pulse - for jumps
-	input_jump_hold = Input.is_action_pressed("player1_jump") # A button hold - for slides and meteors
-	input_jump_released = Input.is_action_just_released("player1_jump") # A button release - for variable jump height, resetting after meteor
-	input_attack = Input.is_action_just_pressed("player1_attack") # X Button
-	var input_attack_hold = Input.is_action_pressed("player1_attack") # X Button hold - for cast ing catch-state (addressing pulse animations)
-	input_block = Input.is_action_just_pressed("player1_block") # B button
-	var input_block_hold = Input.is_action_pressed("player1_block") # X Button hold - for cast ing catch-state (addressing pulse animations)
-	input_special = Input.is_action_just_pressed("player1_special") # Y button
+	input_jump = Input.is_action_just_pressed("player2_jump") # A button pulse - for jumps
+	input_jump_hold = Input.is_action_pressed("player2_jump") # A button hold - for slides and meteors
+	input_jump_released = Input.is_action_just_released("player2_jump") # A button release - for variable jump height, resetting after meteor
+	input_attack = Input.is_action_just_pressed("player2_attack") # X Button
+	var input_attack_hold = Input.is_action_pressed("player2_attack") # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_block = Input.is_action_just_pressed("player2_block") # B button
+	var input_block_hold = Input.is_action_pressed("player2_block") # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_special = Input.is_action_just_pressed("player2_special") # Y button
 
 	# This is to establish last facing direction, so when we stop facing left, we can auto-slide that direction instead of defaulting to slide right.
 	if move_left_right > 0:
@@ -611,7 +625,7 @@ func player_aim() ->void: # Called by input_handling(); Player aim
 		reticle = get_node("AimReticle")
 		reticle.frame = reticle_frame
 		reticle.rotation = aim_direction
-		if Input.is_action_just_pressed("player1_attack"): # DEPRECATED
+		if Input.is_action_just_pressed("player2_attack"): # DEPRECATED
 			player_missile() # DEPRECATED
 
 func player_jump() -> void: # Called by state_machine(); Jump!
@@ -742,8 +756,14 @@ func update_ui() -> void: # called from _process()
 	ui_sprite.frame = current_frame
 	if last_facing == "left":
 		ui_sprite.flip_h = true
+		ui_spike.flip_h = true
 	else:
 		ui_sprite.flip_h = false
+		ui_spike.flip_h = false
+	if spike.visible == true:
+		ui_spike.visible = true
+	else:
+		ui_spike.visible = false
 
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()

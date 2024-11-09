@@ -36,20 +36,28 @@ texture = ExtResource("2_x03g6")
 hframes = 8
 vframes = 18
 
+[node name="PlayerSpike" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, 14)
+texture = ExtResource("2_x03g6")
+hframes = 8
+vframes = 18
+frame = 21
+
 [node name="GoalsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 16)
+position = Vector2(0, 24)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12
 
 [node name="KillsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 31)
+position = Vector2(0, 39)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12
 
 [node name="DeathsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 46)
+position = Vector2(0, 54)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12
