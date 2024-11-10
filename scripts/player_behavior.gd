@@ -121,6 +121,7 @@ var animation_data: Dictionary = {
 # Input
 var move_left_right: float = 0 # Used by input_handling(); Player input variable
 var move_up_down: float = 0 # Used by input_handling(); Player input variable
+var input_up_hold: bool = false # Used by input_handling(); Player input variable
 var aim_left_right: float = 0 # Used by input_handling, player_is_aiming(), player_aim(), player_missile()
 var aim_up_down: float = 0 # Used by input_handling, player_is_aiming(), player_aim(), player_missile()
 var aim_direction: float = 0 # Used by player_aim(); Trigonometry for missile casting
@@ -128,14 +129,13 @@ var input_jump: bool = false # Used by input_handling(); Player input variable
 var input_jump_hold: bool = false # Used by input_handling(); Player input variable
 var input_jump_released: bool = false # Used by input_handling(); Player input variable
 var input_attack: bool = false # Used by input_handling(); Player input variable
+var input_attack_hold: bool = false # Used by input_handling(); Player input variable
 var input_block: bool = false # Used by input_handling(); Player input variable
+var input_block_hold: bool = false # Used by input_handling(); Player input variable
 var input_special: bool = false # Used by input_handling(); Player input variable
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
-func is_slide() -> bool: # Called by player_jump(), variable_force() #TODO Needs rework, dupliactive
-	return is_on_floor() and Input.is_action_pressed(player_input_down) and not from_meteor
-
 func get_state_directionality(action: State) -> State: #Called by input_handling(); Checks left/right, returns correct state
 	if last_facing == "left": # If pointed left
 		match action:
@@ -189,14 +189,14 @@ func variable_gravity() -> float: # called by player_movement(); Game feel.
 		return gravity * 1.4 # return 40% higher gravity and fall faster, snapping back to the ground
 	if is_on_ramp():
 		return gravity * 2.5 # return 2 times gravity, to keep that player glued to the ramp, on their slide down.
-	if Input.is_action_pressed(player_input_up): # If the player is holding up
+	if input_up_hold: # If the player is holding up
 		return gravity * 0.8 # Let them jump higher under lower gravity
 	return gravity # Else, return normal gravity
 
 func variable_force() -> float: # called by physics_collisions() controller; How hard we punch the ball.
-	if from_meteor == true: # If we're down+A,
+	if current_state == State.METEOR or current_state == State.METEOR_LEFT: # If we're down+A,
 		return meteor_force # hit the ball extra hard @ 1000
-	elif is_slide() and Input.is_action_pressed(player_input_A): # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
+	elif current_state == State.SLIDE or current_state == State.SLIDE_LEFT: # If we're sliding; NOTE: is_slide assumes jump is pressed in its other uses cases (player_jump(), for instance)
 		return push_force * 2 # 400
 	else: # If we're just running
 		return push_force # 200
@@ -431,24 +431,25 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 	update_ui()
 	# Gravity and variable jump
 	velocity.y += variable_gravity() * delta # apply variable gravity to character, depending on whether falling
-	input_handling(delta)
-	state_machine()
-	move_and_slide() # Execute movement accumulated above
-	physics_collisions() # React to Physics, as per the movement.
+	input_handling(delta) # Gather input, set state, for parsing in state_machine() below.
+	state_machine() # Parses states and executes follow up code
+	move_and_slide() # Execute the movement accumulated from velocity changes above
+	physics_collisions() # React to Physics, as per the movement and contact with other objects.
 
-func input_handling(delta: float) -> void:
+func input_handling(delta: float) -> void: # Called every frame, by _physics_process()
 	# Gathering input data
 	move_left_right = Input.get_axis(player_input_left, player_input_right) # D-pad & L-stick X axis
 	move_up_down = Input.get_axis(player_input_down, player_input_up) # D-pad & L-stick Y axis
+	input_up_hold = Input.is_action_pressed(player_input_up) # D-pad & L-stick Up button hold - for variable_gravity()
 	aim_left_right = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_X) # Right Joystick X
 	aim_up_down = Input.get_joy_axis(player_index, JOY_AXIS_RIGHT_Y) # Right Joystick Y
 	input_jump = Input.is_action_just_pressed(player_input_A) # A button pulse - for jumps
 	input_jump_hold = Input.is_action_pressed(player_input_A) # A button hold - for slides and meteors
 	input_jump_released = Input.is_action_just_released(player_input_A) # A button release - for variable jump height, resetting after meteor
 	input_attack = Input.is_action_just_pressed(player_input_X) # X Button
-	var input_attack_hold = Input.is_action_pressed(player_input_X) # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_attack_hold = Input.is_action_pressed(player_input_X) # X Button hold - for cast ing catch-state (addressing pulse animations)
 	input_block = Input.is_action_just_pressed(player_input_B) # B button
-	var input_block_hold = Input.is_action_pressed(player_input_B) # X Button hold - for cast ing catch-state (addressing pulse animations)
+	input_block_hold = Input.is_action_pressed(player_input_B) # X Button hold - for cast ing catch-state (addressing pulse animations)
 	input_special = Input.is_action_just_pressed(player_input_Y) # Y button
 
 	# This is to establish last facing direction, so when we stop facing left, we can auto-slide that direction instead of defaulting to slide right.
@@ -456,13 +457,15 @@ func input_handling(delta: float) -> void:
 		last_facing = "right"
 	elif move_left_right < 0:
 		last_facing = "left"
+	#NOTE: This deliberately leaves 0 position set to whatever it was last set to.
+	# This is for slides-from-IDLE, so they're aimed the right way, and other LEFT states (for eye placements mostly)
 
 	# Player movement and aim
-	player_movement(delta) # We want the player to move regardless of state
+	player_movement() # We want the player to move regardless of state
 	player_aim() # We want the player to aim, regardless of state
 
 	# On-ground States
-	if abs(move_left_right) > player_setting_deadzone and not is_in_air() and cast_anim_timer.is_stopped(): # Pressed left/right on floor, w/ 25% deadzone TODO: Should probably be a player setting
+	if abs(move_left_right) > player_setting_deadzone and not is_in_air() and cast_anim_timer.is_stopped(): # Pressed left/right on floor, w/ player-set deadzone
 		current_state = get_state_directionality(State.RUN)
 	else: # We're in the Dead Zone, check for up/down, if none revert to idle
 		if move_up_down < -player_setting_deadzone: # Pressed Down
@@ -474,23 +477,25 @@ func input_handling(delta: float) -> void:
 
 	# In-air States
 	if velocity.y >= 0 and not is_on_floor(): # That's falling, because Godot is silly on Y axis
-		if abs(move_left_right) > player_setting_deadzone:
+		if abs(move_left_right) > player_setting_deadzone: # That's falling sideways
 			current_state = get_state_directionality(State.FALLSIDE)
-		else:
+		else: # There's no input, falling straight down
 			current_state = get_state_directionality(State.FALL)
-	elif velocity.y < 0 and not is_on_floor():
+	elif velocity.y < 0 and not is_on_floor(): # We're "falling" up-ways. Used to hold the jump animation.
 		current_state = get_state_directionality(State.ASCEND)
 
-	# A Button
+	# A Button - Jump/slide/meteor
 	if input_jump: # Pressed A, and NOT-Down
 		current_state = get_state_directionality(State.JUMP)
 	if input_jump_hold and move_up_down <= -player_setting_deadzone: # Pressed A + Down
-		if is_on_floor() or is_on_ramp(): # Is on ground or ramp?
+		if is_on_floor() or is_on_ramp(): # Is on ground or ramp? If yes, we're on the ground.
 			current_state = get_state_directionality(State.SLIDE) # Then slide, stupid
 			if from_meteor: # We need to screen for this here now and vent to IDLE when from meteor.
 				current_state = get_state_directionality(State.IDLE)
 		else: #We're in the air, pressing Down+A. METEOR TIME
 			current_state = get_state_directionality(State.METEOR) # LINK! LINK! LINK! LINK! LINK!
+
+	# A Button Release - Jump/slide/meteor
 	if input_jump_released: # Player let go of A
 		from_meteor = false # Reset our flag
 		raycast.enabled = true # Turns ball detector back on for is_on_top_of_ball()
@@ -498,35 +503,35 @@ func input_handling(delta: float) -> void:
 			velocity.y = jump_speed / 4 # Quarter our upward velocity, fall faster.
 
 	# X Button - Attack/Missile
-	if input_attack and not player_is_aiming():
+	if input_attack and not player_is_aiming(): # If we're not aiming, our attack is melee
 		current_state = get_state_directionality(State.ATTACK) # NOTE CAST animation & player_attack()
-	elif input_attack and player_is_aiming():
+	elif input_attack and player_is_aiming(): #But if we are aiming, our attack is ranged
 		current_state = get_state_directionality(State.MISSILE) # NOTE CAST animation & player_missile()
 
 	# B Button - Block/Platform
-	if input_block and is_on_floor():
+	if input_block and is_on_floor(): # On the floor, we need the wall-block
 		current_state = get_state_directionality(State.BLOCK) # NOTE CAST animation & player_block()
-	elif input_block and not is_on_floor():
+	elif input_block and not is_on_floor(): # In the air, we need the platform instead
 		current_state = get_state_directionality(State.PLATFORM) # NOTE CAST animation & player_platform() TODO
 
 	# Casting - Either X or B Buttons
-	if not cast_anim_timer.is_stopped():
-		current_state = get_state_directionality(State.CASTING)
+	if not cast_anim_timer.is_stopped(): # If the player's castanim timer node is running, we've just cast a spell
+		current_state = get_state_directionality(State.CASTING) # Used to hold the cast animation.
 
-	# Y Button - Special TODO: Needs implementation
+	# Y Button - Special TODO: Needs implementation - not here, down at player_special()
 	if input_special:
 		current_state = get_state_directionality(State.SPECIAL)
 
 	# Death
-	if hp <= 0:
+	if hp <= 0: # Then the player is "D-E-D, Dead"
 		current_state = get_state_directionality(State.DEATH)
 
-func state_machine() -> void:
+func state_machine() -> void: # Called every frame, by _physics_process()
 	match current_state:
-		State.IDLE:
+		State.IDLE: # Cold Team default
 			sprite_flip("right")
 			player.play("idle")
-		State.IDLE_LEFT:
+		State.IDLE_LEFT: # Hot Team default
 			sprite_flip("left")
 			player.play("idle_left")
 		State.SQUAT:
@@ -546,10 +551,10 @@ func state_machine() -> void:
 		State.RUN_LEFT:
 			sprite_flip("left")
 			player.play("run_left")
-		State.ASCEND:
+		State.ASCEND: # to hold jump animation, so we don't immediately revert to idle in the air
 			sprite_flip("right")
 			player.play("jump")
-		State.ASCEND_LEFT:
+		State.ASCEND_LEFT: # to hold jump animation, so we don't immediately revert to idle in the air
 			sprite_flip("left")
 			player.play("jump_left")
 		State.JUMP:
@@ -620,21 +625,20 @@ func state_machine() -> void:
 			sprite_flip("left")
 			player_platform()
 			player.play("cast_left")
-		State.CASTING:
+		State.CASTING: # to hold cast animation, so we don't immediately revert to idle after cast
 			player.play("cast")
-		State.CASTING_LEFT:
+		State.CASTING_LEFT: # to hold cast animation, so we don't immediately revert to idle after cast
 			player.play("cast_left")
 
 #######################################################################################################################################################
 ## PLAYER ACTIONS
-func player_movement(_delta: float) -> void: # Called by input_handling(); Player movement
-	#Perform filter for arcade-like on/off controls
-	if move_left_right < -0.25: # Pressed Left w/ 25% deadzone
-		velocity.x = -run_speed  + outside_forces # Go Left
-	elif move_left_right > 0.25: # Pressed Right w/ 25% deadzone
-		velocity.x = run_speed + outside_forces # Go Right
+func player_movement() -> void: # Called by input_handling(); Player movement
+	if move_left_right < player_setting_deadzone: # Pressed Left w/ 25% deadzone
+		velocity.x = -run_speed  + outside_forces # Go Left, considering push forces
+	elif move_left_right > player_setting_deadzone: # Pressed Right w/ 25% deadzone
+		velocity.x = run_speed + outside_forces # Go Right, considering push forces
 	else: # 0 input
-		velocity.x = 0 + outside_forces # don't move
+		velocity.x = 0 + outside_forces # don't move, except push forces
 	outside_forces = 0.0
 
 func player_aim() ->void: # Called by input_handling(); Player aim
@@ -648,23 +652,19 @@ func player_aim() ->void: # Called by input_handling(); Player aim
 		reticle.rotation = aim_direction
 
 func player_jump() -> void: # Called by state_machine(); Jump!
-	if !is_slide(): #Make sure we're not sliding
-		velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh*
-		if is_ball_near() and !is_on_top_of_ball(): # If ball is in range, but we're not directly on top of it
-			%Ball.linear_velocity.y = 1.1 * jump_speed # Apply upward force to ball
+	velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh*
+	if is_ball_near() and !is_on_top_of_ball(): # If ball is in range, but we're not directly on top of it
+		%Ball.linear_velocity.y = 1.1 * jump_speed # Apply upward force to ball
 	var platform_name = "PlayerPlatform_" + player_color # Search for existing platforms with this name
 	for child in magic_layer.get_children(): # Check the magic layer
 		if child.name == platform_name: # If we already one of these spawned,
 			child.free() # Free the existing platform and kill it, because we kill platforms on jump.
 
 func player_slide() -> void: # Called by state_machine(); Megaman slide!
-	var left_right
-	if (is_slide() and is_on_ramp() and from_meteor) or (is_slide() and not from_meteor):
-		if last_facing == "left": # If player is facing left
-			left_right = -1 # Tune the forces to the left
-		else: # else, we're facing right
-			left_right = 1 # Keep the forces tuned to the right
-		velocity.x = left_right * slide_speed # Load forces for move_and_slide()
+	if last_facing == "left": # If player is facing left
+		velocity.x = -slide_speed # Tune the forces to the left
+	else: # else, we're facing right
+		velocity.x = slide_speed # Keep the forces tuned to the right
 
 func player_meteor() -> void: 	# Called by state_machine(); Meteor strike downwards from the sky!
 	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
@@ -766,7 +766,7 @@ func player_death() -> void: # TODO Called by state_machine();
 
 #######################################################################################################################################################
 ## CONTROLLERS
-func update_ui() -> void: # called from _process()
+func update_ui() -> void: # called very first _physics_process()
 	ui_layer.set("hp", hp)
 	ui_layer.set("goals", goals)
 	ui_layer.set("kills", kills)
