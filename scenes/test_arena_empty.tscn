@@ -163,15 +163,15 @@ script = ExtResource("12_vnq04")
 [node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
 frame = 120
 
-[node name="Player2" parent="UI" instance=ExtResource("15_d1dub")]
-position = Vector2(501, 304)
-
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
 position = Vector2(314, 267)
 
 [node name="Player1" parent="." instance=ExtResource("16_xo7ig")]
 position = Vector2(156, 326)
+
+[node name="Player2" parent="." instance=ExtResource("15_d1dub")]
+position = Vector2(501, 304)
 
 [node name="MagicLayer" type="Node2D" parent="."]
 unique_name_in_owner = true
