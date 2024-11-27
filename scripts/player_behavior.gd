@@ -170,7 +170,6 @@ func is_ball_near() -> bool: # Called from player_jump(); Ball radar for 'ball-p
 
 func is_on_top_of_ball() -> bool: # called by physics_collisions(); we don't want to pinch due to gravity
 	if raycast.is_colliding(): # what is says on the can - is it touching anything?
-		#print("RayCast hit the ball!") # Logs
 		return raycast.get_collider().is_in_group("balls")
 	return false # false if not
 
@@ -202,7 +201,7 @@ func variable_force() -> float: # called by physics_collisions() controller; How
 		return push_force # 200
 
 #######################################################################################################################################################
-## INIT
+## INIT/CONSTRUCTORS
 func player_setup() -> void: # Blank hook for children to override
 	pass  # Placeholder, will be overridden by child
 
@@ -211,6 +210,7 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 		player_setup()
 	construct_player() # Calls construct_cold/hot_team, as required
 	construct_animations() # builds sprite, animation data
+	construct_melee()
 	current_state = State.IDLE # Initialize the state as idle
 
 func construct_player() -> void: # Called by ready(); Dynanmic-player assignment set up.
@@ -425,6 +425,23 @@ func construct_animations() -> void: # Called by ready(); Dynamic-player assignm
 		for frame in number_of_frames: # Iterate over each frame presented in the animation data
 			anim.track_insert_key(track_index, 0, animation_data[animation]["meteor_spike_sprite"])
 
+func construct_melee() -> void:
+	var attack_frames: Array = []
+	var blue_attack: Array[int] = [16, 17]
+	var green_attack: Array[int] = [40, 41]
+	var purple_attack: Array[int] = [64, 65]
+	var red_attack: Array[int] = [88, 89]
+	var yellow_attack: Array[int] = [112, 113]
+	var orange_attack: Array[int] = [136, 137]
+	match player_color: # omfg - I'm so glad I figured this match syntax out, this is gonna save my life, if this works right
+		"Blue": attack_frames = blue_attack
+		"Green": attack_frames = green_attack
+		"Purple": attack_frames = purple_attack
+		"Red": attack_frames = red_attack
+		"Yellow": attack_frames = yellow_attack
+		"Orange": attack_frames = orange_attack
+
+
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _physics_process(delta: float) -> void: # Called every frame. We're gonna collect input and execute control-functions here. Separate thread from _process().
@@ -633,7 +650,7 @@ func state_machine() -> void: # Called every frame, by _physics_process()
 #######################################################################################################################################################
 ## PLAYER ACTIONS
 func player_movement() -> void: # Called by input_handling(); Player movement
-	if move_left_right < player_setting_deadzone: # Pressed Left w/ 25% deadzone
+	if move_left_right < -player_setting_deadzone: # Pressed Left w/ 25% deadzone
 		velocity.x = -run_speed  + outside_forces # Go Left, considering push forces
 	elif move_left_right > player_setting_deadzone: # Pressed Right w/ 25% deadzone
 		velocity.x = run_speed + outside_forces # Go Right, considering push forces
@@ -683,6 +700,7 @@ func player_attack() -> void: # Called by state_machine(); Localized magic ball 
 			face_direction = -1
 		new_attack.global_position = get_global_position() + Vector2(16 * face_direction, 0) # Small offset, makes sure it appears outside the player body, on the correct side.
 		new_attack.set("player_color", player_color) # I hope this works. // It totally worked!
+		new_attack.set("attack_frames", attack_frames)
 		if player_color=="Blue" or player_color=="Green" or player_color=="Purple":
 			construct_cold_team(new_attack)
 		else:
@@ -793,7 +811,6 @@ func physics_collisions() -> void: # Called from _physics_process()
 		collision = get_slide_collision(i) # Get collision, from # above
 		collider = collision.get_collider()
 		if collider.is_in_group("balls") and not is_on_top_of_ball() and not collider.is_in_group("ramps"): # if the collision is with the ball, and we're not on top of it.
-			#print("Ball!") # Log
 			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball
 			var normal = collision.get_normal() # Collision normal vector
 			var pinch_factor = relative_velocity.dot(normal) # Pinch factor based on collision speed
