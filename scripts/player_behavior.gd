@@ -210,7 +210,7 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 		player_setup()
 	construct_player() # Calls construct_cold/hot_team, as required
 	construct_animations() # builds sprite, animation data
-	construct_melee()
+	#construct_melee()
 	current_state = State.IDLE # Initialize the state as idle
 
 func construct_player() -> void: # Called by ready(); Dynanmic-player assignment set up.
