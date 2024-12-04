@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3 uid="uid://buytkmov6kvrd"]
+
+[ext_resource type="Texture2D" uid="uid://c40sj5fg3e1xm" path="res://assets/cold_goal.png" id="1_lquva"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_opt6p"]
+size = Vector2(15, 116)
+
+[node name="ColdGoal" type="StaticBody2D"]
+
+[node name="PhysicsShape" type="CollisionShape2D" parent="."]
+position = Vector2(-7.5, 0)
+shape = SubResource("RectangleShape2D_opt6p")
+
+[node name="Sprite" type="Sprite2D" parent="."]
+texture = ExtResource("1_lquva")
