@@ -810,6 +810,8 @@ func physics_collisions() -> void: # Called from _physics_process()
 		#TODO: I'm going to implement this as a match option, in the future.
 		collision = get_slide_collision(i) # Get collision, from # above
 		collider = collision.get_collider()
+		if collider.is_in_group("balls"): ###################################################HACK
+			collider.set("last_contact", self.name) ###################################################HACK
 		if collider.is_in_group("balls") and not is_on_top_of_ball() and not collider.is_in_group("ramps"): # if the collision is with the ball, and we're not on top of it.
 			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball
 			var normal = collision.get_normal() # Collision normal vector

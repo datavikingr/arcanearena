@@ -14,6 +14,8 @@ collision_layer = 4
 collision_mask = 255
 physics_material_override = SubResource("PhysicsMaterial_f475m")
 can_sleep = false
+contact_monitor = true
+max_contacts_reported = 16
 script = ExtResource("1_k4exm")
 
 [node name="PhysicsShape" type="CollisionShape2D" parent="."]

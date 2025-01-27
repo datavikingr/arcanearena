@@ -1,20 +1,18 @@
 extends RigidBody2D
 
-const MAX_VELOCITY = 8000.0  # Set this to a value that feels right for your game
+var body: Array[Node2D] # bodies the ball is contacting with; used in _physics_process()
+var last_contact: String = "" # Keeps track of the last player to touch the ball
 
-func _ready(): # Called when the node enters the scene tree for the first time.
+func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	pass # Replace with function body.
 
-func _process(_delta): # Called every frame. 'delta' is the elapsed time since the previous frame.
-	#if self.position.x > 640 or self.position.x < 0 or self.position.y < 0 or self.position.y
+func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
+	print(last_contact)
 	pass
 
-func _integrate_forces(_state) -> void:
-	#velocity_clamp(state)
+func _physics_process(delta: float) -> void: # Called every frame. We're gonna collect data from collisions here. Separate thread from _process().
+	for body in get_colliding_bodies():
+		if body.is_in_group("players"):
+			#last_contact = body.name
+			pass
 	pass
-
-func velocity_clamp(state) -> void:
-	var velocity = state.get_linear_velocity() # what it says on the can
-	if velocity.length() > MAX_VELOCITY: # If we're exceeding the speed limit
-		velocity = velocity.normalized() * MAX_VELOCITY # Clamp the velocity magnitude
-	state.set_linear_velocity(velocity) # Hard-write the clamped speed to the object

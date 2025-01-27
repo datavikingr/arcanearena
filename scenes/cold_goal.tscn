@@ -3,12 +3,13 @@
 [ext_resource type="Texture2D" uid="uid://c40sj5fg3e1xm" path="res://assets/cold_goal.png" id="1_lquva"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_opt6p"]
-size = Vector2(15, 116)
+size = Vector2(13, 97)
 
-[node name="ColdGoal" type="StaticBody2D"]
+[node name="ColdGoal" type="StaticBody2D" groups=["goals"]]
+collision_layer = 272
+collision_mask = 4
 
 [node name="PhysicsShape" type="CollisionShape2D" parent="."]
-position = Vector2(-7.5, 0)
 shape = SubResource("RectangleShape2D_opt6p")
 
 [node name="Sprite" type="Sprite2D" parent="."]

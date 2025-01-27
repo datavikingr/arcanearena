@@ -8,7 +8,7 @@
 script = ExtResource("1_as18e")
 
 [node name="Hearts" type="Node2D" parent="."]
-position = Vector2(0, -13)
+position = Vector2(-0.5, -13)
 
 [node name="Heart1" type="Sprite2D" parent="Hearts"]
 position = Vector2(-7, 1)
@@ -45,19 +45,19 @@ vframes = 18
 frame = 21
 
 [node name="GoalsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 24)
+position = Vector2(16, 0)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12
 
 [node name="KillsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 39)
+position = Vector2(32, 0)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12
 
 [node name="DeathsSprite" type="Sprite2D" parent="."]
-position = Vector2(0, 54)
+position = Vector2(48, 0)
 texture = ExtResource("1_fdubh")
 hframes = 8
 vframes = 12

@@ -9,7 +9,7 @@ class_name PlayerUI
 @onready var ui_deaths: Sprite2D = $DeathsSprite
 
 var player_color: String
-var hp: int = 3
+var hp: int = 0
 var goals: int = 0
 var kills: int = 0
 var deaths: int = 0
