@@ -773,7 +773,13 @@ func player_special() -> void: # TODO Called by state_machine(); The Player is s
 func player_knockback() -> void: # TODO
 	pass
 
-func player_score() -> void: # TODO
+func player_score(player) -> void: # TODO
+	goals += 1
+	pass
+
+func own_goal(player) -> void: # TODO
+	#hp = 0
+	#TODO: Yes player dies on own goal, lmfao
 	pass
 
 func player_kill() -> void: # TODO
