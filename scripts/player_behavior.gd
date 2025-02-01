@@ -19,6 +19,8 @@ var player_input_Y: String # Called in input_handling(); Player input
 @export var kills: int = 0 # Player Kills, for UI & bragging rights
 @export var deaths: int = 0 # Player Deaths, for UI & shame
 var death_state: bool = false
+var knockback_state: bool = false
+var special_state: bool = false
 var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 var jump_speed: float = -400.0 # 400 is a little too high for the maps. 300 feels good. player_jump()
 var meteor_speed: int = 800 # 2x jump speed
@@ -134,6 +136,8 @@ var input_attack_hold: bool = false # Used by input_handling(); Player input var
 var input_block: bool = false # Used by input_handling(); Player input variable
 var input_block_hold: bool = false # Used by input_handling(); Player input variable
 var input_special: bool = false # Used by input_handling(); Player input variable
+# Signals
+signal kill
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
@@ -292,8 +296,8 @@ func construct_animations() -> void: # Called by ready(); Dynamic-player assignm
 	animation_data["idle"]["trail_right_positions"] = [Vector2(2.5, -2.5), Vector2(2.5, -3.5)]
 	# Idle Left
 	animation_data["idle_left"] = animation_data["idle"].duplicate()
-	animation_data["idle_left"]["trail_left_positions"] = [Vector2(-0.5,-2.5), Vector2(-0.5,-1.5)]
-	animation_data["idle_left"]["trail_right_positions"] = [Vector2(-2.5,-2.5), Vector2(-2.5,-1.5)]
+	animation_data["idle_left"]["trail_left_positions"] = [Vector2(-0.5,-2.5), Vector2(-0.5,-3.5)]
+	animation_data["idle_left"]["trail_right_positions"] = [Vector2(-2.5,-2.5), Vector2(-2.5,-3.5)]
 	# Run
 	animation_data["run"] = animation_data["default_anim_data"].duplicate()
 	animation_data["run"]["sprite_frames"] = [run_frames[0], run_frames[1]]
@@ -343,6 +347,7 @@ func construct_animations() -> void: # Called by ready(); Dynamic-player assignm
 	animation_data["slide_left"]["trail_right_positions"] = [Vector2(-4.5,5.5), Vector2(-4.5,5.5)]
 	# Death
 	animation_data["death"] = animation_data["default_anim_data"].duplicate()
+	animation_data["death"].loop = false
 	animation_data["death"]["sprite_frames"] = [death_frames[0], death_frames[1]]
 	animation_data["death"]["trail_left_vis"] = false
 	animation_data["death"]["trail_right_vis"] = false
@@ -427,7 +432,6 @@ func construct_animations() -> void: # Called by ready(); Dynamic-player assignm
 			anim.track_insert_key(track_index, 0, animation_data[animation]["meteor_spike_sprite"])
 
 func construct_melee() -> void:
-	var attack_frames: Array = []
 	var blue_attack: Array[int] = [16, 17]
 	var green_attack: Array[int] = [40, 41]
 	var purple_attack: Array[int] = [64, 65]
@@ -468,7 +472,7 @@ func input_handling(_delta: float) -> void: # Called every frame, by _physics_pr
 	input_attack_hold = Input.is_action_pressed(player_input_X) # X Button hold - for cast ing catch-state (addressing pulse animations)
 	input_block = Input.is_action_just_pressed(player_input_B) # B button
 	input_block_hold = Input.is_action_pressed(player_input_B) # X Button hold - for cast ing catch-state (addressing pulse animations)
-	input_special = Input.is_action_just_pressed(player_input_Y) # Y button
+	input_special = Input.is_action_pressed(player_input_Y) # Y button
 
 	# This is to establish last facing direction, so when we stop facing left, we can auto-slide that direction instead of defaulting to slide right.
 	if move_left_right > 0:
@@ -483,8 +487,10 @@ func input_handling(_delta: float) -> void: # Called every frame, by _physics_pr
 	player_aim() # We want the player to aim, regardless of state
 
 	# On-ground States
-	if abs(move_left_right) > player_setting_deadzone and not is_in_air() and cast_anim_timer.is_stopped(): # Pressed left/right on floor, w/ player-set deadzone
+	if not knockback_state and (move_left_right) > player_setting_deadzone and not is_in_air() and cast_anim_timer.is_stopped(): # Pressed left/right on floor, w/ player-set deadzone
 		current_state = get_state_directionality(State.RUN)
+	elif knockback_state:
+		current_state = get_state_directionality(State.SQUAT)
 	else: # We're in the Dead Zone, check for up/down, if none revert to idle
 		if move_up_down < -player_setting_deadzone: # Pressed Down
 			current_state = get_state_directionality(State.SQUAT)
@@ -547,9 +553,11 @@ func input_handling(_delta: float) -> void: # Called every frame, by _physics_pr
 func state_machine() -> void: # Called every frame, by _physics_process()
 	match current_state:
 		State.IDLE: # Cold Team default
+			special_state = false
 			sprite_flip("right")
 			player.play("idle")
 		State.IDLE_LEFT: # Hot Team default
+			special_state = false
 			sprite_flip("left")
 			player.play("idle_left")
 		State.SQUAT:
@@ -557,12 +565,15 @@ func state_machine() -> void: # Called every frame, by _physics_process()
 		State.STRETCH:
 			player.play("stretch")
 		State.DEATH:
-			player.play("death")
-			player_death_init()
+			if death_state == false:
+				player.play("death")
+				player_death_init()
 		State.SPECIAL:
-			sprite_flip("right")
-			player.play("special")
-			player_special()
+			if special_state == false:
+				player.play("special")
+				special_state = true
+				sprite_flip("right")
+				player_special()
 		State.RUN:
 			sprite_flip("right")
 			player.play("run")
@@ -651,13 +662,14 @@ func state_machine() -> void: # Called every frame, by _physics_process()
 #######################################################################################################################################################
 ## PLAYER ACTIONS
 func player_movement() -> void: # Called by input_handling(); Player movement
-	if move_left_right < -player_setting_deadzone: # Pressed Left w/ 25% deadzone
-		velocity.x = -run_speed  + outside_forces # Go Left, considering push forces
-	elif move_left_right > player_setting_deadzone: # Pressed Right w/ 25% deadzone
-		velocity.x = run_speed + outside_forces # Go Right, considering push forces
-	else: # 0 input
-		velocity.x = 0 + outside_forces # don't move, except push forces
-	outside_forces = 0.0
+	if knockback_state == false && death_state == false && special_state == false:
+		if move_left_right < -player_setting_deadzone: # Pressed Left w/ 25% deadzone
+			velocity.x = -run_speed  + outside_forces # Go Left, considering push forces
+		elif move_left_right > player_setting_deadzone: # Pressed Right w/ 25% deadzone
+			velocity.x = run_speed + outside_forces # Go Right, considering push forces
+		else: # 0 input
+			velocity.x = 0 + outside_forces # don't move, except push forces
+		outside_forces = 0.0
 
 func player_aim() ->void: # Called by input_handling(); Player aim
 	if not player_is_aiming():
@@ -772,7 +784,20 @@ func player_special() -> void: # TODO Called by state_machine(); The Player is s
 	pass
 
 func player_knockback() -> void: # TODO
+	if knockback_state == false:
+		knockback_state = true
+		var knockback_timer = Timer.new()
+		knockback_timer.wait_time = 0.25
+		knockback_timer.one_shot = true
+		knockback_timer.name = "KnockbackTimer"
+		add_child(knockback_timer)
+		knockback_timer.timeout.connect(knockback_reset)
+		knockback_timer.start()
 	pass
+
+func knockback_reset():
+	get_node("KnockbackTimer").queue_free()
+	knockback_state = false
 
 func player_score(player_name) -> void: # TODO
 	if player_name == self.name:
@@ -786,19 +811,27 @@ func own_goal(player_name) -> void: # TODO
 		#hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
 		print("#4 "+self.name+" knows what he did")
 
-func player_hurt() -> void:
+func player_hurt(attacker) -> void:
 	hp -= 1
-	pass
+	player_knockback()
+	if hp <= 0:
+		announce_killer(attacker)
+
+func announce_killer(attacker):
+	var killer = get_parent().get_node(attacker)
+	if not self.kill.is_connected(Callable(killer, "player_kill")):
+		self.kill.connect(Callable(killer, "player_kill"))
+	kill.emit()
 
 func player_kill() -> void: # TODO
-	pass
+	kills += 1
 
 func player_death_init() -> void: # TODO Called by state_machine();
 	if death_state  == false:
 		deaths += 1
 		death_state = true
 		var death_timer = Timer.new()
-		death_timer.wait_time = 0.5
+		death_timer.wait_time = 5
 		death_timer.one_shot = true
 		death_timer.name = "DeathTimer"
 		add_child(death_timer)
@@ -806,6 +839,7 @@ func player_death_init() -> void: # TODO Called by state_machine();
 		death_timer.start()
 
 func death_reset() -> void:
+	get_node("DeathTimer").queue_free()
 	death_state = false
 	hp = 3
 	current_state = get_state_directionality(State.IDLE)

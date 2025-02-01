@@ -50,17 +50,17 @@ func _on_body_entered(body: Node) -> void:
 		body.apply_central_impulse(force_vector) # Apply the force to the ball
 		queue_free()
 	elif body.is_in_group("players"):# and not body.is_in_group("ColdTeam"): # Assuming you are firing as a ColdTeam player
-		print("We have player contact!")
+		#print("We have player contact!")
 		if body.name != player_color: # Make sure it's not self contact
-			print("We didn't hit the missile ourselves")
+			#print("We didn't hit the missile ourselves")
 			if not has_common_group(body): # Doesn't belong to the same group as self
-				print("We have enemy contact!") # Debug
+				#print("We have enemy contact!") # Debug
 				self.enemy_missile_contact.connect(Callable(body, "player_hurt"))
-				enemy_missile_contact.emit()
+				enemy_missile_contact.emit(player_color)
 				queue_free()
 				#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
 			else: # Friendly fire, no effect.
-				print("Friendly Fire!") # Debug
+				#print("Friendly Fire!") # Debug
 				queue_free()
 	else: #Non-ball, non-player contact, likely a wall
 		queue_free() # Destroy the projectile after collision

@@ -1,8 +1,9 @@
 extends Node2D
 
-var goals: int = 0
-
+# Nodes
 @onready var ui_goals: Sprite2D = $GoalsSprite
+# Local
+var goals: int = 0
 
 func ready() -> void:
 	pass

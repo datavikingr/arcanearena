@@ -1,6 +1,5 @@
 extends RigidBody2D
 
-var body: Array[Node2D] # bodies the ball is contacting with; used in _physics_process()
 var last_contact: String = "" # Keeps track of the last player to touch the ball
 var penultimate_contact: String = "" #So we can see next previous possession
 var current_team_possession: PlayerCharacter
@@ -29,7 +28,7 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 	for body in get_colliding_bodies():
 		if body.is_in_group("goals"):
 			goal.emit(last_contact, body)
-			print("#1 Goal Signal emitted by: "+last_contact)
+			#print("#1 Goal Signal emitted by: "+last_contact)
 			#self.free() 											#TEST
 			#TODO: Ball explosion
 			#TODO: Regen ball.
