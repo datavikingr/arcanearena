@@ -453,7 +453,7 @@ func _physics_process(delta: float) -> void: # Called every frame. We're gonna c
 	move_and_slide() # Execute the movement accumulated from velocity changes above
 	physics_collisions() # React to Physics, as per the movement and contact with other objects.
 
-func input_handling(delta: float) -> void: # Called every frame, by _physics_process()
+func input_handling(_delta: float) -> void: # Called every frame, by _physics_process()
 	# Gathering input data
 	move_left_right = Input.get_axis(player_input_left, player_input_right) # D-pad & L-stick X axis
 	move_up_down = Input.get_axis(player_input_down, player_input_up) # D-pad & L-stick Y axis
@@ -773,14 +773,17 @@ func player_special() -> void: # TODO Called by state_machine(); The Player is s
 func player_knockback() -> void: # TODO
 	pass
 
-func player_score(player) -> void: # TODO
-	goals += 1
-	pass
+func player_score(player_name) -> void: # TODO
+	if player_name == self.name:
+		goals += 1
+		print("#4 "+self.name+" is celebrating their success!!")
 
-func own_goal(player) -> void: # TODO
-	#hp = 0
-	#TODO: Yes player dies on own goal, lmfao
-	pass
+
+func own_goal(player_name) -> void: # TODO
+	if player_name == self.name:
+		deaths += 1 #TEST
+		#hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
+		print("#4 "+self.name+" knows what he did")
 
 func player_kill() -> void: # TODO
 	pass

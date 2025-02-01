@@ -123,11 +123,11 @@ position = Vector2(647, 17)
 
 [node name="ColdGoal" parent="Map/Goals" instance=ExtResource("8_mar6g")]
 unique_name_in_owner = true
-position = Vector2(18.5, 114)
+position = Vector2(18.5, 264)
 
 [node name="HotGoal" parent="Map/Goals" instance=ExtResource("9_10jty")]
 unique_name_in_owner = true
-position = Vector2(621.5, 115)
+position = Vector2(621.5, 265)
 
 [node name="UI" type="Node2D" parent="."]
 
@@ -184,9 +184,11 @@ unique_name_in_owner = true
 position = Vector2(314, 267)
 
 [node name="Player1" parent="." instance=ExtResource("16_xo7ig")]
+unique_name_in_owner = true
 position = Vector2(156, 326)
 
 [node name="Player2" parent="." instance=ExtResource("15_d1dub")]
+unique_name_in_owner = true
 position = Vector2(501, 304)
 
 [node name="MagicLayer" type="Node2D" parent="."]
@@ -194,9 +196,6 @@ unique_name_in_owner = true
 
 [node name="TimeControl" parent="MagicLayer" instance=ExtResource("17_8ypjd")]
 visible = false
-
-[connection signal="goal" from="Ball" to="Map/Goals/ColdGoal" method="_on_ball_goal"]
-[connection signal="goal" from="Ball" to="Map/Goals/HotGoal" method="_on_ball_goal"]
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
