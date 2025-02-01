@@ -2198,9 +2198,6 @@ width_curve = SubResource("Curve_7ob05")
 gradient = ExtResource("6_ey07m")
 script = ExtResource("5_8ijrq")
 
-[node name="AttackCooldown" type="Timer" parent="."]
-one_shot = true
-
 [node name="AimReticle" type="Sprite2D" parent="."]
 visible = false
 position = Vector2(0.0157413, -2.04272)
@@ -2217,6 +2214,9 @@ texture = ExtResource("2_70tjt")
 hframes = 8
 vframes = 18
 frame = 69
+
+[node name="AttackCooldown" type="Timer" parent="."]
+one_shot = true
 
 [node name="CastAnimationTimer" type="Timer" parent="."]
 wait_time = 0.5

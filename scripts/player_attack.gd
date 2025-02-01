@@ -11,6 +11,8 @@ var player_color: String
 var anim_name: String
 var anim: Animation
 var attack_force: float = 750.0
+# Signals
+signal enemy_contact
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
@@ -44,6 +46,9 @@ func _on_body_entered(body: Node) -> void:
 			if not has_common_group(body): # Doesn't belong to the same group as self
 				#print("We have enemy contact!") # Debug
 				#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
+				self.enemy_contact.connect(Callable(body,"player_hurt"))
+				enemy_contact.emit()
+				queue_free()
 				pass
 			else: # Friendly fire, no effect.
 				#print("Friendly Fire!") # Debug

@@ -14,19 +14,17 @@ var goals: int = 0
 var kills: int = 0
 var deaths: int = 0
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
+func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	pass
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(_delta: float) -> void:
+func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	get_hp()
 	get_goals()
 	get_kills()
 	get_deaths()
 	pass
 
-func get_hp() -> void:
+func get_hp() -> void: # Called every frame by _process()
 	match hp:
 		3:
 			heart_one.frame = 10
@@ -49,7 +47,7 @@ func get_hp() -> void:
 			heart_two.frame = 10
 			heart_thr.frame = 11
 
-func get_goals() -> void:
+func get_goals() -> void: # Called every frame by _process()
 	match goals:
 		0:
 			ui_goals.frame = 0
@@ -112,7 +110,7 @@ func get_goals() -> void:
 			ui_goals.frame = 9
 			ui_goals.modulate = Color(1, 1, 0)
 
-func get_kills() -> void:
+func get_kills() -> void: # Called every frame by _process()
 	match kills:
 		0:
 			ui_kills.frame = 0
@@ -175,7 +173,7 @@ func get_kills() -> void:
 			ui_kills.frame = 9
 			ui_kills.modulate = Color(1, 1, 0)
 
-func get_deaths() -> void:
+func get_deaths() -> void: # Called every frame by _process()
 	match deaths:
 		0:
 			ui_deaths.frame = 0

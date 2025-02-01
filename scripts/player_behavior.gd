@@ -18,6 +18,7 @@ var player_input_Y: String # Called in input_handling(); Player input
 @export var goals: int = 0 # Player goals, for UI & game score
 @export var kills: int = 0 # Player Kills, for UI & bragging rights
 @export var deaths: int = 0 # Player Deaths, for UI & shame
+var death_state: bool = false
 var run_speed: int = 200 # Feels like a good lateral speed for now - was 200, feedback is better. player_movement()
 var jump_speed: float = -400.0 # 400 is a little too high for the maps. 300 feels good. player_jump()
 var meteor_speed: int = 800 # 2x jump speed
@@ -557,7 +558,7 @@ func state_machine() -> void: # Called every frame, by _physics_process()
 			player.play("stretch")
 		State.DEATH:
 			player.play("death")
-			player_death()
+			player_death_init()
 		State.SPECIAL:
 			sprite_flip("right")
 			player.play("special")
@@ -777,7 +778,7 @@ func player_score(player_name) -> void: # TODO
 	if player_name == self.name:
 		goals += 1
 		print("#4 "+self.name+" is celebrating their success!!")
-
+		#TODO: Celebration animation??
 
 func own_goal(player_name) -> void: # TODO
 	if player_name == self.name:
@@ -785,11 +786,30 @@ func own_goal(player_name) -> void: # TODO
 		#hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
 		print("#4 "+self.name+" knows what he did")
 
+func player_hurt() -> void:
+	hp -= 1
+	pass
+
 func player_kill() -> void: # TODO
 	pass
 
-func player_death() -> void: # TODO Called by state_machine();
-	player.play("death")
+func player_death_init() -> void: # TODO Called by state_machine();
+	if death_state  == false:
+		deaths += 1
+		death_state = true
+		var death_timer = Timer.new()
+		death_timer.wait_time = 0.5
+		death_timer.one_shot = true
+		death_timer.name = "DeathTimer"
+		add_child(death_timer)
+		death_timer.timeout.connect(death_reset)
+		death_timer.start()
+
+func death_reset() -> void:
+	death_state = false
+	hp = 3
+	current_state = get_state_directionality(State.IDLE)
+	pass
 
 #######################################################################################################################################################
 ## CONTROLLERS

@@ -3,6 +3,7 @@ extends StaticBody2D
 @onready var ball: RigidBody2D = %Ball
 @onready var player1: PlayerCharacter = %Player1
 @onready var player2: PlayerCharacter = %Player2
+@onready var coldui: Node2D = %ColdTeamUI
 
 signal hot_own_goal(player_name: String)
 signal hot_player_score(player_name: String)
@@ -12,8 +13,9 @@ var init_goals: bool
 
 func _ready() -> void:
 	self.add_to_group("HotTeam")
+	self.hot_player_score.connect(Callable(coldui, "score"))
+	self.hot_own_goal.connect(Callable(coldui, "score"))
 	init_goals = true
-
 
 func _goal(player_name, body) -> void:
 	if body != self:
