@@ -807,9 +807,7 @@ func player_score(player_name) -> void: # TODO
 
 func own_goal(player_name) -> void: # TODO
 	if player_name == self.name:
-		deaths += 1 #TEST
-		#hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
-		print("#4 "+self.name+" knows what he did")
+		hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
 
 func player_hurt(attacker) -> void:
 	hp -= 1
@@ -823,10 +821,10 @@ func announce_killer(attacker):
 		self.kill.connect(Callable(killer, "player_kill"))
 	kill.emit()
 
-func player_kill() -> void: # TODO
+func player_kill() -> void:
 	kills += 1
 
-func player_death_init() -> void: # TODO Called by state_machine();
+func player_death_init() -> void:
 	if death_state  == false:
 		deaths += 1
 		death_state = true
