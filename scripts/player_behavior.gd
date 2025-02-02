@@ -670,6 +670,8 @@ func player_movement() -> void: # Called by input_handling(); Player movement
 		else: # 0 input
 			velocity.x = 0 + outside_forces # don't move, except push forces
 		outside_forces = 0.0
+	else:
+		velocity.x = 0
 
 func player_aim() ->void: # Called by input_handling(); Player aim
 	if not player_is_aiming():

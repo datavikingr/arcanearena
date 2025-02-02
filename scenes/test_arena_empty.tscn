@@ -139,7 +139,7 @@ position = Vector2(305, 17.5)
 
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(12, 17)
+position = Vector2(37, 19)
 script = ExtResource("7_87kly")
 
 [node name="PlayerSprite" parent="UI/BlueUI" index="1"]
@@ -147,7 +147,7 @@ frame = 13
 
 [node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(88, 17)
+position = Vector2(113, 19)
 script = ExtResource("8_q2urm")
 
 [node name="PlayerSprite" parent="UI/GreenUI" index="1"]
@@ -155,7 +155,7 @@ frame = 37
 
 [node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(164, 17)
+position = Vector2(189, 19)
 script = ExtResource("9_gc17j")
 
 [node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
@@ -167,7 +167,7 @@ position = Vector2(335, 17.5)
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(585, 17)
+position = Vector2(560, 19)
 script = ExtResource("10_8sjcl")
 
 [node name="PlayerSprite" parent="UI/RedUI" index="1"]
@@ -175,7 +175,7 @@ frame = 85
 
 [node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(509, 17)
+position = Vector2(484, 19)
 script = ExtResource("11_n8n62")
 
 [node name="PlayerSprite" parent="UI/YellowUI" index="1"]
@@ -183,7 +183,7 @@ frame = 109
 
 [node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
-position = Vector2(433, 17)
+position = Vector2(408, 19)
 script = ExtResource("12_vnq04")
 
 [node name="PlayerSprite" parent="UI/OrangeUI" index="1"]

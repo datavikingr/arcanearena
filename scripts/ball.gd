@@ -47,6 +47,7 @@ func ball_die():
 		goal_state = true
 		ball_sprite.visible = false
 		countdown_sprite.visible = true
+		countdown_sprite.modulate = Color(1, 0, 0)
 		linear_velocity = Vector2(0,0)
 		angular_velocity = 0.0
 		rotation = 0
