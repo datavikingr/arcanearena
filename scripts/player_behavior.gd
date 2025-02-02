@@ -783,7 +783,7 @@ func player_platform() -> void: #Called by state_machine(); Localized matgic flo
 func player_special() -> void: # TODO Called by state_machine(); The Player is spending their 'smash ball' scroll
 	pass
 
-func player_knockback() -> void: # TODO
+func player_knockback() -> void:
 	if knockback_state == false:
 		knockback_state = true
 		var knockback_timer = Timer.new()
@@ -799,27 +799,23 @@ func knockback_reset():
 	get_node("KnockbackTimer").queue_free()
 	knockback_state = false
 
-func player_score(player_name) -> void: # TODO
+func player_score(player_name) -> void: # TODO?? Maybe a celebration animation?
 	if player_name == self.name:
 		goals += 1
-		print("#4 "+self.name+" is celebrating their success!!")
-		#TODO: Celebration animation??
 
-func own_goal(player_name) -> void: # TODO
+func own_goal(player_name) -> void:
 	if player_name == self.name:
-		hp = 0 #TODO: Yes player dies on own goal, lmfao, as they ~should~.
+		hp = 0
 
 func player_hurt(attacker) -> void:
 	hp -= 1
 	player_knockback()
 	if hp <= 0:
-		announce_killer(attacker)
-
-func announce_killer(attacker):
-	var killer = get_parent().get_node(attacker)
-	if not self.kill.is_connected(Callable(killer, "player_kill")):
-		self.kill.connect(Callable(killer, "player_kill"))
-	kill.emit()
+		var killer = get_parent().get_node(attacker)
+		if not self.kill.is_connected(Callable(killer, "player_kill")):
+			self.kill.connect(Callable(killer, "player_kill"))
+		kill.emit()
+		self.kill.disconnect(Callable(killer, "player_kill"))
 
 func player_kill() -> void:
 	kills += 1

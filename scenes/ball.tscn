@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=3 uid="uid://bwn62t14qa0a0"]
+[gd_scene load_steps=6 format=3 uid="uid://bwn62t14qa0a0"]
 
 [ext_resource type="Texture2D" uid="uid://c1httc2obgnaf" path="res://assets/ball.png" id="1_61etl"]
 [ext_resource type="Script" path="res://scripts/ball.gd" id="1_k4exm"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="3_dlt2n"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f475m"]
 bounce = 0.64
@@ -22,5 +23,13 @@ script = ExtResource("1_k4exm")
 [node name="PhysicsShape" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_dflga")
 
-[node name="Sprite" type="Sprite2D" parent="."]
+[node name="BallSprite" type="Sprite2D" parent="."]
 texture = ExtResource("1_61etl")
+
+[node name="CountdownSprite" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(0, -26)
+texture = ExtResource("3_dlt2n")
+hframes = 8
+vframes = 12
+frame = 3

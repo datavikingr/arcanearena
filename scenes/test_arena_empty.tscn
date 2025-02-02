@@ -191,7 +191,8 @@ frame = 133
 
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
-position = Vector2(320, 267)
+position = Vector2(320, 90)
+continuous_cd = 0
 
 [node name="Player1" parent="." instance=ExtResource("16_xo7ig")]
 unique_name_in_owner = true
