@@ -1,10 +1,10 @@
 [gd_scene load_steps=30 format=3 uid="uid://x1l6ji4xxc3x"]
 
-[ext_resource type="Script" path="res://scripts/player2.gd" id="1_q64lh"]
+[ext_resource type="Script" uid="uid://buifs5qugrcdy" path="res://scripts/player2.gd" id="1_q64lh"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_83qg3"]
 [ext_resource type="PackedScene" uid="uid://uskrmwhqnjx5" path="res://scenes/trail.tscn" id="3_7f7fi"]
 [ext_resource type="Gradient" uid="uid://cxpxqrpnsj4hk" path="res://resources/red_gradient.tres" id="4_vi0t1"]
-[ext_resource type="Script" path="res://scripts/playereyetrail.gd" id="5_u8riw"]
+[ext_resource type="Script" uid="uid://bg8ajmijhd2o8" path="res://scripts/playereyetrail.gd" id="5_u8riw"]
 [ext_resource type="Gradient" uid="uid://l2lj34l012p2" path="res://resources/cyan_gradient.tres" id="6_uy8sj"]
 
 [sub_resource type="Animation" id="Animation_lokpq"]
@@ -2130,27 +2130,27 @@ tracks/7/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_b06bv"]
 _data = {
-"RESET": SubResource("Animation_lokpq"),
-"cast": SubResource("Animation_em0i0"),
-"cast_left": SubResource("Animation_ruk2p"),
-"death": SubResource("Animation_joxvx"),
-"falldown": SubResource("Animation_nfjee"),
-"falldown_left": SubResource("Animation_su3yu"),
-"fallsideways": SubResource("Animation_3l1h0"),
-"fallsideways_left": SubResource("Animation_byq7p"),
-"idle": SubResource("Animation_lgg0o"),
-"idle_left": SubResource("Animation_n1uvk"),
-"jump": SubResource("Animation_1r5qw"),
-"jump_left": SubResource("Animation_eu8nr"),
-"meteor": SubResource("Animation_68dpm"),
-"meteor_left": SubResource("Animation_kp1h7"),
-"run": SubResource("Animation_n70cj"),
-"run_left": SubResource("Animation_e2ld6"),
-"slide": SubResource("Animation_tlkah"),
-"slide_left": SubResource("Animation_wuubm"),
-"special": SubResource("Animation_31xjn"),
-"squat": SubResource("Animation_0d8tp"),
-"stretch": SubResource("Animation_cktr5")
+&"RESET": SubResource("Animation_lokpq"),
+&"cast": SubResource("Animation_em0i0"),
+&"cast_left": SubResource("Animation_ruk2p"),
+&"death": SubResource("Animation_joxvx"),
+&"falldown": SubResource("Animation_nfjee"),
+&"falldown_left": SubResource("Animation_su3yu"),
+&"fallsideways": SubResource("Animation_3l1h0"),
+&"fallsideways_left": SubResource("Animation_byq7p"),
+&"idle": SubResource("Animation_lgg0o"),
+&"idle_left": SubResource("Animation_n1uvk"),
+&"jump": SubResource("Animation_1r5qw"),
+&"jump_left": SubResource("Animation_eu8nr"),
+&"meteor": SubResource("Animation_68dpm"),
+&"meteor_left": SubResource("Animation_kp1h7"),
+&"run": SubResource("Animation_n70cj"),
+&"run_left": SubResource("Animation_e2ld6"),
+&"slide": SubResource("Animation_tlkah"),
+&"slide_left": SubResource("Animation_wuubm"),
+&"special": SubResource("Animation_31xjn"),
+&"squat": SubResource("Animation_0d8tp"),
+&"stretch": SubResource("Animation_cktr5")
 }
 
 [sub_resource type="Curve" id="Curve_7ob05"]

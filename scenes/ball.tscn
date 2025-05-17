@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://bwn62t14qa0a0"]
 
 [ext_resource type="Texture2D" uid="uid://c1httc2obgnaf" path="res://assets/ball.png" id="1_61etl"]
-[ext_resource type="Script" path="res://scripts/ball.gd" id="1_k4exm"]
+[ext_resource type="Script" uid="uid://cktpq65dv35ln" path="res://scripts/ball.gd" id="1_k4exm"]
 [ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="3_dlt2n"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_f475m"]
@@ -11,6 +11,7 @@ bounce = 0.64
 radius = 16.0
 
 [node name="Ball" type="RigidBody2D" groups=["balls"]]
+position = Vector2(0, 1)
 collision_layer = 4
 collision_mask = 255
 physics_material_override = SubResource("PhysicsMaterial_f475m")

@@ -1,6 +1,6 @@
 [gd_scene load_steps=12 format=3 uid="uid://d6k5n61qtd2"]
 
-[ext_resource type="Script" path="res://scripts/player_attack.gd" id="1_c41aa"]
+[ext_resource type="Script" uid="uid://b11vbyrya3qwk" path="res://scripts/player_attack.gd" id="1_c41aa"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_aeg3t"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ktpgn"]
@@ -396,13 +396,13 @@ tracks/3/keys = {
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_d0nr1"]
 _data = {
-"RESET": SubResource("Animation_ya60c"),
-"blue_attack": SubResource("Animation_0h14n"),
-"green_attack": SubResource("Animation_2xigo"),
-"orange_attack": SubResource("Animation_2o5ji"),
-"purple_attack": SubResource("Animation_nu31g"),
-"red_attack": SubResource("Animation_3ywrl"),
-"yellow_attack": SubResource("Animation_bdgyr")
+&"RESET": SubResource("Animation_ya60c"),
+&"blue_attack": SubResource("Animation_0h14n"),
+&"green_attack": SubResource("Animation_2xigo"),
+&"orange_attack": SubResource("Animation_2o5ji"),
+&"purple_attack": SubResource("Animation_nu31g"),
+&"red_attack": SubResource("Animation_3ywrl"),
+&"yellow_attack": SubResource("Animation_bdgyr")
 }
 
 [node name="PlayerAttack" type="RigidBody2D"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://csmhjkox5eqkv"]
 
-[ext_resource type="Script" path="res://scripts/cold_team_ui.gd" id="1_1dlh5"]
+[ext_resource type="Script" uid="uid://ic66r4d4tr7" path="res://scripts/cold_team_ui.gd" id="1_1dlh5"]
 [ext_resource type="Texture2D" uid="uid://cmyqylwyb1qu5" path="res://assets/coldteam_scoreui.png" id="1_b0urk"]
 [ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="2_lw38n"]
 

@@ -1,6 +1,6 @@
 [gd_scene load_steps=4 format=3 uid="uid://cjb2rfjtr5xsn"]
 
-[ext_resource type="Script" path="res://scripts/hot_goal.gd" id="1_6eene"]
+[ext_resource type="Script" uid="uid://dlqv57hy17033" path="res://scripts/hot_goal.gd" id="1_6eene"]
 [ext_resource type="Texture2D" uid="uid://chxnf687wseij" path="res://assets/hot_goal.png" id="1_jf0r6"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_opt6p"]

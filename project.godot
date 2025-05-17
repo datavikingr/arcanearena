@@ -14,7 +14,7 @@ config/name="Arcane Arena"
 config/description="Wizards playing arcane soccer."
 config/version="0.1"
 run/main_scene="res://scenes/test_arena_empty.tscn"
-config/features=PackedStringArray("4.3", "Forward Plus")
+config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/bg_color=Color(0, 0, 0, 1)
 
 [display]

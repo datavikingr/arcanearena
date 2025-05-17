@@ -44,6 +44,7 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 func ball_die():
 	if goal_state == false:
 		self.global_transform.origin = Vector2(320,90)
+		self.freeze = true
 		goal_state = true
 		ball_sprite.visible = false
 		countdown_sprite.visible = true
@@ -76,6 +77,7 @@ func ball_respawn():
 		goal_state = false
 		ball_sprite.visible = true
 		gravity_scale = 1
+		self.freeze = false
 		print("Contact Monitor should be back on.")
 	pass
 
