@@ -2177,7 +2177,7 @@ vframes = 18
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {
-"": SubResource("AnimationLibrary_b06bv")
+&"": SubResource("AnimationLibrary_b06bv")
 }
 
 [node name="TremorSense" type="RayCast2D" parent="."]
