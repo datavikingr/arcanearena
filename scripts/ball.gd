@@ -3,6 +3,8 @@ extends RigidBody2D
 # Nodese
 @onready var goal_hot: StaticBody2D = %HotGoal
 @onready var goal_cold: StaticBody2D = %ColdGoal
+@onready var splosion_hot: GPUParticles2D = %HotGoalExplosion
+@onready var splosion_cold: GPUParticles2D = %ColdGoalExplosion
 @onready var ball_sprite: Sprite2D = get_node("BallSprite")
 @onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
 # Local
@@ -21,6 +23,8 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
+	ball_die()
+	ball_respawn()
 	pass # Replace with function body.
 
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -33,6 +37,13 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 	if contact_monitor == true:
 		for body in get_colliding_bodies():
 			if body.is_in_group("goals"):
+				var goal_position = self.global_position # Cache the position BEFORE ball_die()
+				if body.is_in_group("coldteam"):
+					splosion_hot.global_position = goal_position
+					splosion_hot.emitting = true
+				else:
+					splosion_cold.global_position = goal_position
+					splosion_cold.emitting = true
 				goal.emit(last_contact, body)
 				contact_monitor = false
 				ball_die()
@@ -60,7 +71,6 @@ func ball_die():
 		add_child(ball_timer)
 		ball_timer.timeout.connect(ball_respawn)
 		ball_timer.start()
-		#TODO: Ball explosion
 
 func ball_respawn():
 	var balltimer = get_node("BallTimer")

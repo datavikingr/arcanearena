@@ -31,6 +31,8 @@ players=""
 balls=""
 goals=""
 ramps=""
+coldteam=""
+hotteam=""
 
 [input]
 

@@ -1,4 +1,4 @@
-[gd_scene load_steps=23 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=25 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -22,6 +22,8 @@
 [ext_resource type="PackedScene" uid="uid://bhl8wkiu38vtc" path="res://scenes/hot_team_ui.tscn" id="15_fuq6r"]
 [ext_resource type="PackedScene" uid="uid://cdvp5lryb85dh" path="res://scenes/player1.tscn" id="16_xo7ig"]
 [ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="17_8ypjd"]
+[ext_resource type="PackedScene" uid="uid://cyjwmp1vsxxpx" path="res://scenes/cold_goal_explosion.tscn" id="20_t57ip"]
+[ext_resource type="PackedScene" uid="uid://d10d3vo7gehv4" path="res://scenes/hot_goal_explosion.tscn" id="21_j3giw"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 
@@ -193,6 +195,12 @@ frame = 133
 unique_name_in_owner = true
 position = Vector2(320, 90)
 continuous_cd = 0
+
+[node name="ColdGoalExplosion" parent="." instance=ExtResource("20_t57ip")]
+unique_name_in_owner = true
+
+[node name="HotGoalExplosion" parent="." instance=ExtResource("21_j3giw")]
+unique_name_in_owner = true
 
 [node name="Player1" parent="." instance=ExtResource("16_xo7ig")]
 unique_name_in_owner = true
