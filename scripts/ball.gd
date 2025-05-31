@@ -7,6 +7,8 @@ extends RigidBody2D
 @onready var splosion_cold: GPUParticles2D = %ColdGoalExplosion
 @onready var ball_sprite: Sprite2D = get_node("BallSprite")
 @onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
+@onready var hot_goal_detector: RayCast2D = get_node("HotGoalRayCast")
+@onready var cold_goal_detector: RayCast2D = get_node("ColdGoalRayCast")
 # Local
 var last_contact: String = "" # Keeps track of the last player to touch the ball
 var penultimate_contact: String = "" #So we can see next previous possession
@@ -93,4 +95,21 @@ func ball_respawn():
 
 func on_fire() -> void:
 	# Ball on fire animation
+	pass
+
+func detect_hot_goal() -> void:
+	var to_goal = (goal_hot.global_position - global_position).normalized()
+	hot_goal_detector.target_position = to_goal * 48 # Or however long you want the ray
+	hot_goal_detector.force_raycast_update()
+	pass
+
+func detect_cold_goal() -> void:
+	pass
+
+func write_gitgud_message() -> void: #TODO
+	#Strike it!
+	#Harder next time!
+	#Well, it certainly was a shot.
+	#Your weakness disgusts me.
+	#gitgud
 	pass

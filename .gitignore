@@ -1,3 +1,4 @@
 # Godot 4+ specific ignores
 .godot/
 assets/krita_saves/inspo/
+addons/
