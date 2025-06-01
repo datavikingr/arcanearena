@@ -101,10 +101,11 @@ func detect_hot_goal() -> void:
 	var to_goal = (goal_hot.global_position - global_position).normalized()
 	hot_goal_detector.target_position = to_goal * 48 # Or however long you want the ray
 	hot_goal_detector.force_raycast_update()
-	pass
 
 func detect_cold_goal() -> void:
-	pass
+	var to_other_goal = (goal_hot.global_position - global_position).normalized()
+	hot_goal_detector.target_position = to_other_goal * 48 # Or however long you want the ray
+	hot_goal_detector.force_raycast_update()
 
 func write_gitgud_message() -> void: #TODO
 	#Strike it!
