@@ -126,6 +126,10 @@ scale = Vector2(0.1, 0.130556)
 [node name="BlockCoverSprite_NE" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
 position = Vector2(647, 17)
 
+[node name="BlockCoverSprite_East" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+position = Vector2(676, 194)
+scale = Vector2(0.1, 0.966667)
+
 [node name="Goals" type="Node2D" parent="Map"]
 
 [node name="ColdGoal" parent="Map/Goals" instance=ExtResource("8_mar6g")]
