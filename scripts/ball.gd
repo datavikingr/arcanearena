@@ -112,4 +112,5 @@ func write_gitgud_message() -> void: #TODO
 	#Well, it certainly was a shot.
 	#Your weakness disgusts me.
 	#gitgud
+	#oh, so close!!
 	pass

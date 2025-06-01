@@ -68,6 +68,10 @@ var outside_forces: float = 0.0 # Other players pushing on us, used in physics_c
 @onready var orange_ui_spike: Sprite2D = orange_ui.get_node("PlayerSpike")
 @onready var trail_left: Trails = $TrailLeft
 @onready var trail_right: Trails = $TrailRight
+# Spells
+@onready var spiderclimb: Node2D = %SpiderClimb
+@onready var snailstride: Node2D = %SnailStride
+
 # Misc
 enum State {IDLE, IDLE_LEFT, SQUAT, STRETCH, DEATH, SPECIAL, RUN, RUN_LEFT, ASCEND, ASCEND_LEFT, JUMP, JUMP_LEFT, FALL, FALL_LEFT, FALLSIDE, FALLSIDE_LEFT, SLIDE, SLIDE_LEFT, METEOR, METEOR_LEFT, ATTACK, ATTACK_LEFT, MISSILE, MISSILE_LEFT, BLOCK, BLOCK_LEFT, PLATFORM, PLATFORM_LEFT, CASTING, CASTING_LEFT}
 var current_state: State
@@ -536,7 +540,7 @@ func input_handling(_delta: float) -> void: # Called every frame, by _physics_pr
 	if input_block and is_on_floor(): # On the floor, we need the wall-block
 		current_state = get_state_directionality(State.BLOCK) # NOTE CAST animation & player_block()
 	elif input_block and not is_on_floor(): # In the air, we need the platform instead
-		current_state = get_state_directionality(State.PLATFORM) # NOTE CAST animation & player_platform() TODO
+		current_state = get_state_directionality(State.PLATFORM) # NOTE CAST animation & player_platform()
 
 	# Casting - Either X or B Buttons
 	if not cast_anim_timer.is_stopped(): # If the player's castanim timer node is running, we've just cast a spell
@@ -743,7 +747,7 @@ func player_missile() -> void: # Called by state_machine(); Ranged dart attack
 	# NOTE: After the above, players will collide with the opposite teams' attacks, and visa versa (from the default)
 		magic_layer.add_child(new_missile) # Add the new instance as a child of the magic layer node
 
-func player_block() -> void: # Called by state_machine(); Localized magic wall for defense #NOTE/FEEDBACK/TODO: It's been suggested to make the block bigger.
+func player_block() -> void: # Called by state_machine(); Localized magic wall for defense #TODO: Make the block magic bigger.
 	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
 	if cast_anim_timer.is_stopped():
 		cast_anim_timer.start()
@@ -864,14 +868,16 @@ func update_ui() -> void: # called very first _physics_process()
 func physics_collisions() -> void: # Called from _physics_process()
 	# after calling move_and_slide()
 	for i in range(get_slide_collision_count()): # Get collisions #, loop
-		#TODO: Okay, the following line, -here-, creates wall-stick. it's grippier than meatboy.
-		#self.velocity.y = 0
-		#TODO: I'm going to implement this as a match option, in the future.
 		collision = get_slide_collision(i) # Get collision, from # above
 		collider = collision.get_collider()
-		if collider.is_in_group("balls"): ###################################################HACK
-			collider.set("last_contact", self.name) ###################################################HACK
-		if collider.is_in_group("balls") and not is_on_top_of_ball() and not collider.is_in_group("ramps"): # if the collision is with the ball, and we're not on top of it.
+		if collider.is_in_group("walls") or collider.is_in_group("ramps"):
+			if spiderclimb.wallstick == true:
+				self.velocity.y = 0
+			if snailstride.meatboyslide == true:
+				self.velocity.x = 0.25
+				self.velocity.y = 0.95
+		elif collider.is_in_group("balls") and not is_on_top_of_ball(): # if the collision is with the ball, and we're not on top of it.
+			collider.set("last_contact", self.name)
 			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball
 			var normal = collision.get_normal() # Collision normal vector
 			var pinch_factor = relative_velocity.dot(normal) # Pinch factor based on collision speed

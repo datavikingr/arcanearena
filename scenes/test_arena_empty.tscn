@@ -1,4 +1,4 @@
-[gd_scene load_steps=25 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=28 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -24,6 +24,9 @@
 [ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="17_8ypjd"]
 [ext_resource type="PackedScene" uid="uid://cyjwmp1vsxxpx" path="res://scenes/cold_goal_explosion.tscn" id="20_t57ip"]
 [ext_resource type="PackedScene" uid="uid://d10d3vo7gehv4" path="res://scenes/hot_goal_explosion.tscn" id="21_j3giw"]
+[ext_resource type="PackedScene" uid="uid://q6m28lcoxxhk" path="res://scenes/spider_climb.tscn" id="25_j3giw"]
+[ext_resource type="PackedScene" uid="uid://dr3cvu3f7eq3w" path="res://scenes/snail_stride.tscn" id="26_bijpa"]
+[ext_resource type="Script" uid="uid://cqlwepj8502hw" path="res://scenes/haste.gd" id="27_mslhf"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 
@@ -69,10 +72,10 @@ rotation = -3.14159
 
 [node name="Map Borders" type="Node2D" parent="Map"]
 
-[node name="Map Border Wall East" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall East" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 position = Vector2(634, 187)
 
-[node name="Map Border Wall West" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall West" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 position = Vector2(6, 180)
 rotation = 3.14159
 
@@ -81,30 +84,30 @@ position = Vector2(322, 369)
 rotation = 1.5708
 scale = Vector2(1, 2)
 
-[node name="Map Border Wall North" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall North" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 position = Vector2(349, 14)
 rotation = -1.5708
 scale = Vector2(1, 2)
 
-[node name="Map Border Wall NW" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall NW" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 visible = false
 position = Vector2(-1405, -1533)
 rotation = -5.49779
 scale = Vector2(1, 4)
 
-[node name="Map Border Wall NE" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall NE" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 visible = false
 position = Vector2(2019, -1560)
 rotation = -3.92699
 scale = Vector2(1, 4)
 
-[node name="Map Border Wall SE" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall SE" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 visible = false
 position = Vector2(2072, 1865)
 rotation = -2.35619
 scale = Vector2(1, 4)
 
-[node name="Map Border Wall SW" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall SW" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 visible = false
 position = Vector2(-1643, 1683)
 rotation = -7.06858
@@ -210,11 +213,22 @@ position = Vector2(160, 300)
 unique_name_in_owner = true
 position = Vector2(480, 300)
 
-[node name="MagicLayer" type="Node2D" parent="."]
+[node name="Spells" type="Node2D" parent="."]
 unique_name_in_owner = true
 
-[node name="TimeControl" parent="MagicLayer" instance=ExtResource("17_8ypjd")]
+[node name="Slow" parent="Spells" instance=ExtResource("17_8ypjd")]
 visible = false
+
+[node name="SpiderClimb" parent="Spells" instance=ExtResource("25_j3giw")]
+unique_name_in_owner = true
+
+[node name="SnailStride" parent="Spells" instance=ExtResource("26_bijpa")]
+unique_name_in_owner = true
+visible = false
+
+[node name="Haste" type="Node2D" parent="Spells"]
+visible = false
+script = ExtResource("27_mslhf")
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

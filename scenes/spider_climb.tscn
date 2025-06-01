@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://q6m28lcoxxhk"]
+
+[ext_resource type="Script" uid="uid://ctj6cp3luvuwl" path="res://scenes/spider_climb.gd" id="1_lobb0"]
+
+[node name="SpiderClimb" type="Node2D"]
+visible = false
+script = ExtResource("1_lobb0")

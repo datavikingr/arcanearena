@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://dr3cvu3f7eq3w"]
+
+[ext_resource type="Script" uid="uid://di1hpyjf4381" path="res://scenes/snail_stride.gd" id="1_vor63"]
+
+[node name="SnailStride" type="Node2D"]
+script = ExtResource("1_vor63")
