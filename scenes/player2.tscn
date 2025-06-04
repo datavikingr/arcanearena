@@ -1,4 +1,4 @@
-[gd_scene load_steps=30 format=3 uid="uid://x1l6ji4xxc3x"]
+[gd_scene load_steps=31 format=3 uid="uid://x1l6ji4xxc3x"]
 
 [ext_resource type="Script" uid="uid://buifs5qugrcdy" path="res://scripts/player2.gd" id="1_q64lh"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_83qg3"]
@@ -6,6 +6,10 @@
 [ext_resource type="Gradient" uid="uid://cxpxqrpnsj4hk" path="res://resources/red_gradient.tres" id="4_vi0t1"]
 [ext_resource type="Script" uid="uid://bg8ajmijhd2o8" path="res://scripts/playereyetrail.gd" id="5_u8riw"]
 [ext_resource type="Gradient" uid="uid://l2lj34l012p2" path="res://resources/cyan_gradient.tres" id="6_uy8sj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gmtae"]
+radius = 5.5
+height = 18.0
 
 [sub_resource type="Animation" id="Animation_lokpq"]
 length = 0.001
@@ -2165,8 +2169,9 @@ platform_on_leave = 2
 platform_floor_layers = 4294901763
 script = ExtResource("1_q64lh")
 
-[node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-6, 5, -6, 5, -6, 1, -6, -5, -5, -7, -3, -8, 2, -8, 4, -7, 5, -5, 5, -2, 5, 3, 5, 6, 4, 8, 1, 9, 0, 9, -1, 9, -4, 8)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.5, 0)
+shape = SubResource("CapsuleShape2D_gmtae")
 
 [node name="Sprite" type="Sprite2D" parent="." groups=["players"]]
 position = Vector2(0, 7)

@@ -2169,9 +2169,6 @@ platform_on_leave = 2
 platform_floor_layers = 4294901763
 script = ExtResource("1_wk53d")
 
-[node name="PhysicsBody" type="CollisionPolygon2D" parent="."]
-polygon = PackedVector2Array(-6, 5, -6, 5, -6, 1, -6, -5, -5, -7, -3, -8, 2, -8, 4, -7, 5, -5, 5, -2, 5, 3, 5, 6, 4, 8, 1, 9, 0, 9, -1, 9, -4, 8)
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2(-0.5, 0)
 shape = SubResource("CapsuleShape2D_dcfem")

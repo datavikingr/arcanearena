@@ -33,9 +33,3 @@ texture = ExtResource("3_dlt2n")
 hframes = 8
 vframes = 12
 frame = 3
-
-[node name="HotGoalRayCast" type="RayCast2D" parent="."]
-target_position = Vector2(0, 48)
-
-[node name="ColdGoalRayCast" type="RayCast2D" parent="."]
-target_position = Vector2(0, 48)

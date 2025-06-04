@@ -27,7 +27,7 @@
 [ext_resource type="PackedScene" uid="uid://d10d3vo7gehv4" path="res://scenes/hot_goal_explosion.tscn" id="21_j3giw"]
 [ext_resource type="PackedScene" uid="uid://q6m28lcoxxhk" path="res://scenes/spider_climb.tscn" id="25_j3giw"]
 [ext_resource type="PackedScene" uid="uid://dr3cvu3f7eq3w" path="res://scenes/snail_stride.tscn" id="26_bijpa"]
-[ext_resource type="Script" uid="uid://cqlwepj8502hw" path="res://scenes/haste.gd" id="27_mslhf"]
+[ext_resource type="Script" uid="uid://cqlwepj8502hw" path="res://scripts/haste.gd" id="27_mslhf"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 

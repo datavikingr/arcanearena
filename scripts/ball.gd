@@ -7,33 +7,45 @@ extends RigidBody2D
 @onready var splosion_cold: GPUParticles2D = %ColdGoalExplosion
 @onready var ball_sprite: Sprite2D = get_node("BallSprite")
 @onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
-@onready var hot_goal_detector: RayCast2D = get_node("HotGoalRayCast")
-@onready var cold_goal_detector: RayCast2D = get_node("ColdGoalRayCast")
 # Local
 var last_contact: String = "" # Keeps track of the last player to touch the ball
 var penultimate_contact: String = "" #So we can see next previous possession
-var current_team_possession: PlayerCharacter
-var last_team_possession: PlayerCharacter
-var penult_team_possession: PlayerCharacter
 var force_multiplier
+var contact_names := [] # Holds up to 5 names
 @export var countdown: int = 3
 @export var goal_state: bool = false
 # Signals
 signal goal(player: String)
 
+#######################################################################################################################################################
+## STATUS-CHECK / CALLABLE FUNCTIONS
+func add_contact_name(new_name: String) -> void:
+	contact_names.insert(0, new_name) # Add to front
+	if contact_names.size() > 5:
+		contact_names.pop_back() # Drop oldest
+
+func detect_contacts():
+	return contact_names.size() == 5 and contact_names.count(contact_names[0]) == 5
+	#TODO detect for teams rather than players in the future;
+	#requires rework to player_behavior during physics_collisions() around line 880 to set additional data
+
+#######################################################################################################################################################
+## INIT/CONSTRUCTORS
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	ball_die()
 	ball_respawn()
-	pass # Replace with function body.
 
+#######################################################################################################################################################
+## EXECUTION / MAIN
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	if last_contact != penultimate_contact:
 		print(last_contact)
 		penultimate_contact = last_contact
-	pass
+	if detect_contacts():
+		on_fire()
 
 func _physics_process(_delta: float) -> void: # Called every frame. We're gonna collect data from collisions here. Separate thread from _process().
 	if contact_monitor == true:
@@ -49,11 +61,11 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 				goal.emit(last_contact, body)
 				contact_monitor = false
 				ball_die()
-				#TODO We need the ball to stop interacting with physics, disappear, and reset position.
 			if body.is_in_group("players"):
-				#TODO: We gotta figure out this possession and on fire idea
-				pass
+				add_contact_name(last_contact)
 
+#######################################################################################################################################################
+## BALL STUFF
 func ball_die():
 	if goal_state == false:
 		self.global_transform.origin = Vector2(320,90)
@@ -90,22 +102,12 @@ func ball_respawn():
 		ball_sprite.visible = true
 		gravity_scale = 1
 		self.freeze = false
-		print("Contact Monitor should be back on.")
-	pass
+		#print("Contact Monitor should be back on.")
 
 func on_fire() -> void:
-	# Ball on fire animation
+	#TODO : what happens when we're on fire?
 	pass
 
-func detect_hot_goal() -> void:
-	var to_goal = (goal_hot.global_position - global_position).normalized()
-	hot_goal_detector.target_position = to_goal * 48 # Or however long you want the ray
-	hot_goal_detector.force_raycast_update()
-
-func detect_cold_goal() -> void:
-	var to_other_goal = (goal_hot.global_position - global_position).normalized()
-	hot_goal_detector.target_position = to_other_goal * 48 # Or however long you want the ray
-	hot_goal_detector.force_raycast_update()
 
 func write_gitgud_message() -> void: #TODO
 	#Strike it!
