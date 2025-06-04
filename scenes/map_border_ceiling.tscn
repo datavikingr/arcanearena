@@ -1,16 +1,17 @@
-[gd_scene load_steps=3 format=3 uid="uid://w3y2lg015ylj"]
+[gd_scene load_steps=3 format=3 uid="uid://dhaddp0qoysfd"]
 
-[ext_resource type="Texture2D" uid="uid://d1lgpg6webkl3" path="res://assets/map_wall.png" id="1_a15v3"]
+[ext_resource type="Texture2D" uid="uid://d1lgpg6webkl3" path="res://assets/map_wall.png" id="1_jg5rs"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_dn6jl"]
 size = Vector2(2121, 360)
 
 [node name="Map Border Wall" type="StaticBody2D"]
-scale = Vector2(1, 0.444)
+rotation = -1.5708
+scale = Vector2(1, 2)
 
 [node name="PhysicsShape" type="CollisionShape2D" parent="."]
 position = Vector2(1040.5, 0)
 shape = SubResource("RectangleShape2D_dn6jl")
 
 [node name="Sprite" type="Sprite2D" parent="."]
-texture = ExtResource("1_a15v3")
+texture = ExtResource("1_jg5rs")

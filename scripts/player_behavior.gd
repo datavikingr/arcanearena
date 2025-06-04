@@ -874,8 +874,8 @@ func physics_collisions() -> void: # Called from _physics_process()
 			if spiderclimb.wallstick == true:
 				self.velocity.y = 0
 			if snailstride.meatboyslide == true:
-				self.velocity.x = 0.25
-				self.velocity.y = 0.95
+				self.velocity.x = 0.25 * self.velocity.x
+				self.velocity.y = 0.95 * self.velocity.y
 		elif collider.is_in_group("balls") and not is_on_top_of_ball(): # if the collision is with the ball, and we're not on top of it.
 			collider.set("last_contact", self.name)
 			var relative_velocity = collider.linear_velocity - velocity # Relative velocity between player and ball

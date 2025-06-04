@@ -1,4 +1,4 @@
-[gd_scene load_steps=28 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=29 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -9,6 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://c70wfwmqcvgy2" path="res://scenes/block_cover_sprite.tscn" id="5_fkke6"]
 [ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="6_55bwo"]
 [ext_resource type="PackedScene" uid="uid://bwl56ve1rsnkn" path="res://scenes/player_ui.tscn" id="6_e3s0m"]
+[ext_resource type="PackedScene" uid="uid://dhaddp0qoysfd" path="res://scenes/map_border_ceiling.tscn" id="7_07k44"]
 [ext_resource type="Script" uid="uid://cyyrivel7oycn" path="res://scripts/blue_ui.gd" id="7_87kly"]
 [ext_resource type="PackedScene" uid="uid://buytkmov6kvrd" path="res://scenes/cold_goal.tscn" id="8_mar6g"]
 [ext_resource type="Script" uid="uid://cikqxjrq5hr44" path="res://scripts/green_ui.gd" id="8_q2urm"]
@@ -72,22 +73,26 @@ rotation = -3.14159
 
 [node name="Map Borders" type="Node2D" parent="Map"]
 
-[node name="Map Border Wall East" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(634, 187)
+[node name="MapBorderWallEast" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(634, 136)
+
+[node name="MapBorderWallEast_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(634, 394)
 
 [node name="Map Border Wall West" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(6, 180)
+position = Vector2(6, 135)
 rotation = 3.14159
 
-[node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("4_6qjae")]
+[node name="MapBorderWallWest_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(6, 393)
+rotation = 3.14159
+
+[node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("7_07k44")]
 position = Vector2(322, 369)
 rotation = 1.5708
-scale = Vector2(1, 2)
 
-[node name="Map Border Wall North" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
+[node name="Map Border Wall North" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("7_07k44")]
 position = Vector2(349, 14)
-rotation = -1.5708
-scale = Vector2(1, 2)
 
 [node name="Map Border Wall NW" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
 visible = false
@@ -113,22 +118,37 @@ position = Vector2(-1643, 1683)
 rotation = -7.06858
 scale = Vector2(1, 4)
 
-[node name="BlockCoverSprite_SW" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+[node name="BlackScreenCovers" type="Node2D" parent="Map"]
+
+[node name="BlockCoverSprite_W" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(-1609, 179.5)
+scale = Vector2(5.063, 13.7528)
+
+[node name="BlockCoverSprite_SW" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(-7, 351)
 
-[node name="BlockCoverSprite_SE" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_S" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(365, 1510.77)
+scale = Vector2(2.25, 6.31241)
+
+[node name="BlockCoverSprite_SE" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(647, 353)
 
-[node name="BlockCoverSprite_NW" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
-position = Vector2(-7, 11.5)
-scale = Vector2(0.1, 0.130556)
+[node name="BlockCoverSprite_NW" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(-7, 24)
+scale = Vector2(0.1, 0.2)
 
-[node name="BlockCoverSprite_NE" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
-position = Vector2(647, 17)
+[node name="BlockCoverSprite_N" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(368, -1105)
+scale = Vector2(1.5, 6.13889)
 
-[node name="BlockCoverSprite_East" parent="Map/Map Borders" instance=ExtResource("5_fkke6")]
-position = Vector2(676, 194)
-scale = Vector2(0.1, 0.966667)
+[node name="BlockCoverSprite_NE" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(647, 29.5)
+scale = Vector2(0.1, 0.169444)
+
+[node name="BlockCoverSprite_E" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+position = Vector2(1791.5, 228)
+scale = Vector2(3.63281, 1.27222)
 
 [node name="Goals" type="Node2D" parent="Map"]
 
