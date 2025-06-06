@@ -10,6 +10,8 @@ func ready() -> void:
 
 func score(_player_name) -> void:
 	goals += 1
+	if goals >= 10:
+		hot_team_wins()
 
 func _process(_delta) -> void:
 	get_goals()
@@ -76,3 +78,6 @@ func get_goals() -> void: # Called every frame by _process()
 		19:
 			ui_goals.frame = 9
 			ui_goals.modulate = Color(1, 1, 0)
+
+func hot_team_wins():
+	pass

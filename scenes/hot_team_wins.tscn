@@ -1,0 +1,94 @@
+[gd_scene load_steps=3 format=3 uid="uid://cm5pish7xyrr8"]
+
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="1_sojvd"]
+[ext_resource type="Script" uid="uid://cao4gahf8c5ve" path="res://scripts/hot_team_wins.gd" id="1_tjnxv"]
+
+[node name="HotTeamWins" type="Node2D"]
+script = ExtResource("1_tjnxv")
+
+[node name="H" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(-48, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 23
+
+[node name="O" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(-34, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="T" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(-20, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="T2" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(6, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="E" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(20, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="A" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(34, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="M" type="Sprite2D" parent="."]
+modulate = Color(1, 0, 0, 1)
+position = Vector2(49, -8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="W" type="Sprite2D" parent="."]
+position = Vector2(-18, 8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 38
+
+[node name="I" type="Sprite2D" parent="."]
+position = Vector2(-6, 8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N" type="Sprite2D" parent="."]
+position = Vector2(5, 8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="S" type="Sprite2D" parent="."]
+position = Vector2(19, 8)
+texture = ExtResource("1_sojvd")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0

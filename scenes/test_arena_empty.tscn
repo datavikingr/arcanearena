@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=31 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -28,6 +28,8 @@
 [ext_resource type="PackedScene" uid="uid://q6m28lcoxxhk" path="res://scenes/spider_climb.tscn" id="25_j3giw"]
 [ext_resource type="PackedScene" uid="uid://dr3cvu3f7eq3w" path="res://scenes/snail_stride.tscn" id="26_bijpa"]
 [ext_resource type="Script" uid="uid://cqlwepj8502hw" path="res://scripts/haste.gd" id="27_mslhf"]
+[ext_resource type="PackedScene" uid="uid://cm5pish7xyrr8" path="res://scenes/hot_team_wins.tscn" id="29_7hvqx"]
+[ext_resource type="PackedScene" uid="uid://bstr88etfrqkc" path="res://scenes/cold_team_wins.tscn" id="30_hmr2h"]
 
 [node name="TestArenaEmpty" type="Node2D"]
 
@@ -40,7 +42,7 @@ scale = Vector2(7.54688, 12.7417)
 texture = ExtResource("1_a1h4a")
 
 [node name="BgForest" type="Sprite2D" parent="BGs"]
-position = Vector2(57, -9)
+position = Vector2(-16, 14)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("2_8a7vy")
 
@@ -253,6 +255,14 @@ visible = false
 [node name="Haste" type="Node2D" parent="Spells"]
 visible = false
 script = ExtResource("27_mslhf")
+
+[node name="HotTeamWins" parent="." instance=ExtResource("29_7hvqx")]
+visible = false
+position = Vector2(320, 90)
+
+[node name="ColdTeamWins" parent="." instance=ExtResource("30_hmr2h")]
+visible = false
+position = Vector2(320, 90)
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
