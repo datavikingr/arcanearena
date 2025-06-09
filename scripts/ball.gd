@@ -11,6 +11,7 @@ extends RigidBody2D
 var last_contact: String = "" # Keeps track of the last player to touch the ball
 var penultimate_contact: String = "" #So we can see next previous possession
 var force_multiplier
+var team: String
 var contact_names := [] # Holds up to 5 names
 @export var countdown: int = 3
 @export var goal_state: bool = false
@@ -20,14 +21,25 @@ signal goal(player: String)
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
 func add_contact_name(new_name: String) -> void:
-	contact_names.insert(0, new_name) # Add to front
+	match new_name:
+		"Blue":
+			team = "cold"
+		"Green":
+			team = "cold"
+		"Purple":
+			team = "cold"
+		"Red":
+			team = "hot"
+		"Yellow":
+			team = "hot"
+		"Orange":
+			team = "hot"
+	contact_names.insert(0, team) # Add to front
 	if contact_names.size() > 5:
 		contact_names.pop_back() # Drop oldest
 
-func detect_contacts():
+func detect_team_contacts():
 	return contact_names.size() == 5 and contact_names.count(contact_names[0]) == 5
-	#TODO detect for teams rather than players in the future;
-	#requires rework to player_behavior during physics_collisions() around line 880 to set additional data
 
 #######################################################################################################################################################
 ## INIT/CONSTRUCTORS
@@ -44,7 +56,7 @@ func _process(_delta: float) -> void: # Called every frame. 'delta' is the elaps
 	if last_contact != penultimate_contact:
 		print(last_contact)
 		penultimate_contact = last_contact
-	if detect_contacts():
+	if detect_team_contacts():
 		on_fire()
 
 func _physics_process(_delta: float) -> void: # Called every frame. We're gonna collect data from collisions here. Separate thread from _process().
