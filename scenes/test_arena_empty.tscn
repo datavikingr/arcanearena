@@ -168,6 +168,10 @@ position = Vector2(621.5, 265)
 unique_name_in_owner = true
 position = Vector2(305, 17.5)
 
+[node name="ColdTeamWins" parent="UI" instance=ExtResource("30_hmr2h")]
+visible = false
+position = Vector2(320, 90)
+
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
 position = Vector2(37, 19)
@@ -195,6 +199,10 @@ frame = 61
 [node name="HotTeamUI" parent="UI" instance=ExtResource("15_fuq6r")]
 unique_name_in_owner = true
 position = Vector2(335, 17.5)
+
+[node name="HotTeamWins" parent="UI" instance=ExtResource("29_7hvqx")]
+visible = false
+position = Vector2(320, 90)
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
@@ -255,14 +263,6 @@ visible = false
 [node name="Haste" type="Node2D" parent="Spells"]
 visible = false
 script = ExtResource("27_mslhf")
-
-[node name="HotTeamWins" parent="." instance=ExtResource("29_7hvqx")]
-visible = false
-position = Vector2(320, 90)
-
-[node name="ColdTeamWins" parent="." instance=ExtResource("30_hmr2h")]
-visible = false
-position = Vector2(320, 90)
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
