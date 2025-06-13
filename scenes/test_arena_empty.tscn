@@ -73,21 +73,31 @@ rotation = -1.5708
 position = Vector2(534, 274)
 rotation = -3.14159
 
+[node name="Goals" type="Node2D" parent="Map"]
+
+[node name="ColdGoal" parent="Map/Goals" instance=ExtResource("8_mar6g")]
+unique_name_in_owner = true
+position = Vector2(18.5, 264)
+
+[node name="Map Border Wall West" parent="Map/Goals/ColdGoal" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(-12.5, -129)
+rotation = 3.14159
+
+[node name="MapBorderWallWest_BottomOfGoal" parent="Map/Goals/ColdGoal" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(-12.5, 129)
+rotation = 3.14159
+
+[node name="HotGoal" parent="Map/Goals" instance=ExtResource("9_10jty")]
+unique_name_in_owner = true
+position = Vector2(621.5, 265)
+
+[node name="MapBorderWallEast" parent="Map/Goals/HotGoal" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(12.5, -129)
+
+[node name="MapBorderWallEast_BottomOfGoal" parent="Map/Goals/HotGoal" groups=["walls"] instance=ExtResource("4_6qjae")]
+position = Vector2(12.5, 129)
+
 [node name="Map Borders" type="Node2D" parent="Map"]
-
-[node name="MapBorderWallEast" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(634, 136)
-
-[node name="MapBorderWallEast_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(634, 394)
-
-[node name="Map Border Wall West" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(6, 135)
-rotation = 3.14159
-
-[node name="MapBorderWallWest_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("4_6qjae")]
-position = Vector2(6, 393)
-rotation = 3.14159
 
 [node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("7_07k44")]
 position = Vector2(322, 369)
@@ -120,58 +130,43 @@ position = Vector2(-1643, 1683)
 rotation = -7.06858
 scale = Vector2(1, 4)
 
-[node name="BlackScreenCovers" type="Node2D" parent="Map"]
+[node name="BlackScreenCovers" type="Node2D" parent="."]
 
-[node name="BlockCoverSprite_W" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_W" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(-1609, 179.5)
 scale = Vector2(5.063, 13.7528)
 
-[node name="BlockCoverSprite_SW" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_SW" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(-7, 351)
 
-[node name="BlockCoverSprite_S" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_S" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(365, 1510.77)
 scale = Vector2(2.25, 6.31241)
 
-[node name="BlockCoverSprite_SE" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_SE" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(647, 353)
 
-[node name="BlockCoverSprite_NW" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_NW" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(-7, 24)
 scale = Vector2(0.1, 0.2)
 
-[node name="BlockCoverSprite_N" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_N" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(368, -1105)
 scale = Vector2(1.5, 6.13889)
 
-[node name="BlockCoverSprite_NE" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_NE" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(647, 29.5)
 scale = Vector2(0.1, 0.169444)
 
-[node name="BlockCoverSprite_E" parent="Map/BlackScreenCovers" instance=ExtResource("5_fkke6")]
+[node name="BlockCoverSprite_E" parent="BlackScreenCovers" instance=ExtResource("5_fkke6")]
 position = Vector2(1791.5, 228)
 scale = Vector2(3.63281, 1.27222)
-
-[node name="Goals" type="Node2D" parent="Map"]
-
-[node name="ColdGoal" parent="Map/Goals" instance=ExtResource("8_mar6g")]
-unique_name_in_owner = true
-position = Vector2(18.5, 264)
-
-[node name="HotGoal" parent="Map/Goals" instance=ExtResource("9_10jty")]
-unique_name_in_owner = true
-position = Vector2(621.5, 265)
 
 [node name="UI" type="Node2D" parent="."]
 
 [node name="ColdTeamUI" parent="UI" instance=ExtResource("10_lgwtb")]
 unique_name_in_owner = true
 position = Vector2(305, 17.5)
-
-[node name="ColdTeamWins" parent="UI" instance=ExtResource("30_hmr2h")]
-unique_name_in_owner = true
-visible = false
-position = Vector2(320, 90)
 
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
@@ -200,11 +195,6 @@ frame = 61
 [node name="HotTeamUI" parent="UI" instance=ExtResource("15_fuq6r")]
 unique_name_in_owner = true
 position = Vector2(335, 17.5)
-
-[node name="HotTeamWins" parent="UI" instance=ExtResource("29_7hvqx")]
-unique_name_in_owner = true
-visible = false
-position = Vector2(320, 90)
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
@@ -265,6 +255,24 @@ visible = false
 [node name="Haste" type="Node2D" parent="Spells"]
 visible = false
 script = ExtResource("27_mslhf")
+
+[node name="MatchOverUI" type="Node2D" parent="."]
+
+[node name="ScreenDark" parent="MatchOverUI" instance=ExtResource("5_fkke6")]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+position = Vector2(320, 180)
+scale = Vector2(1, 1)
+
+[node name="ColdTeamWins" parent="MatchOverUI" instance=ExtResource("30_hmr2h")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 90)
+
+[node name="HotTeamWins" parent="MatchOverUI" instance=ExtResource("29_7hvqx")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 90)
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

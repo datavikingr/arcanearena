@@ -3,7 +3,6 @@ extends Node2D
 # Nodes
 @onready var ui_goals: Sprite2D = $GoalsSprite
 @onready var cold_win: Node2D = %ColdTeamWins
-@onready var ball = %Ball
 # Local
 var win_countdown: Timer
 @export var goals: int = 0
@@ -85,4 +84,3 @@ func get_goals() -> void: # Called every frame by _process()
 func cold_team_wins():
 	win_countdown=  cold_win.get_node("Timer")
 	win_countdown.start()
-	#ball.position(4000,-1100)

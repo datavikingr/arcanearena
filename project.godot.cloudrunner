@@ -478,5 +478,5 @@ player6_aimdown={
 2d_physics/layer_16="Orange"
 
 [rendering]
-
+renderer/renderer_name="opengl3"
 textures/canvas_textures/default_texture_filter=0

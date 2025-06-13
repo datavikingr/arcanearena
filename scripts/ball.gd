@@ -5,8 +5,11 @@ extends RigidBody2D
 @onready var goal_cold: StaticBody2D = %ColdGoal
 @onready var splosion_hot: GPUParticles2D = %HotGoalExplosion
 @onready var splosion_cold: GPUParticles2D = %ColdGoalExplosion
+@onready var cold_team_ui: Node2D = %ColdTeamUI
+@onready var hot_team_ui: Node2D = %HotTeamUI
 @onready var ball_sprite: Sprite2D = get_node("BallSprite")
 @onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
+
 # Local
 var last_contact: String = "" # Keeps track of the last player to touch the ball
 var penultimate_contact: String = "" #So we can see next previous possession
@@ -38,6 +41,9 @@ func add_contact_name(new_name: String) -> void:
 	if contact_names.size() > 5:
 		contact_names.pop_back() # Drop oldest
 
+func match_is_over():
+	return cold_team_ui.goals == 10 or hot_team_ui.goals == 10
+
 func detect_team_contacts():
 	return contact_names.size() == 5 and contact_names.count(contact_names[0]) == 5
 
@@ -58,6 +64,9 @@ func _process(_delta: float) -> void: # Called every frame. 'delta' is the elaps
 		penultimate_contact = last_contact
 	if detect_team_contacts():
 		on_fire()
+	if match_is_over():
+		self.global_transform.origin = Vector2(4000,-1100)
+		ball_sprite.visible = false
 
 func _physics_process(_delta: float) -> void: # Called every frame. We're gonna collect data from collisions here. Separate thread from _process().
 	if contact_monitor == true:
@@ -79,7 +88,7 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 #######################################################################################################################################################
 ## BALL STUFF
 func ball_die():
-	if goal_state == false:
+	if not goal_state:
 		self.global_transform.origin = Vector2(320,90)
 		self.freeze = true
 		goal_state = true
@@ -90,13 +99,16 @@ func ball_die():
 		angular_velocity = 0.0
 		rotation = 0
 		gravity_scale = 0
-		var ball_timer = Timer.new()
-		ball_timer.wait_time = 1
-		ball_timer.one_shot = true
-		ball_timer.name = "BallTimer"
-		add_child(ball_timer)
-		ball_timer.timeout.connect(ball_respawn)
-		ball_timer.start()
+		if match_is_over():
+			self.global_transform.origin = Vector2(4000,-1100)
+		else:
+			var ball_timer = Timer.new()
+			ball_timer.wait_time = 1
+			ball_timer.one_shot = true
+			ball_timer.name = "BallTimer"
+			add_child(ball_timer)
+			ball_timer.timeout.connect(ball_respawn)
+			ball_timer.start()
 
 func ball_respawn():
 	var balltimer = get_node("BallTimer")
@@ -122,6 +134,12 @@ func on_fire() -> void:
 
 
 func write_gitgud_message() -> void: #TODO
+	#NOTE This requires 2 raycast2Ds, one aimed at each goal
+	# They should be long, min 64 length
+	# if contact with goal, record team score, start 1s timer
+	# if recorded team score = team score now, this was (only) a shot.
+
+	# EXAMPLES
 	#Strike it!
 	#Harder next time!
 	#Well, it certainly was a shot.
