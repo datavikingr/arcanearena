@@ -162,64 +162,6 @@ scale = Vector2(0.1, 0.169444)
 position = Vector2(1791.5, 228)
 scale = Vector2(3.63281, 1.27222)
 
-[node name="UI" type="Node2D" parent="."]
-
-[node name="ColdTeamUI" parent="UI" instance=ExtResource("10_lgwtb")]
-unique_name_in_owner = true
-position = Vector2(305, 17.5)
-
-[node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(37, 19)
-script = ExtResource("7_87kly")
-
-[node name="PlayerSprite" parent="UI/BlueUI" index="1"]
-frame = 13
-
-[node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(113, 19)
-script = ExtResource("8_q2urm")
-
-[node name="PlayerSprite" parent="UI/GreenUI" index="1"]
-frame = 37
-
-[node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(189, 19)
-script = ExtResource("9_gc17j")
-
-[node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
-frame = 61
-
-[node name="HotTeamUI" parent="UI" instance=ExtResource("15_fuq6r")]
-unique_name_in_owner = true
-position = Vector2(335, 17.5)
-
-[node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(560, 19)
-script = ExtResource("10_8sjcl")
-
-[node name="PlayerSprite" parent="UI/RedUI" index="1"]
-frame = 85
-
-[node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(484, 19)
-script = ExtResource("11_n8n62")
-
-[node name="PlayerSprite" parent="UI/YellowUI" index="1"]
-frame = 109
-
-[node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
-unique_name_in_owner = true
-position = Vector2(408, 19)
-script = ExtResource("12_vnq04")
-
-[node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
-frame = 133
-
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
 position = Vector2(320, 90)
@@ -273,6 +215,66 @@ position = Vector2(320, 90)
 unique_name_in_owner = true
 visible = false
 position = Vector2(320, 90)
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="ColdTeamUI" parent="UI" instance=ExtResource("10_lgwtb")]
+unique_name_in_owner = true
+position = Vector2(305, 17.5)
+goals = 9
+
+[node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(37, 19)
+script = ExtResource("7_87kly")
+
+[node name="PlayerSprite" parent="UI/BlueUI" index="1"]
+frame = 13
+
+[node name="GreenUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(113, 19)
+script = ExtResource("8_q2urm")
+
+[node name="PlayerSprite" parent="UI/GreenUI" index="1"]
+frame = 37
+
+[node name="PurpleUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(189, 19)
+script = ExtResource("9_gc17j")
+
+[node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
+frame = 61
+
+[node name="HotTeamUI" parent="UI" instance=ExtResource("15_fuq6r")]
+unique_name_in_owner = true
+position = Vector2(335, 17.5)
+goals = 9
+
+[node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(560, 19)
+script = ExtResource("10_8sjcl")
+
+[node name="PlayerSprite" parent="UI/RedUI" index="1"]
+frame = 85
+
+[node name="YellowUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(484, 19)
+script = ExtResource("11_n8n62")
+
+[node name="PlayerSprite" parent="UI/YellowUI" index="1"]
+frame = 109
+
+[node name="OrangeUI" parent="UI" instance=ExtResource("6_e3s0m")]
+unique_name_in_owner = true
+position = Vector2(408, 19)
+script = ExtResource("12_vnq04")
+
+[node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
+frame = 133
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]

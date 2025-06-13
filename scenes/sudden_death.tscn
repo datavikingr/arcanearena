@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://cio813svg1ukx"]
+
+[ext_resource type="Script" uid="uid://gj3r7qy4wgax" path="res://scripts/sudden_death.gd" id="1_hhrjr"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="2_r1tsq"]
+
+[node name="SuddenDeath" type="Node2D"]
+script = ExtResource("1_hhrjr")
+
+[node name="TensPlace" type="Sprite2D" parent="."]
+position = Vector2(-7, 0)
+texture = ExtResource("2_r1tsq")
+hframes = 8
+vframes = 12
+frame = 3
+
+[node name="OnesPlace" type="Sprite2D" parent="."]
+position = Vector2(6, 0)
+texture = ExtResource("2_r1tsq")
+hframes = 8
+vframes = 12
+
+[node name="Timer" type="Timer" parent="."]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
