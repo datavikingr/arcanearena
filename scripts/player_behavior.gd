@@ -806,6 +806,10 @@ func knockback_reset():
 	get_node("KnockbackTimer").queue_free()
 	knockback_state = false
 
+func player_shot(player_name):
+	if player_name == self.name:
+		shots += 1
+
 func player_score(player_name) -> void: # TODO?? Maybe a celebration animation?
 	if player_name == self.name:
 		goals += 1

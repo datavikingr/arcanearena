@@ -11,8 +11,11 @@ extends RigidBody2D
 @onready var raycast_cold = $ColdGoalFinder
 @onready var miami = $HotLine
 @onready var alaska = $ColdLine
-@onready var ball_sprite: Sprite2D = get_node("BallSprite")
-@onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
+@onready var ball_sprite: Sprite2D = $BallSprite
+@onready var countdown_sprite: Sprite2D = $CountdownSprite
+@onready var player1: PlayerCharacter = %Player1
+@onready var player2: PlayerCharacter = %Player2
+var players: Array[PlayerCharacter] = []
 
 # Local
 var last_contact: String = "" # Keeps track of the last player to touch the ball
@@ -64,6 +67,12 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
+	players = [player1, player2] #TODO: Replace with dynamic detection of players
+	for player in players:
+		if player.is_in_group("ColdTeam"):
+			self.miamishot.connect(Callable(player, "player_shot"))
+		else:
+			self.alaskashot.connect(Callable(player, "player_shot"))
 	ball_die()
 	ball_respawn()
 
@@ -164,14 +173,16 @@ func aim_goal_finders() -> void:
 func shot_detection():
 	if raycast_hot.is_colliding() and raycast_hot.get_collider() == goal_hot: # Hot Goal Shot Detection
 		if not hot_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
+			#print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
 			hot_goal_hit = true # and we're gonna stop detecting more shots.
+			miamishot.emit(last_contact)
 	else:
 		hot_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
 	if raycast_cold.is_colliding() and raycast_cold.get_collider() == goal_cold: # Cold Goal Shot Detection
 		if not cold_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
+			#print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
 			cold_goal_hit = true # and we're gonna stop detecting more shots.
+			alaskashot.emit(last_contact)
 	else:
 		cold_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
 
