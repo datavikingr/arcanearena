@@ -1,12 +1,16 @@
 extends RigidBody2D
 
-# Nodese
+# Nodes
 @onready var goal_hot: StaticBody2D = %HotGoal
 @onready var goal_cold: StaticBody2D = %ColdGoal
 @onready var splosion_hot: GPUParticles2D = %HotGoalExplosion
 @onready var splosion_cold: GPUParticles2D = %ColdGoalExplosion
 @onready var cold_team_ui: Node2D = %ColdTeamUI
 @onready var hot_team_ui: Node2D = %HotTeamUI
+@onready var raycast_hot = $HotGoalFinder
+@onready var raycast_cold = $ColdGoalFinder
+@onready var miami = $HotLine
+@onready var alaska = $ColdLine
 @onready var ball_sprite: Sprite2D = get_node("BallSprite")
 @onready var countdown_sprite: Sprite2D = get_node("CountdownSprite")
 
@@ -16,15 +20,21 @@ var penultimate_contact: String = "" #So we can see next previous possession
 var force_multiplier
 var team: String
 var contact_names := [] # Holds up to 5 names
+var goal_radar_distance: int = 100 # used on the raycasts in aim_goal_finder()
 @export var countdown: int = 3
 @export var goal_state: bool = false
+var hot_goal_hit: bool = false
+var cold_goal_hit: bool = false
+
 # Signals
 signal goal(player: String)
+signal miamishot(player: String) # shot on hot net
+signal alaskashot(player: String) # shot on cold net
 
 #######################################################################################################################################################
 ## STATUS-CHECK / CALLABLE FUNCTIONS
 func add_contact_name(new_name: String) -> void:
-	match new_name:
+	match new_name: # parse who belongs to what team
 		"Blue":
 			team = "cold"
 		"Green":
@@ -38,7 +48,7 @@ func add_contact_name(new_name: String) -> void:
 		"Orange":
 			team = "hot"
 	contact_names.insert(0, team) # Add to front
-	if contact_names.size() > 5:
+	if contact_names.size() > 5: # Detect size so we can trim the fucker
 		contact_names.pop_back() # Drop oldest
 
 func match_is_over():
@@ -53,12 +63,14 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
+	# TODO shot signals to players; see cold_goal._goal() for reference.
 	ball_die()
 	ball_respawn()
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
+	aim_goal_finders()
 	if last_contact != penultimate_contact:
 		print(last_contact)
 		penultimate_contact = last_contact
@@ -84,6 +96,7 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 				ball_die()
 			if body.is_in_group("players"):
 				add_contact_name(last_contact)
+	shot_detection()
 
 #######################################################################################################################################################
 ## BALL STUFF
@@ -132,6 +145,35 @@ func on_fire() -> void:
 	#TODO : what happens when we're on fire?
 	pass
 
+func aim_goal_finders() -> void:
+	# Hot goal
+	var direction_to_hot = goal_hot.global_position - global_position
+	var local_target_hot = direction_to_hot.normalized() * goal_radar_distance
+	raycast_hot.rotation = -rotation
+	raycast_hot.target_position = local_target_hot
+	miami.points = [raycast_hot.position, raycast_hot.target_position]
+	miami.rotation = -rotation
+	# Cold goal
+	var direction_to_cold = goal_cold.global_position - global_position
+	var local_target_cold = direction_to_cold.normalized() * goal_radar_distance
+	raycast_cold.rotation = -rotation
+	raycast_cold.target_position = local_target_cold
+	alaska.points = [raycast_cold.position, raycast_cold.target_position]
+	alaska.rotation = -rotation
+
+func shot_detection():
+	if raycast_hot.is_colliding() and raycast_hot.get_collider() == goal_hot: # Hot Goal Shot Detection
+		if not hot_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
+			print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
+			hot_goal_hit = true # and we're gonna stop detecting more shots.
+	else:
+		hot_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
+	if raycast_cold.is_colliding() and raycast_cold.get_collider() == goal_cold: # Cold Goal Shot Detection
+		if not cold_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
+			print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
+			cold_goal_hit = true # and we're gonna stop detecting more shots.
+	else:
+		cold_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
 
 func write_gitgud_message() -> void: #TODO
 	#NOTE This requires 2 raycast2Ds, one aimed at each goal

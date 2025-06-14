@@ -18,6 +18,7 @@ var player_input_Y: String # Called in input_handling(); Player input
 @export var goals: int = 0 # Player goals, for UI & game score
 @export var kills: int = 0 # Player Kills, for UI & bragging rights
 @export var deaths: int = 0 # Player Deaths, for UI & shame
+@export var shots: int = 0 # Player Shots, for end of match UI & gitting gudder
 var death_state: bool = false
 var knockback_state: bool = false
 var special_state: bool = false

@@ -33,3 +33,20 @@ texture = ExtResource("3_dlt2n")
 hframes = 8
 vframes = 12
 frame = 3
+
+[node name="HotGoalFinder" type="RayCast2D" parent="."]
+target_position = Vector2(64, 0)
+
+[node name="ColdGoalFinder" type="RayCast2D" parent="."]
+target_position = Vector2(-64, 0)
+collision_mask = 16
+
+[node name="HotLine" type="Line2D" parent="."]
+visible = false
+width = 4.0
+default_color = Color(1, 0, 0, 1)
+
+[node name="ColdLine" type="Line2D" parent="."]
+visible = false
+width = 4.0
+default_color = Color(0, 0, 1, 1)
