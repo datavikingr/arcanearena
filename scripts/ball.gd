@@ -23,7 +23,7 @@ var penultimate_contact: String = "" #So we can see next previous possession
 var force_multiplier
 var team: String
 var contact_names := [] # Holds up to 5 names
-var goal_radar_distance: int = 100 # used on the raycasts in aim_goal_finder()
+var goal_radar_distance: int = 124 # used on the raycasts in aim_goal_finder()
 @export var countdown: int = 3
 @export var goal_state: bool = false
 var hot_goal_hit: bool = false
