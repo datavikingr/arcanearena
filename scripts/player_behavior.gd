@@ -16,9 +16,10 @@ var player_input_Y: String # Called in input_handling(); Player input
 # Admin settings on Player
 @export var hp: int = 3 # Players spawn in with 3 HP, die after 3 hits.
 @export var goals: int = 0 # Player goals, for UI & game score
+@export var own_goals: int = 0 # Player own goals, for UI & gitting gud
 @export var kills: int = 0 # Player Kills, for UI & bragging rights
 @export var deaths: int = 0 # Player Deaths, for UI & shame
-@export var shots: int = 0 # Player Shots, for end of match UI & gitting gudder
+@export var shots: int = 0 # Player Shots, for end of match UI & gitting gud
 var death_state: bool = false
 var knockback_state: bool = false
 var special_state: bool = false
@@ -815,6 +816,7 @@ func player_score(player_name) -> void: # TODO?? Maybe a celebration animation?
 		goals += 1
 
 func own_goal(player_name) -> void:
+	own_goals += 1
 	if player_name == self.name:
 		hp = 0
 

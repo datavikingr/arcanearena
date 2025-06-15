@@ -12,7 +12,7 @@ func ready() -> void:
 
 func score(_player_name) -> void:
 	goals += 1
-	if goals >= 10:
+	if goals >= 20:
 		cold_team_wins()
 
 func _process(_delta) -> void:
@@ -25,61 +25,64 @@ func get_goals() -> void: # Called every frame by _process()
 			ui_goals.modulate = Color(1, 1, 1)
 		1:
 			ui_goals.frame = 1
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .9)
 		2:
 			ui_goals.frame = 2
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .8)
 		3:
 			ui_goals.frame = 3
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .7)
 		4:
 			ui_goals.frame = 4
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .6)
 		5:
 			ui_goals.frame = 5
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .5)
 		6:
 			ui_goals.frame = 6
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .4)
 		7:
 			ui_goals.frame = 7
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .3)
 		8:
 			ui_goals.frame = 8
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .2)
 		9:
 			ui_goals.frame = 9
-			ui_goals.modulate = Color(1, 1, 1)
+			ui_goals.modulate = Color(1, 1, .1)
 		10:
 			ui_goals.frame = 0
 			ui_goals.modulate = Color(1, 1, 0)
 		11:
 			ui_goals.frame = 1
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .9, 0)
 		12:
 			ui_goals.frame = 2
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .8, 0)
 		13:
 			ui_goals.frame = 3
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .7, 0)
 		14:
 			ui_goals.frame = 4
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .6, 0)
 		15:
 			ui_goals.frame = 5
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .5, 0)
 		16:
 			ui_goals.frame = 6
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .4, 0)
 		17:
 			ui_goals.frame = 7
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .3, 0)
 		18:
 			ui_goals.frame = 8
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .2, 0)
 		19:
 			ui_goals.frame = 9
-			ui_goals.modulate = Color(1, 1, 0)
+			ui_goals.modulate = Color(1, .1, 0)
+		20:
+			ui_goals.frame = 0
+			ui_goals.modulate = Color(1, 0, 0)
 
 func cold_team_wins():
 	win_countdown=  cold_win.get_node("Timer")

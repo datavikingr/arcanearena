@@ -1,7 +1,5 @@
 extends Node
 
-#signal players_ready(current_players)
-
 var current_players = []
 var match_data: Dictionary = {} # Store match-wide state here
 var root: Node2D
@@ -28,7 +26,7 @@ func _ready() -> void:
 	# So instead, we'll be instancing platform patterns instead, and moving goal positions from here.
 	# We still have to figure out which players are present.
 
-	#TODO get player nodes and append current_players with them, so we can gather those stats later.
+	# Get player nodes and append current_players with them, so we can gather their stats later.
 	var players = [
 		root.get_node_or_null("Player1"),
 		root.get_node_or_null("Player2"),
@@ -40,9 +38,6 @@ func _ready() -> void:
 	for player in players:
 		if player != null:
 			current_players.append(player)
-
-	print(current_players)
-	#players_ready.emit(current_players)
 
 	# Random selection of platfrom configurations
 	var random_index = randi() % platform_configs.size() # Get a random index

@@ -53,7 +53,7 @@ func add_contact_name(new_name: String) -> void:
 		contact_names.pop_back() # Drop oldest
 
 func match_is_over():
-	return cold_team_ui.goals == 10 or hot_team_ui.goals == 10
+	return cold_team_ui.goals == 20 or hot_team_ui.goals == 20
 
 func detect_team_contacts():
 	return contact_names.size() == 5 and contact_names.count(contact_names[0]) == 5
@@ -170,14 +170,14 @@ func aim_goal_finders() -> void:
 func shot_detection():
 	if raycast_hot.is_colliding() and raycast_hot.get_collider() == goal_hot: # Hot Goal Shot Detection
 		if not hot_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
+			#print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
 			hot_goal_hit = true # and we're gonna stop detecting more shots.
 			miamishot.emit(last_contact)
 	else:
 		hot_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
 	if raycast_cold.is_colliding() and raycast_cold.get_collider() == goal_cold: # Cold Goal Shot Detection
 		if not cold_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
+			#print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
 			cold_goal_hit = true # and we're gonna stop detecting more shots.
 			alaskashot.emit(last_contact)
 	else:

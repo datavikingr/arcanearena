@@ -1,13 +1,11 @@
 extends StaticBody2D
 
 @onready var ball: RigidBody2D = %Ball
-@onready var player1: PlayerCharacter = %Player1
-@onready var player2: PlayerCharacter = %Player2
 @onready var coldui: Node2D = %ColdTeamUI
 
 signal hot_own_goal(player_name: String)
 signal hot_player_score(player_name: String)
-var players: Array[PlayerCharacter] = []
+var players: Array = []
 var init_goals: bool
 
 func _ready() -> void:
@@ -19,7 +17,7 @@ func _ready() -> void:
 func _goal(player_name, body) -> void:
 	if body == self:
 		if init_goals == true:
-			players = [player1, player2] #TODO: Replace with dynamic detection of players
+			players = Global.current_players
 			for player in players:
 				if player.is_in_group("HotTeam"):
 					self.hot_own_goal.connect(Callable(player, "own_goal"))
