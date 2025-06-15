@@ -41,11 +41,10 @@ func _on_body_entered(body: Node) -> void:
 		var attack_direction = (body.global_position - global_position).normalized() # Normalize direction
 		var attack = attack_direction * attack_force # Multiply normalized direction by the desired force
 		body.apply_central_impulse(attack) # Apply the force to the ball
-	elif body.is_in_group("players"): # Then we need to be able to do damage TODO
+	elif body.is_in_group("players"): # Then we need to be able to do damage
 		if body.name != player_color: # Make sure it's not self contact
 			if not has_common_group(body): # Doesn't belong to the same group as self
 				#print("We have enemy contact!") # Debug
-				#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
 				self.enemy_contact.connect(Callable(body,"player_hurt"))
 				enemy_contact.emit(player_color)
 				queue_free()

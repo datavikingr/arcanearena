@@ -23,7 +23,12 @@ func countdown_timer() -> void:
 		screen_dark.modulate = Color(0,0,0,.8)
 	if countdown == countdown_total - (visibility_decay_rate * 5):
 		screen_dark.modulate = Color(0,0,0,1)
-		#TODO prevent player movement & switch to menu controls
+		for player in Global.current_players:
+			var left_eye = player.get_node("TrailLeft")
+			var right_eye = player.get_node("TrailRight")
+			left_eye.visible = false
+			right_eye.visible = true
+		#TODO switch to menu controls
 	if countdown == 0:
 		#get_tree().change_scene_to_file("res://scenes/new_scene.tscn") #TODO
 		pass

@@ -1,0 +1,289 @@
+[gd_scene load_steps=33 format=3 uid="uid://c2dv7685yx4wc"]
+
+[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_p2qdi"]
+[ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_snsxf"]
+[ext_resource type="Texture2D" uid="uid://b4no5474kragd" path="res://assets/bgs/thedoorsbetwixtworlds.png" id="3_hwpvo"]
+[ext_resource type="Script" uid="uid://d3ki26pwejesb" path="res://scripts/bg_random.gd" id="4_q02l3"]
+[ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="5_35lc5"]
+[ext_resource type="PackedScene" uid="uid://buytkmov6kvrd" path="res://scenes/cold_goal.tscn" id="6_lt55k"]
+[ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="7_xsd3d"]
+[ext_resource type="PackedScene" uid="uid://cjb2rfjtr5xsn" path="res://scenes/hot_goal.tscn" id="8_xnsdv"]
+[ext_resource type="PackedScene" uid="uid://dhaddp0qoysfd" path="res://scenes/map_border_ceiling.tscn" id="9_e6o35"]
+[ext_resource type="PackedScene" uid="uid://c70wfwmqcvgy2" path="res://scenes/block_cover_sprite.tscn" id="10_o21a6"]
+[ext_resource type="PackedScene" uid="uid://bwn62t14qa0a0" path="res://scenes/ball.tscn" id="11_lc07f"]
+[ext_resource type="PackedScene" uid="uid://cyjwmp1vsxxpx" path="res://scenes/cold_goal_explosion.tscn" id="12_sn1ft"]
+[ext_resource type="PackedScene" uid="uid://d10d3vo7gehv4" path="res://scenes/hot_goal_explosion.tscn" id="13_317jg"]
+[ext_resource type="PackedScene" uid="uid://cdvp5lryb85dh" path="res://scenes/player1.tscn" id="14_n3a12"]
+[ext_resource type="PackedScene" uid="uid://x1l6ji4xxc3x" path="res://scenes/player2.tscn" id="15_yg21o"]
+[ext_resource type="PackedScene" uid="uid://cllgsjtt73t47" path="res://scenes/player3.tscn" id="16_w3e1a"]
+[ext_resource type="PackedScene" uid="uid://cprwrdmdpw7ia" path="res://scenes/player4.tscn" id="17_ary2g"]
+[ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="18_cjeyw"]
+[ext_resource type="PackedScene" uid="uid://q6m28lcoxxhk" path="res://scenes/spider_climb.tscn" id="19_tukt8"]
+[ext_resource type="PackedScene" uid="uid://dr3cvu3f7eq3w" path="res://scenes/snail_stride.tscn" id="20_3as3d"]
+[ext_resource type="Script" uid="uid://cqlwepj8502hw" path="res://scripts/haste.gd" id="21_sghel"]
+[ext_resource type="PackedScene" uid="uid://bstr88etfrqkc" path="res://scenes/cold_team_wins.tscn" id="22_yu5h1"]
+[ext_resource type="PackedScene" uid="uid://cm5pish7xyrr8" path="res://scenes/hot_team_wins.tscn" id="23_mdu57"]
+[ext_resource type="PackedScene" uid="uid://csmhjkox5eqkv" path="res://scenes/cold_team_ui.tscn" id="24_7mif2"]
+[ext_resource type="PackedScene" uid="uid://bwl56ve1rsnkn" path="res://scenes/player_ui.tscn" id="25_focfj"]
+[ext_resource type="Script" uid="uid://cyyrivel7oycn" path="res://scripts/blue_ui.gd" id="26_6cun4"]
+[ext_resource type="Script" uid="uid://cikqxjrq5hr44" path="res://scripts/green_ui.gd" id="27_paogk"]
+[ext_resource type="Script" uid="uid://n2cab70kk268" path="res://scripts/purple_ui.gd" id="28_v86oy"]
+[ext_resource type="PackedScene" uid="uid://bhl8wkiu38vtc" path="res://scenes/hot_team_ui.tscn" id="29_8elyw"]
+[ext_resource type="Script" uid="uid://b4oy3t1gj5gg7" path="res://scripts/red_ui.gd" id="30_4nlfr"]
+[ext_resource type="Script" uid="uid://bfm76secb20rm" path="res://scripts/yellow_ui.gd" id="31_kvu34"]
+[ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="32_xtu75"]
+
+[node name="Arena" type="Node2D"]
+
+[node name="BGs" type="Node2D" parent="."]
+position = Vector2(320, 180)
+
+[node name="BgBlack" type="Sprite2D" parent="BGs"]
+position = Vector2(0, 0.499939)
+scale = Vector2(7.54688, 12.7417)
+texture = ExtResource("1_p2qdi")
+
+[node name="BgForest" type="Sprite2D" parent="BGs"]
+position = Vector2(3, -11)
+scale = Vector2(1.2, 1.2)
+texture = ExtResource("2_snsxf")
+
+[node name="BgRandom" type="Sprite2D" parent="BGs"]
+visible = false
+position = Vector2(8, 3.5)
+scale = Vector2(1.6, 1.634)
+texture = ExtResource("3_hwpvo")
+script = ExtResource("4_q02l3")
+
+[node name="Map" type="Node2D" parent="."]
+
+[node name="Ramps" type="Node2D" parent="Map" groups=["ramps"]]
+position = Vector2(65, 60)
+
+[node name="MapRamp_TL" parent="Map/Ramps" instance=ExtResource("5_35lc5")]
+position = Vector2(-24, -11)
+
+[node name="MapRamp_TR" parent="Map/Ramps" instance=ExtResource("5_35lc5")]
+position = Vector2(534, -11)
+rotation = 1.5708
+
+[node name="MapRamp_BL" parent="Map/Ramps" instance=ExtResource("5_35lc5")]
+position = Vector2(-24, 274)
+rotation = -1.5708
+
+[node name="MapRamp_BR" parent="Map/Ramps" instance=ExtResource("5_35lc5")]
+position = Vector2(534, 274)
+rotation = -3.14159
+
+[node name="Goals" type="Node2D" parent="Map"]
+
+[node name="ColdGoal" parent="Map/Goals" instance=ExtResource("6_lt55k")]
+unique_name_in_owner = true
+position = Vector2(18.5, 191)
+
+[node name="Map Border Wall West" parent="Map/Goals/ColdGoal" groups=["walls"] instance=ExtResource("7_xsd3d")]
+position = Vector2(-12.5, -129)
+rotation = 3.14159
+
+[node name="MapBorderWallWest_BottomOfGoal" parent="Map/Goals/ColdGoal" groups=["walls"] instance=ExtResource("7_xsd3d")]
+position = Vector2(-12.5, 129)
+rotation = 3.14159
+
+[node name="HotGoal" parent="Map/Goals" instance=ExtResource("8_xnsdv")]
+unique_name_in_owner = true
+position = Vector2(621.5, 191)
+
+[node name="MapBorderWallEast" parent="Map/Goals/HotGoal" groups=["walls"] instance=ExtResource("7_xsd3d")]
+position = Vector2(12.5, -129)
+
+[node name="MapBorderWallEast_BottomOfGoal" parent="Map/Goals/HotGoal" groups=["walls"] instance=ExtResource("7_xsd3d")]
+position = Vector2(12.5, 129)
+
+[node name="Map Borders" type="Node2D" parent="Map"]
+
+[node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("9_e6o35")]
+position = Vector2(322, 369)
+rotation = 1.5708
+
+[node name="Map Border Wall North" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("9_e6o35")]
+position = Vector2(349, 14)
+
+[node name="Map Border Wall NW" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("7_xsd3d")]
+visible = false
+position = Vector2(-1405, -1533)
+rotation = -5.49779
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall NE" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("7_xsd3d")]
+visible = false
+position = Vector2(2019, -1560)
+rotation = -3.92699
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall SE" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("7_xsd3d")]
+visible = false
+position = Vector2(2072, 1865)
+rotation = -2.35619
+scale = Vector2(1, 4)
+
+[node name="Map Border Wall SW" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("7_xsd3d")]
+visible = false
+position = Vector2(-1643, 1683)
+rotation = -7.06858
+scale = Vector2(1, 4)
+
+[node name="BlackScreenCovers" type="Node2D" parent="."]
+
+[node name="BlockCoverSprite_W" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(-1609, 179.5)
+scale = Vector2(5.063, 13.7528)
+
+[node name="BlockCoverSprite_SW" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(-7, 351)
+
+[node name="BlockCoverSprite_S" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(365, 1510.77)
+scale = Vector2(2.25, 6.31241)
+
+[node name="BlockCoverSprite_SE" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(647, 353)
+
+[node name="BlockCoverSprite_NW" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(-7, 24)
+scale = Vector2(0.1, 0.2)
+
+[node name="BlockCoverSprite_N" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(368, -1105)
+scale = Vector2(1.5, 6.13889)
+
+[node name="BlockCoverSprite_NE" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(647, 29.5)
+scale = Vector2(0.1, 0.169444)
+
+[node name="BlockCoverSprite_E" parent="BlackScreenCovers" instance=ExtResource("10_o21a6")]
+position = Vector2(1791.5, 228)
+scale = Vector2(3.63281, 1.27222)
+
+[node name="Ball" parent="." instance=ExtResource("11_lc07f")]
+unique_name_in_owner = true
+position = Vector2(320, 60)
+continuous_cd = 0
+
+[node name="ColdGoalExplosion" parent="." instance=ExtResource("12_sn1ft")]
+unique_name_in_owner = true
+
+[node name="HotGoalExplosion" parent="." instance=ExtResource("13_317jg")]
+unique_name_in_owner = true
+
+[node name="Player1" parent="." instance=ExtResource("14_n3a12")]
+position = Vector2(160, 300)
+
+[node name="Player2" parent="." instance=ExtResource("15_yg21o")]
+position = Vector2(480, 300)
+
+[node name="Player3" parent="." instance=ExtResource("16_w3e1a")]
+position = Vector2(200, 300)
+player_color = "Green"
+
+[node name="Player4" parent="." instance=ExtResource("17_ary2g")]
+position = Vector2(440, 300)
+
+[node name="Spells" type="Node2D" parent="."]
+unique_name_in_owner = true
+
+[node name="Slow" parent="Spells" instance=ExtResource("18_cjeyw")]
+visible = false
+
+[node name="SpiderClimb" parent="Spells" instance=ExtResource("19_tukt8")]
+unique_name_in_owner = true
+
+[node name="SnailStride" parent="Spells" instance=ExtResource("20_3as3d")]
+unique_name_in_owner = true
+visible = false
+
+[node name="Haste" type="Node2D" parent="Spells"]
+visible = false
+script = ExtResource("21_sghel")
+
+[node name="MatchOverUI" type="Node2D" parent="."]
+
+[node name="ScreenDark" parent="MatchOverUI" instance=ExtResource("10_o21a6")]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+position = Vector2(320, 180)
+scale = Vector2(1, 1)
+
+[node name="ColdTeamWins" parent="MatchOverUI" instance=ExtResource("22_yu5h1")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 90)
+
+[node name="HotTeamWins" parent="MatchOverUI" instance=ExtResource("23_mdu57")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 90)
+
+[node name="UI" type="Node2D" parent="."]
+
+[node name="ColdTeamUI" parent="UI" instance=ExtResource("24_7mif2")]
+unique_name_in_owner = true
+position = Vector2(305, 17.5)
+
+[node name="BlueUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(37, 19)
+script = ExtResource("26_6cun4")
+
+[node name="PlayerSprite" parent="UI/BlueUI" index="1"]
+frame = 13
+
+[node name="GreenUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(113, 19)
+script = ExtResource("27_paogk")
+
+[node name="PlayerSprite" parent="UI/GreenUI" index="1"]
+frame = 37
+
+[node name="PurpleUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(189, 19)
+script = ExtResource("28_v86oy")
+
+[node name="PlayerSprite" parent="UI/PurpleUI" index="1"]
+frame = 61
+
+[node name="HotTeamUI" parent="UI" instance=ExtResource("29_8elyw")]
+unique_name_in_owner = true
+position = Vector2(335, 17.5)
+
+[node name="RedUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(560, 19)
+script = ExtResource("30_4nlfr")
+
+[node name="PlayerSprite" parent="UI/RedUI" index="1"]
+frame = 85
+
+[node name="YellowUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(484, 19)
+script = ExtResource("31_kvu34")
+
+[node name="PlayerSprite" parent="UI/YellowUI" index="1"]
+frame = 109
+
+[node name="OrangeUI" parent="UI" instance=ExtResource("25_focfj")]
+unique_name_in_owner = true
+position = Vector2(408, 19)
+script = ExtResource("32_xtu75")
+
+[node name="PlayerSprite" parent="UI/OrangeUI" index="1"]
+frame = 133
+
+[editable path="UI/BlueUI"]
+[editable path="UI/GreenUI"]
+[editable path="UI/PurpleUI"]
+[editable path="UI/RedUI"]
+[editable path="UI/YellowUI"]
+[editable path="UI/OrangeUI"]

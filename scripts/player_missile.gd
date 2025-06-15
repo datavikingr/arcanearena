@@ -58,7 +58,6 @@ func _on_body_entered(body: Node) -> void:
 				self.enemy_missile_contact.connect(Callable(body, "player_hurt"))
 				enemy_missile_contact.emit(player_color)
 				queue_free()
-				#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
 			else: # Friendly fire, no effect.
 				#print("Friendly Fire!") # Debug
 				queue_free()

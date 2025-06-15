@@ -2,8 +2,11 @@ extends Node
 
 var current_players = []
 var match_data: Dictionary = {} # Store match-wide state here
-var root: Node2D
+var arena: Node2D
 var map: Node2D
+var goal_y
+var hot_goal
+var cold_goal
 var platform_configs = [
 	"res://scenes/platformconfigs/ball.tscn",
 	"res://scenes/platformconfigs/ball_divider.tscn",
@@ -18,22 +21,17 @@ func reset():
 	match_data = {}
 
 func _ready() -> void:
-	root = get_tree().root.get_node("TestArenaEmpty")
-	map = root.get_node("Map")
+	arena = get_tree().root.get_node("Arena")
+	map = arena.get_node("Map")
 
-	# NOTE: We tried to instance players from here. Too many race conditions, it just didn't work.
-	# We'll have to hard-add players in the editor, and keep/maintain 5 arena scenes (2 player, 3 player, etc)
-	# So instead, we'll be instancing platform patterns instead, and moving goal positions from here.
-	# We still have to figure out which players are present.
-
-	# Get player nodes and append current_players with them, so we can gather their stats later.
+	# Get player nodes and append current_players with them, so we can gather their states/stats later.
 	var players = [
-		root.get_node_or_null("Player1"),
-		root.get_node_or_null("Player2"),
-		root.get_node_or_null("Player3"),
-		root.get_node_or_null("Player4"),
-		root.get_node_or_null("Player5"),
-		root.get_node_or_null("Player6")
+		arena.get_node_or_null("Player1"),
+		arena.get_node_or_null("Player2"),
+		arena.get_node_or_null("Player3"),
+		arena.get_node_or_null("Player4"),
+		arena.get_node_or_null("Player5"),
+		arena.get_node_or_null("Player6")
 	]
 	for player in players:
 		if player != null:
@@ -46,12 +44,16 @@ func _ready() -> void:
 	map.add_child(plat_instance)
 
 	# Random Goal height
+	goal_y = randf_range(119, 264)
+	hot_goal = map.get_node("Goals").get_node("HotGoal")
+	cold_goal = map.get_node("Goals").get_node("ColdGoal")
+	hot_goal.position.y = goal_y
+	cold_goal.position.y = goal_y
 
 func process():
 	for player in current_players:
-		#TODO global.process() Get their stats: Goals, kills, deaths, shots
-		#TODO player_behavior() also implement own goals, saves, touches, ranged, melee, blocks, platforms
-		#TODO global.process() Then get those stats
+		#TODO global.process() Get their stats: Goals, kills, murders (total deaths - own goals), shots, own goals
+		#TODO player_behavior() also implement saves, touches, ranged, melee, blocks, platforms && global.process() Then get those stats
 		#TODO we'll cross-analyze these stats in the stats screen, for player % intercomparison; "Player4 had 77% of touches!"
 		#TODO among those cross-analyzed stats, pick the 4 largest numbers, display those.
 		pass

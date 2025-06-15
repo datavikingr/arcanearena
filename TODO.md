@@ -1,49 +1,36 @@
-./scripts/player_behavior.gd:549:	
-# Y Button - Special TODO: Needs implementation - not here, down at player_special()
+# Finish on-map win screen, begin prep for post-map win screen. 
 
-./scripts/player_behavior.gd:750:
-func player_block() -> void: # Called by state_machine(); Localized magic wall for defense #TODO: Make the block magic bigger.
+# Logo splash screen
 
-./scripts/player_behavior.gd:789:
-func player_special() -> void: # TODO Called by state_machine(); The Player is spending their 'smash ball' scroll
+# Main menu (keep it simple to start out)
 
-./scripts/player_behavior.gd:808:
-func player_score(player_name) -> void: # TODO?? Maybe a celebration animation?
+# Add pause function
 
-./scripts/player_missile.gd:61:				
-#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
+# Build new map formats
 
-./scripts/cold_goal.gd:22:			
-players = [player1, player2] #TODO: Replace with dynamic detection of players
+# Team Win Objects (cold/hot_team_wins.tscn)
+./scripts/cold_team_wins.gd:#TODO switch to menu controls
+./scripts/cold_team_wins.gd:#get_tree().change_scene_to_file("res://scenes/new_scene.tscn") #TODO
 
-./scripts/player_attack.gd:44:	
-elif body.is_in_group("players"): # Then we need to be able to do damage TODO
+./scripts/hot_team_wins.gd:#TODO switch to menu controls
+./scripts/hot_team_wins.gd:	#get_tree().change_scene_to_file("res://scenes/new_scene.tscn") #TODO
 
-./scripts/player_attack.gd:48:				
-#TODO: probably emit signal to body: player_hurt, and then have to build the player hurt animation, knockback (.75 seconds), tie it into UI, death animation, respawn timer.
+# Spells
+./scripts/sudden_death.gd:#TODO Currently busted, needs work. hot_team_ui isn't loaded by sudden_death() or something
 
-./scripts/ball.gd:52:				
-#TODO We need the ball to stop interacting with physics, disappear, and reset position.
+Basically none of these spells are properly tested
 
-./scripts/ball.gd:54:				
-#TODO: We gotta figure out this possession and on fire idea
+# Player/Player Sprite
+./scripts/player_behavior.gd:func player_block() -> void: # Called by state_machine(); Localized magic wall for defense #TODO: Make the block magic bigger.
 
-./scripts/ball.gd:110:
-func write_gitgud_message() -> void: #TODO
+implement saves (needs ball too), touches (player), ranged attacks (player), melee (player), blocks (player), platforms (player)
 
-./scripts/hot_goal.gd:22:			
-players = [player1, player2] #TODO: Replace with dynamic detection of players
+# Ball
+./scripts/ball.gd:#TODO : what happens when we're on fire? Force multiplier??
+./scripts/ball.gd:func write_gitgud_message() -> void: #TODO these are for saves/missed shots
 
-finish ball on fire - both for what happens (above) and switching to team posession.
-
-Finish on-map win screen, begin prep for post-map win screen. 
-
-Start collecting shot data for post-map win screen.
-
-Logo splash screen
-
-Main menu (keep it simple to start out)
-
-Add pause function
-
-Begin building new maps
+# Global
+./scripts/global.gd:#TODO global.process() Get their stats: Goals, kills, murders (total deaths - own goals), shots, own goals
+./scripts/global.gd:#TODO player_behavior() also implement saves, touches, ranged, melee, blocks, platforms && global.process() Then get those stats
+./scripts/global.gd:#TODO we'll cross-analyze these stats in the stats screen, for player % intercomparison; "Player4 had 77% of touches!"
+./scripts/global.gd:#TODO among those cross-analyzed stats, pick the 4 largest numbers, display those.
