@@ -65,10 +65,10 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
-	var player1: PlayerCharacter = %Player1
-	var player2: PlayerCharacter = %Player2
-	players = [player1, player2] #TODO: Replace with dynamic detection of players
-	for player in players:
+	Global.connect("players_ready", Callable(self, "_on_player_ready"))
+
+func _on_player_ready(current_players):
+	for player in current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
 		else:

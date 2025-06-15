@@ -1,4 +1,4 @@
-[gd_scene load_steps=32 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=31 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
@@ -21,7 +21,6 @@
 [ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="12_vnq04"]
 [ext_resource type="PackedScene" uid="uid://x1l6ji4xxc3x" path="res://scenes/player2.tscn" id="15_d1dub"]
 [ext_resource type="PackedScene" uid="uid://bhl8wkiu38vtc" path="res://scenes/hot_team_ui.tscn" id="15_fuq6r"]
-[ext_resource type="Script" uid="uid://dhgx12iuslp3r" path="res://scripts/player3.gd" id="16_hmr2h"]
 [ext_resource type="PackedScene" uid="uid://cdvp5lryb85dh" path="res://scenes/player1.tscn" id="16_xo7ig"]
 [ext_resource type="PackedScene" uid="uid://cja5c54dcoiul" path="res://scenes/time_control.tscn" id="17_8ypjd"]
 [ext_resource type="PackedScene" uid="uid://cyjwmp1vsxxpx" path="res://scenes/cold_goal_explosion.tscn" id="20_t57ip"]
@@ -181,7 +180,6 @@ position = Vector2(160, 300)
 [node name="Player2" parent="." instance=ExtResource("15_d1dub")]
 unique_name_in_owner = true
 position = Vector2(480, 300)
-script = ExtResource("16_hmr2h")
 
 [node name="Spells" type="Node2D" parent="."]
 unique_name_in_owner = true

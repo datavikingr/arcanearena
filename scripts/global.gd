@@ -18,20 +18,23 @@ signal players_ready(players)
 func reset():
 	match_data = {}
 
-func ready() -> void:
-	root = get_tree().root
-	spawn_players(root, 2)
+func _ready() -> void:
+	root = get_tree().root.get_node("TestArenaEmpty")
+	# spawn_players(root, 3)
 
-func spawn_players(parent_node: Node, count := 2):
+func spawn_players(parent_node: Node, count: int):
 	for i in count:
+		print("Spawning player # %d" % (i + 1))
 		var scene = player_scenes[i]
 		var player = scene.instantiate()
 
 		player.player_color = player_colors[i] # Set color directly
-		player.name = "Player%d" % i
+		player.name = "Player%d" % (i + 1)
 
 		parent_node.add_child(player)
 		current_players.append(player)
+
+		emit_signal("players_ready", current_players)
 
 func process():
 	for player in current_players:
