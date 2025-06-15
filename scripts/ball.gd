@@ -65,10 +65,7 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
-	Global.connect("players_ready", Callable(self, "_on_player_ready"))
-
-func _on_player_ready(current_players):
-	for player in current_players:
+	for player in Global.current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
 		else:
@@ -81,7 +78,7 @@ func _on_player_ready(current_players):
 func _process(_delta: float) -> void: # Called every frame. 'delta' is the elapsed time since the previous frame.
 	aim_goal_finders()
 	if last_contact != penultimate_contact:
-		print(last_contact)
+		#print(last_contact)
 		penultimate_contact = last_contact
 	if detect_team_contacts():
 		on_fire()
@@ -173,14 +170,14 @@ func aim_goal_finders() -> void:
 func shot_detection():
 	if raycast_hot.is_colliding() and raycast_hot.get_collider() == goal_hot: # Hot Goal Shot Detection
 		if not hot_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			#print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
+			print("Shot toward Hot Goal!") # meaning we have a new a shot on our hands
 			hot_goal_hit = true # and we're gonna stop detecting more shots.
 			miamishot.emit(last_contact)
 	else:
 		hot_goal_hit = false # reset the flag once we've stopped contacting the goals, so we can detect new shots
 	if raycast_cold.is_colliding() and raycast_cold.get_collider() == goal_cold: # Cold Goal Shot Detection
 		if not cold_goal_hit: # if the flag is currently off, we're not actively spamming shot-contact a thousand times
-			#print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
+			print("Shot toward Cold Goal!") # meaning we have a new a shot on our hands
 			cold_goal_hit = true # and we're gonna stop detecting more shots.
 			alaskashot.emit(last_contact)
 	else:

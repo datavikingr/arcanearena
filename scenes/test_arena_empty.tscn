@@ -164,7 +164,7 @@ scale = Vector2(3.63281, 1.27222)
 
 [node name="Ball" parent="." instance=ExtResource("6_55bwo")]
 unique_name_in_owner = true
-position = Vector2(320, 90)
+position = Vector2(320, 60)
 continuous_cd = 0
 
 [node name="ColdGoalExplosion" parent="." instance=ExtResource("20_t57ip")]
@@ -221,7 +221,6 @@ position = Vector2(320, 90)
 [node name="ColdTeamUI" parent="UI" instance=ExtResource("10_lgwtb")]
 unique_name_in_owner = true
 position = Vector2(305, 17.5)
-goals = 9
 
 [node name="BlueUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true
@@ -250,7 +249,6 @@ frame = 61
 [node name="HotTeamUI" parent="UI" instance=ExtResource("15_fuq6r")]
 unique_name_in_owner = true
 position = Vector2(335, 17.5)
-goals = 9
 
 [node name="RedUI" parent="UI" instance=ExtResource("6_e3s0m")]
 unique_name_in_owner = true

@@ -1,0 +1,12 @@
+[gd_scene load_steps=2 format=3 uid="uid://rp5mkf2fkyhq"]
+
+[ext_resource type="PackedScene" uid="uid://dj1bkuuo2x6bu" path="res://scenes/map_platform.tscn" id="1_55dw6"]
+
+[node name="BallPlat" type="Node2D"]
+
+[node name="TopCenter" parent="." instance=ExtResource("1_55dw6")]
+position = Vector2(320, 100)
+
+[node name="TopCenter2" parent="." instance=ExtResource("1_55dw6")]
+position = Vector2(320, 250)
+rotation = 1.5708
