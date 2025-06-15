@@ -13,8 +13,6 @@ extends RigidBody2D
 @onready var alaska = $ColdLine
 @onready var ball_sprite: Sprite2D = $BallSprite
 @onready var countdown_sprite: Sprite2D = $CountdownSprite
-@onready var player1: PlayerCharacter = %Player1
-@onready var player2: PlayerCharacter = %Player2
 var players: Array[PlayerCharacter] = []
 
 # Local
@@ -67,6 +65,8 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
+	var player1: PlayerCharacter = %Player1
+	var player2: PlayerCharacter = %Player2
 	players = [player1, player2] #TODO: Replace with dynamic detection of players
 	for player in players:
 		if player.is_in_group("ColdTeam"):
