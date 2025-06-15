@@ -20,7 +20,7 @@ func reset():
 
 func _ready() -> void:
 	root = get_tree().root.get_node("TestArenaEmpty")
-	# spawn_players(root, 3)
+	spawn_players(root, 3)
 
 func spawn_players(parent_node: Node, count: int):
 	for i in count:
