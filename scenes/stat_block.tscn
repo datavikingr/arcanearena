@@ -1,0 +1,289 @@
+[gd_scene load_steps=3 format=3 uid="uid://c6qbjp8wr8gcg"]
+
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="1_gqgbt"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="2_bh5yf"]
+
+[node name="StatBlock" type="Node2D"]
+
+[node name="PlayerIndicator" type="Node2D" parent="."]
+position = Vector2(0, 5)
+
+[node name="Player" type="Sprite2D" parent="PlayerIndicator"]
+position = Vector2(-47, -43)
+texture = ExtResource("1_gqgbt")
+hframes = 8
+vframes = 18
+
+[node name="Player2" type="Sprite2D" parent="PlayerIndicator"]
+position = Vector2(-23, -43)
+texture = ExtResource("1_gqgbt")
+hframes = 8
+vframes = 18
+
+[node name="Player3" type="Sprite2D" parent="PlayerIndicator"]
+position = Vector2(0, -43)
+texture = ExtResource("1_gqgbt")
+hframes = 8
+vframes = 18
+
+[node name="Player4" type="Sprite2D" parent="PlayerIndicator"]
+position = Vector2(23, -43)
+texture = ExtResource("1_gqgbt")
+hframes = 8
+vframes = 18
+
+[node name="Player5" type="Sprite2D" parent="PlayerIndicator"]
+position = Vector2(47, -43)
+texture = ExtResource("1_gqgbt")
+hframes = 8
+vframes = 18
+
+[node name="Goals" type="Node2D" parent="."]
+position = Vector2(-29, -22)
+
+[node name="G" type="Sprite2D" parent="Goals"]
+position = Vector2(-22, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="O" type="Sprite2D" parent="Goals"]
+position = Vector2(-9, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="A" type="Sprite2D" parent="Goals"]
+position = Vector2(5, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="L" type="Sprite2D" parent="Goals"]
+position = Vector2(18, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="S" type="Sprite2D" parent="Goals"]
+position = Vector2(31, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Tens" type="Sprite2D" parent="Goals"]
+position = Vector2(67, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Ones" type="Sprite2D" parent="Goals"]
+position = Vector2(80, 0)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Kills" type="Node2D" parent="."]
+position = Vector2(-28, -35)
+
+[node name="K" type="Sprite2D" parent="Kills"]
+position = Vector2(-23, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 26
+
+[node name="I" type="Sprite2D" parent="Kills"]
+position = Vector2(-14, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="L" type="Sprite2D" parent="Kills"]
+position = Vector2(-5, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="L2" type="Sprite2D" parent="Kills"]
+position = Vector2(7, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="S" type="Sprite2D" parent="Kills"]
+position = Vector2(20, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Tens" type="Sprite2D" parent="Kills"]
+position = Vector2(66, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Ones" type="Sprite2D" parent="Kills"]
+position = Vector2(79, 28)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Deaths" type="Node2D" parent="."]
+position = Vector2(-187, -11)
+
+[node name="D" type="Sprite2D" parent="Deaths"]
+position = Vector2(135, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="E" type="Sprite2D" parent="Deaths"]
+position = Vector2(147, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="A" type="Sprite2D" parent="Deaths"]
+position = Vector2(160, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="T" type="Sprite2D" parent="Deaths"]
+position = Vector2(170, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="H" type="Sprite2D" parent="Deaths"]
+position = Vector2(184, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 23
+
+[node name="S" type="Sprite2D" parent="Deaths"]
+position = Vector2(198, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Tens" type="Sprite2D" parent="Deaths"]
+position = Vector2(225, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Ones" type="Sprite2D" parent="Deaths"]
+position = Vector2(238, 19)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Owns" type="Node2D" parent="."]
+position = Vector2(-28, -33)
+
+[node name="O" type="Sprite2D" parent="Owns"]
+position = Vector2(-23, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="W" type="Sprite2D" parent="Owns"]
+position = Vector2(-9, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 38
+
+[node name="N" type="Sprite2D" parent="Owns"]
+position = Vector2(5, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="S" type="Sprite2D" parent="Owns"]
+position = Vector2(18, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Tens" type="Sprite2D" parent="Owns"]
+position = Vector2(66, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Ones" type="Sprite2D" parent="Owns"]
+position = Vector2(79, 56)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Shots" type="Node2D" parent="."]
+position = Vector2(-28, -32)
+
+[node name="S" type="Sprite2D" parent="Shots"]
+position = Vector2(-23, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="H" type="Sprite2D" parent="Shots"]
+position = Vector2(-11, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 23
+
+[node name="O" type="Sprite2D" parent="Shots"]
+position = Vector2(2, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="T" type="Sprite2D" parent="Shots"]
+position = Vector2(15, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="S2" type="Sprite2D" parent="Shots"]
+position = Vector2(29, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Tens" type="Sprite2D" parent="Shots"]
+position = Vector2(66, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12
+
+[node name="Ones" type="Sprite2D" parent="Shots"]
+position = Vector2(79, 70)
+texture = ExtResource("2_bh5yf")
+hframes = 8
+vframes = 12

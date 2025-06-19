@@ -1,0 +1,173 @@
+[gd_scene load_steps=8 format=3 uid="uid://cqge7wy8akpke"]
+
+[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_cu52f"]
+[ext_resource type="PackedScene" uid="uid://c6qbjp8wr8gcg" path="res://scenes/stat_block.tscn" id="2_e5rbb"]
+[ext_resource type="PackedScene" uid="uid://cm5pish7xyrr8" path="res://scenes/hot_team_wins.tscn" id="3_afiyj"]
+[ext_resource type="PackedScene" uid="uid://bstr88etfrqkc" path="res://scenes/cold_team_wins.tscn" id="4_gqqt5"]
+[ext_resource type="PackedScene" uid="uid://bhl8wkiu38vtc" path="res://scenes/hot_team_ui.tscn" id="5_fnkl7"]
+[ext_resource type="PackedScene" uid="uid://csmhjkox5eqkv" path="res://scenes/cold_team_ui.tscn" id="6_2leci"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="7_faskj"]
+
+[node name="StatsScreen" type="Node2D"]
+
+[node name="BG" type="Sprite2D" parent="."]
+position = Vector2(320, 180)
+texture = ExtResource("1_cu52f")
+
+[node name="BlueStatBlock" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(73, 60)
+
+[node name="GreenStatBlock2" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(73, 180)
+
+[node name="PurpleStatBlock3" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(73, 301)
+
+[node name="RedStatBlock4" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(568, 60)
+
+[node name="YellowStatBlock5" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(568, 180)
+
+[node name="OrangeStatBlock6" parent="." instance=ExtResource("2_e5rbb")]
+position = Vector2(568, 301)
+
+[node name="HotTeamWins" parent="." instance=ExtResource("3_afiyj")]
+position = Vector2(320, 94)
+scale = Vector2(2, 2)
+
+[node name="ColdTeamWins" parent="." instance=ExtResource("4_gqqt5")]
+visible = false
+position = Vector2(320, 94)
+scale = Vector2(2, 2)
+
+[node name="HotTeamUI" parent="." instance=ExtResource("5_fnkl7")]
+position = Vector2(392, 188)
+scale = Vector2(2, 2)
+
+[node name="ColdTeamUI" parent="." instance=ExtResource("6_2leci")]
+position = Vector2(248, 188)
+scale = Vector2(2, 2)
+
+[node name="PressAToPlayAgain" type="Node2D" parent="."]
+position = Vector2(118, -41)
+scale = Vector2(2, 2)
+
+[node name="P" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(54.5, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 31
+
+[node name="R" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(66, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="E" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(78, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="S" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(91, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="S2" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(104, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="AButton" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(118.5, 161.5)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 42
+
+[node name="T" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(134, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(147.5, 162)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="P2" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(50.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 31
+
+[node name="L" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(61.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="A" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(74.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="Y" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(88.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 40
+
+[node name="A2" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(107.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="G" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(121, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="A3" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(133.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="I" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(143.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N" type="Sprite2D" parent="PressAToPlayAgain"]
+position = Vector2(153.5, 176)
+texture = ExtResource("7_faskj")
+hframes = 8
+vframes = 12
+frame = 29
