@@ -5,6 +5,8 @@ var countdown_total: int = 30
 var countdown: int = countdown_total
 var visibility_decay_rate: int = 2
 
+signal vitory
+
 func toggle_visibility() -> void:
 	if visible:
 		visible = false
@@ -14,6 +16,7 @@ func toggle_visibility() -> void:
 func countdown_timer() -> void:
 	countdown -= 1
 	if countdown == countdown_total - (visibility_decay_rate * 1):
+		emit_signal("victory")
 		screen_dark.modulate = Color(0,0,0,.2)
 	if countdown == countdown_total - (visibility_decay_rate * 2):
 		screen_dark.modulate = Color(0,0,0,.4)
