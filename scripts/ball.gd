@@ -13,7 +13,6 @@ extends RigidBody2D
 @onready var alaska = $ColdLine
 @onready var ball_sprite: Sprite2D = $BallSprite
 @onready var countdown_sprite: Sprite2D = $CountdownSprite
-@onready var arena: Node2D = $".."
 var players: Array[PlayerCharacter] = []
 
 # Local
@@ -66,7 +65,7 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
-	for player in arena.current_players:
+	for player in Global.current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
 		else:
