@@ -21,7 +21,8 @@ func reset():
 	match_data = {}
 
 func _ready() -> void:
-	arena = get_tree().root.get_node("Arena")
+	#arena = get_tree().root.get_node("Arena")
+	arena = get_tree().current_scene
 	map = arena.get_node("Map")
 
 	# Get player nodes and append current_players with them, so we can gather their states/stats later.
