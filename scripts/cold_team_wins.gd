@@ -5,7 +5,7 @@ var countdown_total: int = 30
 var countdown: int = countdown_total
 var visibility_decay_rate: int = 2
 
-signal vitory
+# TODO signal victory
 
 func toggle_visibility() -> void:
 	if visible:
