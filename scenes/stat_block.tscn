@@ -1,16 +1,14 @@
-[gd_scene load_steps=4 format=3 uid="uid://c6qbjp8wr8gcg"]
+[gd_scene load_steps=3 format=3 uid="uid://c6qbjp8wr8gcg"]
 
-[ext_resource type="Script" uid="uid://deeorxwqiuths" path="res://scripts/stat_block.gd" id="1_bh5yf"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="1_gqgbt"]
 [ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="2_bh5yf"]
 
 [node name="StatBlock" type="Node2D"]
-script = ExtResource("1_bh5yf")
 
 [node name="PlayerIndicator" type="Node2D" parent="."]
 position = Vector2(0, 5)
 
-[node name="Player1" type="Sprite2D" parent="PlayerIndicator"]
+[node name="Player" type="Sprite2D" parent="PlayerIndicator"]
 position = Vector2(-47, -43)
 texture = ExtResource("1_gqgbt")
 hframes = 8
