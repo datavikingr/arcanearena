@@ -1,6 +1,7 @@
-[gd_scene load_steps=31 format=3 uid="uid://6g14su3oskxa"]
+[gd_scene load_steps=32 format=3 uid="uid://6g14su3oskxa"]
 
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_a1h4a"]
+[ext_resource type="Script" uid="uid://c7ja7rxfl1k3q" path="res://scenes/arena.gd" id="1_hmr2h"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_8a7vy"]
 [ext_resource type="Texture2D" uid="uid://b4no5474kragd" path="res://assets/bgs/thedoorsbetwixtworlds.png" id="3_su0j7"]
 [ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="4_6qjae"]
@@ -32,6 +33,7 @@
 [ext_resource type="PackedScene" uid="uid://bstr88etfrqkc" path="res://scenes/cold_team_wins.tscn" id="30_hmr2h"]
 
 [node name="TestArenaEmpty" type="Node2D"]
+script = ExtResource("1_hmr2h")
 
 [node name="BGs" type="Node2D" parent="."]
 position = Vector2(320, 180)
