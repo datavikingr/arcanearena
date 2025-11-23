@@ -4,6 +4,10 @@ extends Node2D
 var countdown_total: int = 30
 var countdown: int = countdown_total
 var visibility_decay_rate: int = 2
+var arena: Node2D
+
+func _ready() -> void:
+	arena = get_tree().current_scene
 
 func toggle_visibility() -> void:
 	if visible:
@@ -23,7 +27,7 @@ func countdown_timer() -> void:
 		screen_dark.modulate = Color(0,0,0,.8)
 	if countdown == countdown_total - (visibility_decay_rate * 5):
 		screen_dark.modulate = Color(0,0,0,1)
-		for player in Global.current_players:
+		for player in arena.current_players:
 			var left_eye = player.get_node("TrailLeft")
 			var right_eye = player.get_node("TrailRight")
 			left_eye.visible = false

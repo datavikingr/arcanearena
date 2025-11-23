@@ -7,8 +7,10 @@ signal hot_own_goal(player_name: String)
 signal hot_player_score(player_name: String)
 var players: Array = []
 var init_goals: bool
+var arena: Node2D
 
 func _ready() -> void:
+	arena = get_tree().current_scene
 	self.add_to_group("HotTeam")
 	self.hot_player_score.connect(Callable(coldui, "score"))
 	self.hot_own_goal.connect(Callable(coldui, "score"))
@@ -17,7 +19,7 @@ func _ready() -> void:
 func _goal(player_name, body) -> void:
 	if body == self:
 		if init_goals == true:
-			players = Global.current_players
+			players = arena.current_players
 			for player in players:
 				if player.is_in_group("HotTeam"):
 					self.hot_own_goal.connect(Callable(player, "own_goal"))

@@ -26,6 +26,7 @@ var goal_radar_distance: int = 124 # used on the raycasts in aim_goal_finder()
 @export var goal_state: bool = false
 var hot_goal_hit: bool = false
 var cold_goal_hit: bool = false
+var arena: Node2D
 
 # Signals
 signal goal(player: String)
@@ -61,11 +62,12 @@ func detect_team_contacts():
 #######################################################################################################################################################
 ## INIT/CONSTRUCTORS
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
+	arena = get_tree().current_scene
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
-	for player in Global.current_players:
+	for player in arena.current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
 		else:
