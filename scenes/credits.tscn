@@ -5,4 +5,5 @@
 [node name="Credits" type="Node2D"]
 
 [node name="Sprite" type="Sprite2D" parent="."]
+position = Vector2(320, 180)
 texture = ExtResource("1_0bpdh")

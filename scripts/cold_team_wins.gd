@@ -1,13 +1,14 @@
 extends Node2D
 
 @onready var screen_dark: Sprite2D = %ScreenDark
+@onready var arena = get_tree().current_scene
 var countdown_total: int = 30
 var countdown: int = countdown_total
 var visibility_decay_rate: int = 2
-var arena: Node2D
+var players =[]
 
 func _ready() -> void:
-	arena = get_tree().current_scene
+	pass
 
 func toggle_visibility() -> void:
 	if visible:
@@ -27,11 +28,14 @@ func countdown_timer() -> void:
 		screen_dark.modulate = Color(0,0,0,.8)
 	if countdown == countdown_total - (visibility_decay_rate * 5):
 		screen_dark.modulate = Color(0,0,0,1)
-		for player in arena.current_players:
+		for child in arena.get_children():
+			if child.is_in_group("players"):
+				players.append(child)
+		for player in players:
 			var left_eye = player.get_node("TrailLeft")
 			var right_eye = player.get_node("TrailRight")
 			left_eye.visible = false
-			right_eye.visible = true
+			right_eye.visible = false
 		#TODO switch to menu controls
 	if countdown == 0:
 		#get_tree().change_scene_to_file("res://scenes/new_scene.tscn") #TODO

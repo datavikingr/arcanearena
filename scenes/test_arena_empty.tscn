@@ -32,7 +32,7 @@
 [ext_resource type="PackedScene" uid="uid://cm5pish7xyrr8" path="res://scenes/hot_team_wins.tscn" id="29_7hvqx"]
 [ext_resource type="PackedScene" uid="uid://bstr88etfrqkc" path="res://scenes/cold_team_wins.tscn" id="30_hmr2h"]
 
-[node name="TestArenaEmpty" type="Node2D"]
+[node name="Arena" type="Node2D"]
 script = ExtResource("1_hmr2h")
 
 [node name="BGs" type="Node2D" parent="."]

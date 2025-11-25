@@ -13,7 +13,9 @@ extends RigidBody2D
 @onready var alaska = $ColdLine
 @onready var ball_sprite: Sprite2D = $BallSprite
 @onready var countdown_sprite: Sprite2D = $CountdownSprite
+@onready var arena = get_tree().current_scene
 var players: Array[PlayerCharacter] = []
+var current_players = []
 
 # Local
 var last_contact: String = "" # Keeps track of the last player to touch the ball
@@ -26,7 +28,6 @@ var goal_radar_distance: int = 124 # used on the raycasts in aim_goal_finder()
 @export var goal_state: bool = false
 var hot_goal_hit: bool = false
 var cold_goal_hit: bool = false
-var arena: Node2D
 
 # Signals
 signal goal(player: String)
@@ -62,18 +63,37 @@ func detect_team_contacts():
 #######################################################################################################################################################
 ## INIT/CONSTRUCTORS
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
-	arena = get_tree().current_scene
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
 	# TODO shot signals to players; see cold_goal._goal() for reference.
-	for player in arena.current_players:
+	for player in current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
 		else:
 			self.alaskashot.connect(Callable(player, "player_shot"))
 	ball_die()
 	ball_respawn()
+	# Get player nodes and append current_players with them, so we can gather their states/stats later.
+
+	update_players()
+
+func update_players():
+	await get_tree().process_frame
+	#players = [
+	#	arena.get_node_or_null("Player1"),
+	#	arena.get_node_or_null("Player2"),
+	#	arena.get_node_or_null("Player3"),
+	#	arena.get_node_or_null("Player4"),
+	#	arena.get_node_or_null("Player5"),
+	#	arena.get_node_or_null("Player6")
+	for child in arena.get_children():
+		if child.is_in_group("players"):
+			players.append(child)
+	for player in players:
+		if player != null:
+			current_players.append(player)
+	print(players, current_players)
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
