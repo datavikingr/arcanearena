@@ -1,5 +1,6 @@
-[gd_scene load_steps=34 format=3 uid="uid://w0p3sy7ffmds"]
+[gd_scene load_steps=35 format=3 uid="uid://w0p3sy7ffmds"]
 
+[ext_resource type="Script" uid="uid://c7ja7rxfl1k3q" path="res://scripts/arena.gd" id="1_olusm"]
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_uabhv"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="2_olusm"]
 [ext_resource type="Texture2D" uid="uid://b4no5474kragd" path="res://assets/bgs/thedoorsbetwixtworlds.png" id="3_scjkt"]
@@ -35,6 +36,7 @@
 [ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="33_22315"]
 
 [node name="Arena" type="Node2D"]
+script = ExtResource("1_olusm")
 
 [node name="BGs" type="Node2D" parent="."]
 position = Vector2(320, 180)

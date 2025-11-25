@@ -1,6 +1,6 @@
 extends Node2D
 
-var current_players = []
+var players = []
 var match_data: Dictionary = {} # Store match-wide state here
 var arena: Node2D
 var map: Node2D
@@ -16,33 +16,37 @@ var platform_configs = [
 	"res://scenes/platformconfigs/fourcorners.tscn",
 	"res://scenes/platformconfigs/omega.tscn"
 ]
+var testing = true
 
 func reset():
 	match_data = {}
 
 func _ready() -> void:
 	arena = self #arena = get_tree().current_scene
-	map = arena.get_node("Map")
+	if not testing:
+		map = arena.get_node("Map")
+		# Random selection of platfrom configurations
+		var random_index = randi() % platform_configs.size() # Get a random index
+		var plat_map = load(platform_configs[random_index]) # Load the platform config from the random index
+		var plat_instance = plat_map.instantiate()
+		map.add_child(plat_instance)
 
-	# Random selection of platfrom configurations
-#TODO	var random_index = randi() % platform_configs.size() # Get a random index
-#TODO	var plat_map = load(platform_configs[random_index]) # Load the platform config from the random index
-#TODO	var plat_instance = plat_map.instantiate()
-#TODO	map.add_child(plat_instance)
-
-	# Random Goal height
-#TODO	goal_y = randf_range(119, 264)
-#TODO	hot_goal = map.get_node("Goals").get_node("HotGoal")
-#TODO	cold_goal = map.get_node("Goals").get_node("ColdGoal")
-#TODO	hot_goal.position.y = goal_y
-#TODO	cold_goal.position.y = goal_y
-
-	# Get player nodes and append current_players with them, so we can gather their states/stats later.
+		# Random Goal height
+		randomize()
+		var height_options = [119, 191.5, 264]
+		goal_y = height_options.pick_random()
+		hot_goal = map.get_node("Goals").get_node("HotGoal")
+		cold_goal = map.get_node("Goals").get_node("ColdGoal")
+		hot_goal.position.y = goal_y
+		cold_goal.position.y = goal_y
+	# Get list if players for stat tracking later
 	await get_tree().process_frame
-	update_players()
+	for child in arena.get_children():
+		if child.is_in_group("players"):
+			players.append(child)
 
 func process():
-	for player in current_players:
+	for player in players:
 		#TODO global.process() Get their stats: Goals, kills, murders (total deaths - own goals), shots, own goals
 		#TODO player_behavior() also implement saves, touches, ranged, melee, blocks, platforms && global.process() Then get those stats
 		#TODO we'll cross-analyze these stats in the stats screen, for player % intercomparison; "Player4 had 77% of touches!"
@@ -50,15 +54,4 @@ func process():
 		pass
 	pass
 
-func update_players():
-	var players = [
-		arena.get_node_or_null("Player1"),
-		arena.get_node_or_null("Player2"),
-		arena.get_node_or_null("Player3"),
-		arena.get_node_or_null("Player4"),
-		arena.get_node_or_null("Player5"),
-		arena.get_node_or_null("Player6")
-	]
-	for player in players:
-		if player != null:
-			current_players.append(player)
+	

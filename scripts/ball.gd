@@ -66,7 +66,11 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
-	# TODO shot signals to players; see cold_goal._goal() for reference.
+	#TODO shot signals to players; see cold_goal._goal() for reference.
+	await get_tree().process_frame
+	for child in arena.get_children():
+		if child.is_in_group("players"):
+			players.append(child)
 	for player in current_players:
 		if player.is_in_group("ColdTeam"):
 			self.miamishot.connect(Callable(player, "player_shot"))
@@ -74,26 +78,6 @@ func _ready() -> void: # Called when the node enters the scene tree for the firs
 			self.alaskashot.connect(Callable(player, "player_shot"))
 	ball_die()
 	ball_respawn()
-	# Get player nodes and append current_players with them, so we can gather their states/stats later.
-
-	update_players()
-
-func update_players():
-	await get_tree().process_frame
-	#players = [
-	#	arena.get_node_or_null("Player1"),
-	#	arena.get_node_or_null("Player2"),
-	#	arena.get_node_or_null("Player3"),
-	#	arena.get_node_or_null("Player4"),
-	#	arena.get_node_or_null("Player5"),
-	#	arena.get_node_or_null("Player6")
-	for child in arena.get_children():
-		if child.is_in_group("players"):
-			players.append(child)
-	for player in players:
-		if player != null:
-			current_players.append(player)
-	print(players, current_players)
 
 #######################################################################################################################################################
 ## EXECUTION / MAIN
