@@ -116,8 +116,15 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 				goal.emit(last_contact, body)
 				contact_monitor = false
 				ball_die()
-			if body.is_in_group("players"):
+			elif body.is_in_group("players"):
 				add_contact_name(last_contact)
+			elif not body.is_in_group("walls") and not body.is_in_group("ramps") and body.name != "Map Border Wall South": 
+				#basically checking to see if it's a spell - by eliminating players, goals THEN ramps, walls & the bottom wall
+				var spell_color = body.get("player_color")
+				#print(spell_color)
+				if spell_color:
+					add_contact_name(spell_color)
+					last_contact = spell_color
 	shot_detection()
 
 #######################################################################################################################################################
@@ -147,6 +154,7 @@ func ball_die():
 
 func ball_respawn():
 	var balltimer = get_node("BallTimer")
+	contact_names.clear()
 	if countdown > 0:
 		countdown -= 1
 		countdown_sprite.frame -= 1
