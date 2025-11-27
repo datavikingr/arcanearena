@@ -60,9 +60,13 @@ func match_is_over():
 func detect_team_contacts():
 	return contact_names.size() == 5 and contact_names.count(contact_names[0]) == 5
 
+func in_main_menu():
+	return get_tree().current_scene.name == "MainMenu"
+
 #######################################################################################################################################################
 ## INIT/CONSTRUCTORS
 func _ready() -> void: # Called when the node enters the scene tree for the first time.
+	#print(get_tree().current_scene.name)
 	force_multiplier = 1
 	self.goal.connect(Callable(goal_hot, "_goal"))
 	self.goal.connect(Callable(goal_cold, "_goal"))
@@ -88,6 +92,12 @@ func _process(_delta: float) -> void: # Called every frame. 'delta' is the elaps
 		penultimate_contact = last_contact
 	if detect_team_contacts():
 		on_fire()
+	if in_main_menu():
+		self.global_transform.origin = Vector2(4000,-1100)
+		ball_sprite.visible = false
+		set_physics_process(false)
+		set_process(false)
+		freeze = true
 	if match_is_over():
 		self.global_transform.origin = Vector2(4000,-1100)
 		ball_sprite.visible = false
@@ -154,7 +164,9 @@ func ball_respawn():
 		#print("Contact Monitor should be back on.")
 
 func on_fire() -> void:
-	#TODO : what happens when we're on fire?
+	#TODO : what happens when we're on fire? - We'll go faster, and I'd like the sprite to change for a visual indication
+	#force_multiplier = 2.5
+	#Need some
 	pass
 
 func aim_goal_finders() -> void:
