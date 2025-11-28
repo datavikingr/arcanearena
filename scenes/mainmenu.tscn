@@ -1,4 +1,4 @@
-[gd_scene load_steps=29 format=3 uid="uid://cgt5jirf0v3bs"]
+[gd_scene load_steps=33 format=3 uid="uid://cgt5jirf0v3bs"]
 
 [ext_resource type="Script" uid="uid://c7ja7rxfl1k3q" path="res://scripts/arena.gd" id="1_jqs8n"]
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="2_g7odu"]
@@ -26,8 +26,14 @@
 [ext_resource type="Script" uid="uid://n2cab70kk268" path="res://scripts/purple_ui.gd" id="27_4rpq8"]
 [ext_resource type="PackedScene" uid="uid://bhl8wkiu38vtc" path="res://scenes/hot_team_ui.tscn" id="28_wny6h"]
 [ext_resource type="Script" uid="uid://b4oy3t1gj5gg7" path="res://scripts/red_ui.gd" id="29_2sblg"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="29_a5e1i"]
 [ext_resource type="Script" uid="uid://bfm76secb20rm" path="res://scripts/yellow_ui.gd" id="30_eyoau"]
+[ext_resource type="PackedScene" uid="uid://dj1bkuuo2x6bu" path="res://scenes/map_platform.tscn" id="30_jqs8n"]
 [ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="31_gvbs6"]
+[ext_resource type="Script" uid="uid://b0pm7rp8ibmu3" path="res://scripts/player_contact_zone.gd" id="31_jqs8n"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jqs8n"]
+size = Vector2(96, 20)
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_jqs8n")
@@ -268,6 +274,122 @@ unique_name_in_owner = true
 visible = false
 position = Vector2(320, 418)
 continuous_cd = 0
+
+[node name="Title" type="Node2D" parent="."]
+scale = Vector2(4, 4)
+
+[node name="A" type="Sprite2D" parent="Title"]
+position = Vector2(14.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="R" type="Sprite2D" parent="Title"]
+position = Vector2(28.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="C" type="Sprite2D" parent="Title"]
+position = Vector2(40.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A2" type="Sprite2D" parent="Title"]
+position = Vector2(52.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="N" type="Sprite2D" parent="Title"]
+position = Vector2(66.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="E" type="Sprite2D" parent="Title"]
+position = Vector2(78.75, 15.75)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="S" type="Sprite2D" parent="Title"]
+position = Vector2(65.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T" type="Sprite2D" parent="Title"]
+position = Vector2(77.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="R2" type="Sprite2D" parent="Title"]
+position = Vector2(91.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="I" type="Sprite2D" parent="Title"]
+position = Vector2(100.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="K" type="Sprite2D" parent="Title"]
+position = Vector2(110.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 26
+
+[node name="E2" type="Sprite2D" parent="Title"]
+position = Vector2(122.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="R3" type="Sprite2D" parent="Title"]
+position = Vector2(135.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="S2" type="Sprite2D" parent="Title"]
+position = Vector2(147.25, 30)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="Platforms" type="Node2D" parent="."]
+
+[node name="CenterPlatform" parent="Platforms" instance=ExtResource("30_jqs8n")]
+position = Vector2(320, 180)
+
+[node name="PlayerContactZone" type="Area2D" parent="Platforms/CenterPlatform"]
+position = Vector2(-0.5, -14.375)
+script = ExtResource("31_jqs8n")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/CenterPlatform/PlayerContactZone"]
+position = Vector2(0.5, 0)
+shape = SubResource("RectangleShape2D_jqs8n")
+
+[connection signal="body_entered" from="Platforms/CenterPlatform/PlayerContactZone" to="Platforms/CenterPlatform/PlayerContactZone" method="_on_body_entered"]
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
