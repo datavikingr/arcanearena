@@ -41,7 +41,7 @@ scale = Vector2(1.2, 1.2)
 texture = ExtResource("3_i26lm")
 
 [node name="BgBlack" type="Sprite2D" parent="BGs"]
-modulate = Color(1, 1, 1, 0.64705884)
+modulate = Color(1, 1, 1, 0.3764706)
 position = Vector2(0, 0.49993896)
 scale = Vector2(7.54688, 12.7417)
 texture = ExtResource("2_g7odu")

@@ -118,7 +118,7 @@ func _physics_process(_delta: float) -> void: # Called every frame. We're gonna 
 				ball_die()
 			elif body.is_in_group("players"):
 				add_contact_name(last_contact)
-			elif not body.is_in_group("walls") and not body.is_in_group("ramps") and body.name != "Map Border Wall South": 
+			elif not body.is_in_group("walls") and not body.is_in_group("ramps") and body.name != "Map Border Wall South":
 				#basically checking to see if it's a spell - by eliminating players, goals THEN ramps, walls & the bottom wall
 				var spell_color = body.get("player_color")
 				#print(spell_color)
