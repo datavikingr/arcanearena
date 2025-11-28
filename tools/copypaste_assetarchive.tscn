@@ -381,6 +381,20 @@ hframes = 8
 vframes = 12
 frame = 47
 
+[node name="LeftStick" type="Sprite2D" parent="Controller"]
+position = Vector2(206, 88)
+texture = ExtResource("1_3b6k6")
+hframes = 8
+vframes = 12
+frame = 56
+
+[node name="RightStick" type="Sprite2D" parent="Controller"]
+position = Vector2(239, 88)
+texture = ExtResource("1_3b6k6")
+hframes = 8
+vframes = 12
+frame = 57
+
 [node name="L1" type="Sprite2D" parent="Controller"]
 position = Vector2(197, 23)
 texture = ExtResource("1_3b6k6")

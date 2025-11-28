@@ -1,0 +1,1172 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgjt0fqxm4ggr"]
+
+[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_hig1h"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="2_3tfba"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="3_3tfba"]
+
+[node name="ControlsUI" type="Node2D"]
+
+[node name="MapBgVoid - DELETE ME" type="Sprite2D" parent="."]
+visible = false
+position = Vector2(320, 180)
+texture = ExtResource("1_hig1h")
+
+[node name="JumpControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="A" type="Sprite2D" parent="JumpControls"]
+position = Vector2(19, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 42
+
+[node name="O" type="Sprite2D" parent="JumpControls"]
+position = Vector2(42, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="JumpControls"]
+position = Vector2(56, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="L2" type="Sprite2D" parent="JumpControls"]
+position = Vector2(80.75, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 50
+
+[node name="T" type="Sprite2D" parent="JumpControls"]
+position = Vector2(215, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="JumpControls"]
+position = Vector2(227.25, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="J" type="Sprite2D" parent="JumpControls"]
+position = Vector2(245, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 25
+
+[node name="U" type="Sprite2D" parent="JumpControls"]
+position = Vector2(257, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 36
+
+[node name="M" type="Sprite2D" parent="JumpControls"]
+position = Vector2(271, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="P" type="Sprite2D" parent="JumpControls"]
+position = Vector2(285, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 31
+
+[node name="I" type="Sprite2D" parent="JumpControls"]
+position = Vector2(297, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N" type="Sprite2D" parent="JumpControls"]
+position = Vector2(307, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="F" type="Sprite2D" parent="JumpControls"]
+position = Vector2(319, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 21
+
+[node name="I2" type="Sprite2D" parent="JumpControls"]
+position = Vector2(328, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N2" type="Sprite2D" parent="JumpControls"]
+position = Vector2(338, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="I3" type="Sprite2D" parent="JumpControls"]
+position = Vector2(347, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="T2" type="Sprite2D" parent="JumpControls"]
+position = Vector2(357, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="E" type="Sprite2D" parent="JumpControls"]
+position = Vector2(370, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="L" type="Sprite2D" parent="JumpControls"]
+position = Vector2(382, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="Y" type="Sprite2D" parent="JumpControls"]
+position = Vector2(395, 12)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 40
+
+[node name="Blue" type="Sprite2D" parent="JumpControls"]
+position = Vector2(411, 11)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 5
+
+[node name="MegamanSlideControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="DownButton" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(12, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 53
+
+[node name="A" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(25, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 42
+
+[node name="O" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(42, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(56, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="DownButton2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(73, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 53
+
+[node name="L2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(87, 32)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 50
+
+[node name="O2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(104, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="N" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(117, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="G" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(134, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="R2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(147, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="O3" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(159, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="U" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(172, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 36
+
+[node name="N2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(186, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="D2" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(198, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="T" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(215, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O4" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(227.25, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="S" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(245, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="L" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(256, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="I" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(265, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="D" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(274, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="E" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(285, 31)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="Blue" type="Sprite2D" parent="MegamanSlideControls"]
+position = Vector2(302, 30)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 11
+
+[node name="MeteorSmashControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="DownButton" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(12, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 53
+
+[node name="A" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(25, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 42
+
+[node name="O" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(42, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(56, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="DownButton2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(73, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 53
+
+[node name="L2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(87, 51)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 50
+
+[node name="I" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(100, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(111, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="A2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(128, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="I2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(138, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="R2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(148, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="T" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(215, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(227.25, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="M" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(245, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="E" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(258, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="T2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(271, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="E2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(284, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="O3" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(296, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R3" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(310, 50)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="Blue" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(326, 46)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 20
+
+[node name="Blue2" type="Sprite2D" parent="MeteorSmashControls"]
+position = Vector2(326, 59)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 21
+
+[node name="CastWallControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="B" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(19, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 45
+
+[node name="O" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(42, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(56, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="R1" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(81, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 49
+
+[node name="T" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(215, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(227.25, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="C" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(246, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(258, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="S" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(271, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(283, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="W" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(302, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 38
+
+[node name="A2" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(316, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="L" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(329, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="L2" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(341, 69)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="Blue" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(360, 68)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 14
+
+[node name="Blue2" type="Sprite2D" parent="CastWallControls"]
+position = Vector2(372, 68)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 19
+
+[node name="CastPlatformControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="B" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(19, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 45
+
+[node name="O" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(42, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(56, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="R1" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(81, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 49
+
+[node name="I" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(100, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="N" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(111, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="A2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(128, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="I2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(138, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="R2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(148, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="T" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(215, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(227.25, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="C" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(246, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(258, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="S" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(271, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(283, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="P" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(302, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 31
+
+[node name="L" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(312, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="A3" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(325, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="T3" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(335, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="F" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(348, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 21
+
+[node name="O3" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(360, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R3" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(374, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="M" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(387, 88)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="Blue" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(406, 85)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 1
+
+[node name="Blue2" type="Sprite2D" parent="CastPlatformControls"]
+position = Vector2(406, 94)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 17
+
+[node name="CastAttackControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="X" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(19, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 43
+
+[node name="O" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(42, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(56, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="R2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(81, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 51
+
+[node name="T" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(215, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(227.25, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="C" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(246, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(258, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="S" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(271, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(283, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="A2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(300, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="T3" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(310, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="T4" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(324, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="A3" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(334, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="C2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(346, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="K" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(358, 107)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 26
+
+[node name="Blue" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(377, 106)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 14
+
+[node name="Blue2" type="Sprite2D" parent="CastAttackControls"]
+position = Vector2(393, 106)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 17
+
+[node name="AimControls" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="RightStick" type="Sprite2D" parent="AimControls"]
+position = Vector2(19, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 57
+
+[node name="R" type="Sprite2D" parent="AimControls"]
+position = Vector2(37, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="I" type="Sprite2D" parent="AimControls"]
+position = Vector2(46, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="G" type="Sprite2D" parent="AimControls"]
+position = Vector2(55, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="H" type="Sprite2D" parent="AimControls"]
+position = Vector2(67, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 23
+
+[node name="T" type="Sprite2D" parent="AimControls"]
+position = Vector2(81, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="S" type="Sprite2D" parent="AimControls"]
+position = Vector2(100, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="AimControls"]
+position = Vector2(113, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="I2" type="Sprite2D" parent="AimControls"]
+position = Vector2(123, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="C" type="Sprite2D" parent="AimControls"]
+position = Vector2(132, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="K" type="Sprite2D" parent="AimControls"]
+position = Vector2(144, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 26
+
+[node name="T3" type="Sprite2D" parent="AimControls"]
+position = Vector2(215, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="AimControls"]
+position = Vector2(227.25, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="A" type="Sprite2D" parent="AimControls"]
+position = Vector2(245, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="I3" type="Sprite2D" parent="AimControls"]
+position = Vector2(255, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="M" type="Sprite2D" parent="AimControls"]
+position = Vector2(265, 126)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="Blue" type="Sprite2D" parent="AimControls"]
+position = Vector2(284, 125)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 1
+
+[node name="Blue2" type="Sprite2D" parent="AimControls"]
+position = Vector2(294, 125)
+rotation = 1.5707964
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 22
+
+[node name="CastMissile" type="Node2D" parent="."]
+position = Vector2(100, 31)
+
+[node name="RightStick" type="Sprite2D" parent="CastMissile"]
+position = Vector2(19, 146)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 57
+
+[node name="A4" type="Sprite2D" parent="CastMissile"]
+position = Vector2(37, 146)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="N" type="Sprite2D" parent="CastMissile"]
+position = Vector2(51, 146)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="D" type="Sprite2D" parent="CastMissile"]
+position = Vector2(63, 146)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="R2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(81, 146)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 51
+
+[node name="T" type="Sprite2D" parent="CastMissile"]
+position = Vector2(215, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(227.25, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="C" type="Sprite2D" parent="CastMissile"]
+position = Vector2(246, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A" type="Sprite2D" parent="CastMissile"]
+position = Vector2(258, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="S" type="Sprite2D" parent="CastMissile"]
+position = Vector2(271, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(283, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="Blue" type="Sprite2D" parent="CastMissile"]
+position = Vector2(380, 144)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 1
+
+[node name="Blue2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(391, 144)
+rotation = 1.5707964
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 22
+
+[node name="Blue3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(406, 145)
+texture = ExtResource("3_3tfba")
+hframes = 8
+vframes = 18
+frame = 23
+
+[node name="M" type="Sprite2D" parent="CastMissile"]
+position = Vector2(302, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="I" type="Sprite2D" parent="CastMissile"]
+position = Vector2(312, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="S2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(321, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="S3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(334, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="I2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(342, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="L" type="Sprite2D" parent="CastMissile"]
+position = Vector2(351, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="E" type="Sprite2D" parent="CastMissile"]
+position = Vector2(363, 145)
+texture = ExtResource("2_3tfba")
+hframes = 8
+vframes = 12
+frame = 20

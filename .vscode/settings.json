@@ -1,9 +1,0 @@
-{
-    "godotTools.editorPath.godot4": "/usr/bin/godot",
-	"files.exclude": {
-        "**/*.gd.uid": true,
-        "**/*.uid": true,
-		"**/*.import": true,
-		"**/*.*~": true
-    }
-}

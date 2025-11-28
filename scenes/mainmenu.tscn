@@ -1,8 +1,9 @@
-[gd_scene load_steps=33 format=3 uid="uid://cgt5jirf0v3bs"]
+[gd_scene load_steps=36 format=3 uid="uid://cgt5jirf0v3bs"]
 
 [ext_resource type="Script" uid="uid://c7ja7rxfl1k3q" path="res://scripts/arena.gd" id="1_jqs8n"]
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="2_g7odu"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="3_i26lm"]
+[ext_resource type="Script" uid="uid://b8e1mph2ugrm8" path="res://scripts/bg_black.gd" id="4_g7odu"]
 [ext_resource type="PackedScene" uid="uid://cp2d4ky7kfyt3" path="res://scenes/map_ramp.tscn" id="6_bj6dx"]
 [ext_resource type="PackedScene" uid="uid://buytkmov6kvrd" path="res://scenes/cold_goal.tscn" id="7_dsjw7"]
 [ext_resource type="PackedScene" uid="uid://w3y2lg015ylj" path="res://scenes/map_border_wall.tscn" id="8_altoc"]
@@ -30,19 +31,29 @@
 [ext_resource type="Script" uid="uid://bfm76secb20rm" path="res://scripts/yellow_ui.gd" id="30_eyoau"]
 [ext_resource type="PackedScene" uid="uid://dj1bkuuo2x6bu" path="res://scenes/map_platform.tscn" id="30_jqs8n"]
 [ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="31_gvbs6"]
+[ext_resource type="PackedScene" uid="uid://cgjt0fqxm4ggr" path="res://scenes/controls_ui.tscn" id="31_i26lm"]
 [ext_resource type="Script" uid="uid://b0pm7rp8ibmu3" path="res://scripts/player_contact_zone.gd" id="31_jqs8n"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jqs8n"]
-size = Vector2(96, 20)
+size = Vector2(96, 61)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i26lm"]
+size = Vector2(96, 61)
 
 [node name="MainMenu" type="Node2D"]
 script = ExtResource("1_jqs8n")
+
+[node name="Ball" parent="." instance=ExtResource("12_tb6om")]
+unique_name_in_owner = true
+visible = false
+position = Vector2(320, 418)
+continuous_cd = 0
 
 [node name="BGs" type="Node2D" parent="."]
 position = Vector2(320, 180)
 
 [node name="BgForest" type="Sprite2D" parent="BGs"]
-position = Vector2(-7, -12)
+position = Vector2(-7, -20)
 scale = Vector2(1.2, 1.2)
 texture = ExtResource("3_i26lm")
 
@@ -51,6 +62,7 @@ modulate = Color(1, 1, 1, 0.3764706)
 position = Vector2(0, 0.49993896)
 scale = Vector2(7.54688, 12.7417)
 texture = ExtResource("2_g7odu")
+script = ExtResource("4_g7odu")
 
 [node name="Map" type="Node2D" parent="."]
 
@@ -66,28 +78,29 @@ unique_name_in_owner = true
 position = Vector2(621.5, 265)
 
 [node name="Ramps" type="Node2D" parent="Map" groups=["ramps"]]
-visible = false
 position = Vector2(65, 60)
 
 [node name="MapRamp_TL" parent="Map/Ramps" instance=ExtResource("6_bj6dx")]
+visible = false
 position = Vector2(-24, -11)
 
 [node name="MapRamp_TR" parent="Map/Ramps" instance=ExtResource("6_bj6dx")]
+visible = false
 position = Vector2(534, -11)
 rotation = 1.5708
 
 [node name="MapRamp_BL" parent="Map/Ramps" instance=ExtResource("6_bj6dx")]
-position = Vector2(-24, 274)
+position = Vector2(-24, 261.00003)
 rotation = -1.5708
 
 [node name="MapRamp_BR" parent="Map/Ramps" instance=ExtResource("6_bj6dx")]
-position = Vector2(534, 274)
+position = Vector2(534, 261)
 rotation = -3.14159
 
 [node name="Map Borders" type="Node2D" parent="Map"]
 
 [node name="Map Border Wall South" parent="Map/Map Borders" instance=ExtResource("10_hn8mj")]
-position = Vector2(322, 369)
+position = Vector2(322, 356)
 rotation = 1.5708
 
 [node name="Map Border Wall North" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("10_hn8mj")]
@@ -122,14 +135,14 @@ position = Vector2(6, 110)
 rotation = 3.14159
 
 [node name="MapBorderWallWest_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("8_altoc")]
-position = Vector2(6, 270.00003)
+position = Vector2(6, 256.00006)
 rotation = 3.14159
 
 [node name="MapBorderWallEast" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("8_altoc")]
 position = Vector2(634, 110)
 
 [node name="MapBorderWallEast_BottomOfGoal" parent="Map/Map Borders" groups=["walls"] instance=ExtResource("8_altoc")]
-position = Vector2(634, 270.00003)
+position = Vector2(634, 256)
 
 [node name="BlackScreenCovers" type="Node2D" parent="."]
 
@@ -141,7 +154,7 @@ scale = Vector2(5.063, 13.7528)
 position = Vector2(-7, 351)
 
 [node name="BlockCoverSprite_S" parent="BlackScreenCovers" instance=ExtResource("11_6nvsv")]
-position = Vector2(365, 1510.77)
+position = Vector2(365, 1491.77)
 scale = Vector2(2.25, 6.31241)
 
 [node name="BlockCoverSprite_SE" parent="BlackScreenCovers" instance=ExtResource("11_6nvsv")]
@@ -171,7 +184,7 @@ unique_name_in_owner = true
 
 [node name="Player1" parent="." instance=ExtResource("15_0hngf")]
 unique_name_in_owner = true
-position = Vector2(160, 300)
+position = Vector2(320, 326)
 
 [node name="Spells" type="Node2D" parent="."]
 unique_name_in_owner = true
@@ -269,127 +282,438 @@ unique_name_in_owner = true
 visible = false
 position = Vector2(320, 90)
 
-[node name="Ball" parent="." instance=ExtResource("12_tb6om")]
+[node name="TitleUI" type="Node2D" parent="."]
 unique_name_in_owner = true
-visible = false
-position = Vector2(320, 418)
-continuous_cd = 0
 
-[node name="Title" type="Node2D" parent="."]
+[node name="Title" type="Node2D" parent="TitleUI"]
 scale = Vector2(4, 4)
 
-[node name="A" type="Sprite2D" parent="Title"]
+[node name="A" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(14.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 16
 
-[node name="R" type="Sprite2D" parent="Title"]
+[node name="R" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(28.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 33
 
-[node name="C" type="Sprite2D" parent="Title"]
+[node name="C" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(40.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 18
 
-[node name="A2" type="Sprite2D" parent="Title"]
+[node name="A2" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(52.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 16
 
-[node name="N" type="Sprite2D" parent="Title"]
+[node name="N" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(66.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 29
 
-[node name="E" type="Sprite2D" parent="Title"]
+[node name="E" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(78.75, 15.75)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 20
 
-[node name="S" type="Sprite2D" parent="Title"]
+[node name="S" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(65.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 34
 
-[node name="T" type="Sprite2D" parent="Title"]
+[node name="T" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(77.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 35
 
-[node name="R2" type="Sprite2D" parent="Title"]
+[node name="R2" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(91.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 33
 
-[node name="I" type="Sprite2D" parent="Title"]
+[node name="I" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(100.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 24
 
-[node name="K" type="Sprite2D" parent="Title"]
+[node name="K" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(110.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 26
 
-[node name="E2" type="Sprite2D" parent="Title"]
+[node name="E2" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(122.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 20
 
-[node name="R3" type="Sprite2D" parent="Title"]
+[node name="R3" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(135.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 33
 
-[node name="S2" type="Sprite2D" parent="Title"]
+[node name="S2" type="Sprite2D" parent="TitleUI/Title"]
 position = Vector2(147.25, 30)
 texture = ExtResource("29_a5e1i")
 hframes = 8
 vframes = 12
 frame = 34
 
+[node name="Move Controls" type="Node2D" parent="TitleUI"]
+position = Vector2(0, 5)
+
+[node name="LeftStick" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(59, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 56
+
+[node name="L" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(76, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="E" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(88, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="F" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(100, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 21
+
+[node name="T" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(113, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="S" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(132, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(145, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="I2" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(155, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="C" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(164, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="K" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(176, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 26
+
+[node name="T3" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(194, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(206, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="M" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(224, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="O" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(237, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="V" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(249, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 37
+
+[node name="E2" type="Sprite2D" parent="TitleUI/Move Controls"]
+position = Vector2(262, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="JumpControls" type="Node2D" parent="TitleUI"]
+position = Vector2(0, 5)
+
+[node name="A" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(404, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 42
+
+[node name="O" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(421, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="R" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(435, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="L2" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(453, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 50
+
+[node name="T" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(472, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(484.25, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="J" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(503.25, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 25
+
+[node name="U" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(515, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 36
+
+[node name="M" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(529, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="P" type="Sprite2D" parent="TitleUI/JumpControls"]
+position = Vector2(543, 345)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 31
+
+[node name="ControlsUI" parent="." instance=ExtResource("31_i26lm")]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+
 [node name="Platforms" type="Node2D" parent="."]
+position = Vector2(0, 60)
 
-[node name="CenterPlatform" parent="Platforms" instance=ExtResource("30_jqs8n")]
-position = Vector2(320, 180)
+[node name="ControlsPlatform" parent="Platforms" instance=ExtResource("30_jqs8n")]
+position = Vector2(160, 180)
 
-[node name="PlayerContactZone" type="Area2D" parent="Platforms/CenterPlatform"]
-position = Vector2(-0.5, -14.375)
+[node name="CTRL_PlayerContactZone" type="Area2D" parent="Platforms/ControlsPlatform"]
+position = Vector2(-0.5, -15.375)
+collision_layer = 33
+collision_mask = 33
 script = ExtResource("31_jqs8n")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/CenterPlatform/PlayerContactZone"]
-position = Vector2(0.5, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/ControlsPlatform/CTRL_PlayerContactZone"]
+position = Vector2(0.5, -20)
 shape = SubResource("RectangleShape2D_jqs8n")
 
-[connection signal="body_entered" from="Platforms/CenterPlatform/PlayerContactZone" to="Platforms/CenterPlatform/PlayerContactZone" method="_on_body_entered"]
+[node name="UI" type="Node2D" parent="Platforms/ControlsPlatform"]
+
+[node name="C" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(-44, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="O" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(-32, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="N" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(-19, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="T" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(-6, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="R" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(8, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 33
+
+[node name="O2" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(20, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="L" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(33, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="S" type="Sprite2D" parent="Platforms/ControlsPlatform/UI"]
+position = Vector2(46, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="NewGamePlatform" parent="Platforms" instance=ExtResource("30_jqs8n")]
+position = Vector2(480, 180)
+
+[node name="NG_PlayerContactZone" type="Area2D" parent="Platforms/NewGamePlatform"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/NewGamePlatform/NG_PlayerContactZone"]
+position = Vector2(0, -34.5)
+shape = SubResource("RectangleShape2D_i26lm")
+
+[node name="UI" type="Node2D" parent="Platforms/NewGamePlatform"]
+
+[node name="N" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(-41, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="E" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(-29, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="W" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(-16, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 38
+
+[node name="G" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(3, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="A" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(15, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="M" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(29, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="E2" type="Sprite2D" parent="Platforms/NewGamePlatform/UI"]
+position = Vector2(42, 12)
+texture = ExtResource("29_a5e1i")
+hframes = 8
+vframes = 12
+frame = 20
+
+[connection signal="body_entered" from="Platforms/ControlsPlatform/CTRL_PlayerContactZone" to="BGs/BgBlack" method="_on_player_contact_zone_body_entered"]
+[connection signal="body_exited" from="Platforms/ControlsPlatform/CTRL_PlayerContactZone" to="BGs/BgBlack" method="_on_player_contact_zone_body_exited"]
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
