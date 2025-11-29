@@ -2,4 +2,5 @@
 .godot/
 assets/krita_saves/inspo/
 addons/
-.vscode/*
+.vscode/
+bin/

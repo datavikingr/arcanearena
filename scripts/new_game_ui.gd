@@ -26,5 +26,5 @@ func _on_v_1_body_entered(_body: Node2D) -> void:
 func _on_v_2_body_entered(_body: Node2D) -> void:
 	get_tree().change_scene_to_file("res://scenes/games/FourPlayers.tscn")
 
-func _on_v_3_body_entered(body: Node2D) -> void:
+func _on_v_3_body_entered(_body: Node2D) -> void:
 	get_tree().change_scene_to_file("res://scenes/games/SixPlayers.tscn")
