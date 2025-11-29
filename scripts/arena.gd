@@ -16,7 +16,7 @@ var platform_configs = [
 	"res://scenes/platformconfigs/fourcorners.tscn",
 	"res://scenes/platformconfigs/omega.tscn"
 ]
-var testing = true
+var testing = false
 
 func reset():
 	match_data = {}

@@ -1,9 +1,19 @@
-[gd_scene load_steps=2 format=3 uid="uid://ntnhtnvao17y"]
+[gd_scene load_steps=3 format=3 uid="uid://ntnhtnvao17y"]
 
 [ext_resource type="Texture2D" uid="uid://c0ay7rhuibbgv" path="res://assets/splashscreen.png" id="1_0bpdh"]
+[ext_resource type="Script" uid="uid://bdyuvbd5dtink" path="res://scripts/credits.gd" id="1_2ckv8"]
 
 [node name="Credits" type="Node2D"]
+script = ExtResource("1_2ckv8")
 
 [node name="Sprite" type="Sprite2D" parent="."]
 position = Vector2(320, 180)
 texture = ExtResource("1_0bpdh")
+
+[node name="Timer" type="Timer" parent="."]
+process_callback = 0
+wait_time = 3.5
+one_shot = true
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

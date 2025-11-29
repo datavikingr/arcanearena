@@ -1,0 +1,498 @@
+[gd_scene load_steps=10 format=3 uid="uid://bwpkhugcpu6mu"]
+
+[ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="1_0qsdf"]
+[ext_resource type="Script" uid="uid://jvu73bnu1jly" path="res://scripts/new_game_ui.gd" id="1_6h37w"]
+[ext_resource type="PackedScene" uid="uid://dj1bkuuo2x6bu" path="res://scenes/map_platform.tscn" id="2_q41hc"]
+[ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="3_6h37w"]
+[ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="4_q41hc"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_54acv"]
+size = Vector2(70, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_q41hc"]
+size = Vector2(43, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6h37w"]
+size = Vector2(27, 46)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_edxqo"]
+size = Vector2(39, 46)
+
+[node name="NewGameUI" type="Node2D"]
+script = ExtResource("1_6h37w")
+
+[node name="DELETE ME" type="Node2D" parent="."]
+visible = false
+
+[node name="MapBgVoid - DELETE ME" type="Sprite2D" parent="DELETE ME"]
+position = Vector2(320, 180)
+texture = ExtResource("1_0qsdf")
+
+[node name="NewGamePlatform" parent="DELETE ME" instance=ExtResource("2_q41hc")]
+position = Vector2(480, 180)
+
+[node name="UI" type="Node2D" parent="DELETE ME/NewGamePlatform"]
+
+[node name="N" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(-41, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="E" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(-29, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="W" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(-16, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 38
+
+[node name="G" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(3, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 22
+
+[node name="A" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(15, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="M" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(29, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="E2" type="Sprite2D" parent="DELETE ME/NewGamePlatform/UI"]
+position = Vector2(42, 12)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="Solo" type="Area2D" parent="."]
+position = Vector2(489, 68)
+collision_mask = 160
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Solo"]
+position = Vector2(37, 9)
+shape = SubResource("RectangleShape2D_54acv")
+
+[node name="Blue" type="Sprite2D" parent="Solo"]
+position = Vector2(9, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+
+[node name="S" type="Sprite2D" parent="Solo"]
+position = Vector2(27, 10)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="O" type="Sprite2D" parent="Solo"]
+position = Vector2(40, 10)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="L" type="Sprite2D" parent="Solo"]
+position = Vector2(53, 10)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="O2" type="Sprite2D" parent="Solo"]
+position = Vector2(65, 10)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="1V1" type="Area2D" parent="."]
+position = Vector2(397, 68)
+collision_mask = 160
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="1V1"]
+position = Vector2(22.5, 9)
+shape = SubResource("RectangleShape2D_q41hc")
+
+[node name="Blue" type="Sprite2D" parent="1V1"]
+position = Vector2(9, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+
+[node name="V" type="Sprite2D" parent="1V1"]
+position = Vector2(23, 9)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 37
+
+[node name="Red" type="Sprite2D" parent="1V1"]
+position = Vector2(36, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 72
+
+[node name="2V2" type="Area2D" parent="."]
+position = Vector2(560, 109)
+collision_mask = 160
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="2V2"]
+position = Vector2(15.5, 23)
+shape = SubResource("RectangleShape2D_6h37w")
+
+[node name="Blue" type="Sprite2D" parent="2V2"]
+position = Vector2(9, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+
+[node name="Green" type="Sprite2D" parent="2V2"]
+position = Vector2(22, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 24
+
+[node name="V" type="Sprite2D" parent="2V2"]
+position = Vector2(16, 24)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 37
+
+[node name="Red" type="Sprite2D" parent="2V2"]
+position = Vector2(9, 38)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 72
+
+[node name="Yellow" type="Sprite2D" parent="2V2"]
+position = Vector2(22, 38)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 96
+
+[node name="3V3" type="Area2D" parent="."]
+position = Vector2(346, 109)
+collision_mask = 160
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="3V3"]
+position = Vector2(21.5, 24)
+shape = SubResource("RectangleShape2D_edxqo")
+
+[node name="Blue" type="Sprite2D" parent="3V3"]
+position = Vector2(9, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+
+[node name="Green" type="Sprite2D" parent="3V3"]
+position = Vector2(22, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 24
+
+[node name="Purple" type="Sprite2D" parent="3V3"]
+position = Vector2(35, 9)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 48
+
+[node name="V" type="Sprite2D" parent="3V3"]
+position = Vector2(22, 24)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 37
+
+[node name="Red" type="Sprite2D" parent="3V3"]
+position = Vector2(9, 38)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 72
+
+[node name="Yellow" type="Sprite2D" parent="3V3"]
+position = Vector2(22, 38)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 96
+
+[node name="Orange" type="Sprite2D" parent="3V3"]
+position = Vector2(35, 38)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 120
+
+[node name="CastMissile" type="Node2D" parent="."]
+position = Vector2(153, 30)
+
+[node name="RightStick" type="Sprite2D" parent="CastMissile"]
+position = Vector2(19, 238)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 57
+
+[node name="A4" type="Sprite2D" parent="CastMissile"]
+position = Vector2(37, 238)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="N" type="Sprite2D" parent="CastMissile"]
+position = Vector2(51, 238)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="D" type="Sprite2D" parent="CastMissile"]
+position = Vector2(63, 238)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="R2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(81, 238)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 51
+
+[node name="T" type="Sprite2D" parent="CastMissile"]
+position = Vector2(100, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="O2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(112.25, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="C" type="Sprite2D" parent="CastMissile"]
+position = Vector2(131, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="A" type="Sprite2D" parent="CastMissile"]
+position = Vector2(143, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="S" type="Sprite2D" parent="CastMissile"]
+position = Vector2(156, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="T2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(168, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="Blue" type="Sprite2D" parent="CastMissile"]
+position = Vector2(265, 236)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 1
+
+[node name="Blue2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(276, 236)
+rotation = 1.5707964
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 22
+
+[node name="Blue3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(291, 237)
+texture = ExtResource("4_q41hc")
+hframes = 8
+vframes = 18
+frame = 23
+
+[node name="M" type="Sprite2D" parent="CastMissile"]
+position = Vector2(187, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="I" type="Sprite2D" parent="CastMissile"]
+position = Vector2(197, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="S2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(206, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="S3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(219, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="I2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(227, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 24
+
+[node name="L" type="Sprite2D" parent="CastMissile"]
+position = Vector2(236, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="E" type="Sprite2D" parent="CastMissile"]
+position = Vector2(248, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="A5" type="Sprite2D" parent="CastMissile"]
+position = Vector2(311, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 16
+
+[node name="N2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(325, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 29
+
+[node name="D2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(337, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="S4" type="Sprite2D" parent="CastMissile"]
+position = Vector2(355, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 34
+
+[node name="E2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(366, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="L2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(378, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 27
+
+[node name="E3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(390, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[node name="C2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(402, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 18
+
+[node name="T3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(414, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 35
+
+[node name="M2" type="Sprite2D" parent="CastMissile"]
+position = Vector2(433, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 28
+
+[node name="O" type="Sprite2D" parent="CastMissile"]
+position = Vector2(446, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 30
+
+[node name="D3" type="Sprite2D" parent="CastMissile"]
+position = Vector2(458, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 19
+
+[node name="E4" type="Sprite2D" parent="CastMissile"]
+position = Vector2(469, 237)
+texture = ExtResource("3_6h37w")
+hframes = 8
+vframes = 12
+frame = 20
+
+[connection signal="body_entered" from="Solo" to="." method="_on_solo_body_entered"]
+[connection signal="body_entered" from="1V1" to="." method="_on_v_1_body_entered"]
+[connection signal="body_entered" from="2V2" to="." method="_on_v_2_body_entered"]
+[connection signal="body_entered" from="3V3" to="." method="_on_v_3_body_entered"]

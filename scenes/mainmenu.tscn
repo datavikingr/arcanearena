@@ -1,6 +1,5 @@
-[gd_scene load_steps=36 format=3 uid="uid://cgt5jirf0v3bs"]
+[gd_scene load_steps=37 format=3 uid="uid://cgt5jirf0v3bs"]
 
-[ext_resource type="Script" uid="uid://c7ja7rxfl1k3q" path="res://scripts/arena.gd" id="1_jqs8n"]
 [ext_resource type="Texture2D" uid="uid://ddpahkgu138ly" path="res://assets/bgs/map_bg_void.png" id="2_g7odu"]
 [ext_resource type="Texture2D" uid="uid://bhot6j6xa48hd" path="res://assets/bgs/bg_forest.png" id="3_i26lm"]
 [ext_resource type="Script" uid="uid://b8e1mph2ugrm8" path="res://scripts/bg_black.gd" id="4_g7odu"]
@@ -30,9 +29,11 @@
 [ext_resource type="Texture2D" uid="uid://cnwtstefnr2j5" path="res://assets/font_sprite_sheet.png" id="29_a5e1i"]
 [ext_resource type="Script" uid="uid://bfm76secb20rm" path="res://scripts/yellow_ui.gd" id="30_eyoau"]
 [ext_resource type="PackedScene" uid="uid://dj1bkuuo2x6bu" path="res://scenes/map_platform.tscn" id="30_jqs8n"]
+[ext_resource type="PackedScene" uid="uid://bwpkhugcpu6mu" path="res://scenes/new_game_ui.tscn" id="31_cquq5"]
 [ext_resource type="Script" uid="uid://ceue86a5tmt6f" path="res://scripts/orange_ui.gd" id="31_gvbs6"]
 [ext_resource type="PackedScene" uid="uid://cgjt0fqxm4ggr" path="res://scenes/controls_ui.tscn" id="31_i26lm"]
 [ext_resource type="Script" uid="uid://b0pm7rp8ibmu3" path="res://scripts/player_contact_zone.gd" id="31_jqs8n"]
+[ext_resource type="Script" uid="uid://w43f60680vb6" path="res://scenes/ng_player_contact_zone.gd" id="35_fnwml"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_jqs8n"]
 size = Vector2(96, 61)
@@ -41,7 +42,6 @@ size = Vector2(96, 61)
 size = Vector2(96, 61)
 
 [node name="MainMenu" type="Node2D"]
-script = ExtResource("1_jqs8n")
 
 [node name="Ball" parent="." instance=ExtResource("12_tb6om")]
 unique_name_in_owner = true
@@ -71,11 +71,11 @@ visible = false
 
 [node name="ColdGoal" parent="Map/Goals" instance=ExtResource("7_dsjw7")]
 unique_name_in_owner = true
-position = Vector2(18.5, 264)
+position = Vector2(-0.5, 264)
 
 [node name="HotGoal" parent="Map/Goals" instance=ExtResource("9_owq6t")]
 unique_name_in_owner = true
-position = Vector2(621.5, 265)
+position = Vector2(664.5, 265)
 
 [node name="Ramps" type="Node2D" parent="Map" groups=["ramps"]]
 position = Vector2(65, 60)
@@ -574,6 +574,11 @@ hframes = 8
 vframes = 12
 frame = 31
 
+[node name="NewGameUI" parent="." instance=ExtResource("31_cquq5")]
+unique_name_in_owner = true
+modulate = Color(1, 1, 1, 0)
+position = Vector2(9, 83)
+
 [node name="ControlsUI" parent="." instance=ExtResource("31_i26lm")]
 unique_name_in_owner = true
 modulate = Color(1, 1, 1, 0)
@@ -656,6 +661,10 @@ frame = 34
 position = Vector2(480, 180)
 
 [node name="NG_PlayerContactZone" type="Area2D" parent="Platforms/NewGamePlatform"]
+position = Vector2(0, -1)
+collision_layer = 33
+collision_mask = 33
+script = ExtResource("35_fnwml")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Platforms/NewGamePlatform/NG_PlayerContactZone"]
 position = Vector2(0, -34.5)
@@ -714,6 +723,8 @@ frame = 20
 
 [connection signal="body_entered" from="Platforms/ControlsPlatform/CTRL_PlayerContactZone" to="BGs/BgBlack" method="_on_player_contact_zone_body_entered"]
 [connection signal="body_exited" from="Platforms/ControlsPlatform/CTRL_PlayerContactZone" to="BGs/BgBlack" method="_on_player_contact_zone_body_exited"]
+[connection signal="body_entered" from="Platforms/NewGamePlatform/NG_PlayerContactZone" to="BGs/BgBlack" method="_on_ng_player_contact_zone_body_entered"]
+[connection signal="body_exited" from="Platforms/NewGamePlatform/NG_PlayerContactZone" to="BGs/BgBlack" method="_on_ng_player_contact_zone_body_exited"]
 
 [editable path="UI/BlueUI"]
 [editable path="UI/GreenUI"]
@@ -721,3 +732,4 @@ frame = 20
 [editable path="UI/RedUI"]
 [editable path="UI/YellowUI"]
 [editable path="UI/OrangeUI"]
+[editable path="NewGameUI"]
