@@ -1,0 +1,6 @@
+// Divine Starlight
+
+$: s("hh*12").gain(".4!2 1 .4!2 1").coarse("10").hpf("1000")
+$: note("<[<[0, 3] [2 , 4]>, 5] 4 <5 6> >*6").scale("<C2:minor Ab2:major Bb2:major G2:major>/2").sound("[square]")
+$: note("<[0, 3] [2, 5]  6  >*12").scale("<C5:minor Ab5:major Bb5:major G5:major>/2").sound("sawtooth").gain(".1 .2 .4")
+$: note("<0 5 6 2 <4 [4 [3 3]]> 1 [0 1] [5 6] [<6 [6 6]> 7] [2 3] [4 5] [1  <2 [2 2]>]>").scale("<C4:minor Ab4:major Bb4:major G4:major>/2").sound("triangle")

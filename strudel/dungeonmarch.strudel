@@ -1,0 +1,5 @@
+// Dungeon March
+
+$: s("hh*8").gain(".4!2 1 .4!2 1 .4 1").fast(2).coarse("10").hpf("1000")
+$: note("<1 [6 6] [7, -1] 5>*8").scale("<A3:minor F3:major G3:major E3:minor>/2").sound("[square, triangle]")
+$: note("<1 6 7 5>/2").scale("<A2:minor F2:major G2:major E2:minor>/2").sound("sawtooth")
