@@ -1,0 +1,9 @@
+// Hero
+
+$: s("<hh hh hh hh hh hh hh [hh hh]>*4 ").gain("<.1 <.35 .6>>*4").coarse("10").delay("0.3").hpf("1000").color("white")
+$: s("<bd - - ->*2 ").gain(".2").coarse("16").delay(".2").color("red").speed(".7")
+$: note("<[0 2]*4 [0, 2]*4>").scale("<D3:minor C3:major Bb2:major A2:major>/2").sound("triangle").gain(.5).color("magenta")
+$: note("<5@4 9@4 7@4 4@3 [- 0]>*4").scale("<D4:minor C4:major Bb4:major A4:major>/2").sound("triangle").gain(.25).color("green")
+
+
+$: all(pianoroll)
