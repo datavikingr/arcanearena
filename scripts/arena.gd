@@ -53,5 +53,3 @@ func process():
 		#TODO among those cross-analyzed stats, pick the 4 largest numbers, display those.
 		pass
 	pass
-
-	

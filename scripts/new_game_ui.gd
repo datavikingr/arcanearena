@@ -5,13 +5,13 @@ extends Node2D
 @onready var two_v_two: Node2D = get_node("2V2")
 @onready var three_v_three: Node2D = get_node("3V3")
 
-func _process(_delta: float) -> void: 
+func _process(_delta: float) -> void:
 	if self.modulate.a < 1.0:
 		solo.monitoring = false
 		one_v_one.monitoring = false
 		two_v_two.monitoring = false
 		three_v_three.monitoring = false
-	else: 
+	else:
 		solo.monitoring = true
 		one_v_one.monitoring = true
 		two_v_two.monitoring = true
