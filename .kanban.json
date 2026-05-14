@@ -1,9 +1,110 @@
 {
   "columns": {
-    "Backlog": [],
+    "Backlog": [
+      {
+        "id": "LOCAL-00008",
+        "title": "SFX",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-13 20:26",
+        "due": "",
+        "completed_at": null,
+        "collapsed": false,
+        "children": [
+          {
+            "id": "LOCAL-00001",
+            "title": "Don't play sfx when sfx already playing; if_play()",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:24",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          },
+          {
+            "id": "LOCAL-00002",
+            "title": "platform sfx",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:24",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          },
+          {
+            "id": "LOCAL-00003",
+            "title": "special sfx",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:24",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          },
+          {
+            "id": "LOCAL-00005",
+            "title": "ball sfx",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:24",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          },
+          {
+            "id": "LOCAL-00006",
+            "title": "goal explosion sfx",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:24",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          },
+          {
+            "id": "LOCAL-00007",
+            "title": "goal fanfare sfx",
+            "description": "",
+            "priority": "",
+            "created": "2026-05-13 20:25",
+            "due": "",
+            "completed_at": null,
+            "collapsed": false,
+            "children": []
+          }
+        ]
+      },
+      {
+        "id": "LOCAL-00009",
+        "title": "menu/ui sfx",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-13 20:27",
+        "due": "",
+        "completed_at": null,
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00004",
+        "title": "bgm",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-13 20:24",
+        "due": "",
+        "completed_at": null,
+        "collapsed": false,
+        "children": []
+      }
+    ],
     "In Progress": [],
     "Blocked / External": [],
     "Done": []
   },
-  "next_id": 1
+  "next_id": 10
 }
