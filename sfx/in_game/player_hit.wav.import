@@ -2,13 +2,13 @@
 
 importer="wav"
 type="AudioStreamWAV"
-uid="uid://du2a50qqkteq7"
-path="res://.godot/imported/ball_touch.wav-0469549597608b00ab29b42c56656a78.sample"
+uid="uid://btl78r0vvu7cg"
+path="res://.godot/imported/player_hit.wav-eafc7ca1ba8927f5aee47109b47be555.sample"
 
 [deps]
 
-source_file="res://sfx/in_game/ball_touch.wav"
-dest_files=["res://.godot/imported/ball_touch.wav-0469549597608b00ab29b42c56656a78.sample"]
+source_file="res://sfx/in_game/player_hit.wav"
+dest_files=["res://.godot/imported/player_hit.wav-eafc7ca1ba8927f5aee47109b47be555.sample"]
 
 [params]
 

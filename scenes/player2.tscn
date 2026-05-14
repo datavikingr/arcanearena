@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://x1l6ji4xxc3x"]
+[gd_scene load_steps=39 format=3 uid="uid://x1l6ji4xxc3x"]
 
 [ext_resource type="Script" uid="uid://buifs5qugrcdy" path="res://scripts/player2.gd" id="1_q64lh"]
 [ext_resource type="Texture2D" uid="uid://cnrevimi4ar0b" path="res://assets/sprite_sheet.png" id="2_83qg3"]
@@ -6,6 +6,14 @@
 [ext_resource type="Gradient" uid="uid://cxpxqrpnsj4hk" path="res://resources/red_gradient.tres" id="4_vi0t1"]
 [ext_resource type="Script" uid="uid://bg8ajmijhd2o8" path="res://scripts/playereyetrail.gd" id="5_u8riw"]
 [ext_resource type="Gradient" uid="uid://l2lj34l012p2" path="res://resources/cyan_gradient.tres" id="6_uy8sj"]
+[ext_resource type="AudioStream" uid="uid://c7rckn2f0no8o" path="res://sfx/in_game/player_jump.wav" id="7_8l1to"]
+[ext_resource type="AudioStream" uid="uid://cah4qxp18hhq7" path="res://sfx/in_game/player_attack.wav" id="8_3ejgl"]
+[ext_resource type="AudioStream" uid="uid://vvb4yvg1fh28" path="res://sfx/in_game/player_block.wav" id="9_24gv0"]
+[ext_resource type="AudioStream" uid="uid://btl78r0vvu7cg" path="res://sfx/in_game/player_hit.wav" id="10_7f0u4"]
+[ext_resource type="AudioStream" uid="uid://dgagn6u0nlj41" path="res://sfx/in_game/player_death.wav" id="10_dauvq"]
+[ext_resource type="AudioStream" uid="uid://dkqke7okox3kj" path="res://sfx/in_game/player_meteor.wav" id="12_ftkcl"]
+[ext_resource type="AudioStream" uid="uid://5m012xiieu6l" path="res://sfx/in_game/player_missile.wav" id="13_bsup3"]
+[ext_resource type="AudioStream" uid="uid://drj5hikrumsf" path="res://sfx/in_game/player_slide.wav" id="14_ltp6r"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_gmtae"]
 radius = 5.5
@@ -2227,3 +2235,30 @@ one_shot = true
 [node name="CastAnimationTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="sfx_attack" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("8_3ejgl")
+
+[node name="sfx_block" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("9_24gv0")
+volume_db = -12.0
+
+[node name="sfx_death" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_dauvq")
+volume_db = -12.0
+
+[node name="sfx_hurt" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("10_7f0u4")
+
+[node name="sfx_jump" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_8l1to")
+
+[node name="sfx_meteor" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("12_ftkcl")
+
+[node name="sfx_missile" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("13_bsup3")
+
+[node name="sfx_slide" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("14_ltp6r")
+volume_db = -3.0
