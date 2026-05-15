@@ -112,22 +112,11 @@
         "collapsed": false,
         "children": [
           {
-            "id": "LOCAL-00011",
-            "title": "SFX",
+            "id": "LOCAL-00014",
+            "title": "Menu SFX bus",
             "description": "",
             "priority": "",
-            "created": "2026-05-14 16:16",
-            "due": "",
-            "completed_at": null,
-            "collapsed": false,
-            "children": []
-          },
-          {
-            "id": "LOCAL-00012",
-            "title": "BGM",
-            "description": "",
-            "priority": "",
-            "created": "2026-05-14 16:16",
+            "created": "2026-05-15 11:03",
             "due": "",
             "completed_at": null,
             "collapsed": false,
@@ -138,7 +127,41 @@
     ],
     "In Progress": [],
     "Blocked / External": [],
-    "Done": []
+    "Done": [
+      {
+        "id": "LOCAL-00012",
+        "title": "BGM",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-14 16:16",
+        "due": "",
+        "completed_at": "2026-05-15 11:01",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00011",
+        "title": "SFX",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-14 16:16",
+        "due": "",
+        "completed_at": "2026-05-15 11:02",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00013",
+        "title": "Ball SFX (as opposed to player SFX labelled SFX above)",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-15 11:03",
+        "due": "",
+        "completed_at": "2026-05-15 11:03",
+        "collapsed": false,
+        "children": []
+      }
+    ]
   },
-  "next_id": 13
+  "next_id": 15
 }
