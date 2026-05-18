@@ -12,28 +12,6 @@
         "collapsed": false,
         "children": [
           {
-            "id": "LOCAL-00001",
-            "title": "Don't play sfx when sfx already playing; if_play()",
-            "description": "",
-            "priority": "",
-            "created": "2026-05-13 20:24",
-            "due": "",
-            "completed_at": null,
-            "collapsed": false,
-            "children": []
-          },
-          {
-            "id": "LOCAL-00002",
-            "title": "platform sfx",
-            "description": "",
-            "priority": "",
-            "created": "2026-05-13 20:24",
-            "due": "",
-            "completed_at": null,
-            "collapsed": false,
-            "children": []
-          },
-          {
             "id": "LOCAL-00003",
             "title": "special sfx",
             "description": "",
@@ -100,29 +78,6 @@
         "completed_at": null,
         "collapsed": false,
         "children": []
-      },
-      {
-        "id": "LOCAL-00010",
-        "title": "Audio Buses",
-        "description": "",
-        "priority": "",
-        "created": "2026-05-14 16:16",
-        "due": "",
-        "completed_at": null,
-        "collapsed": false,
-        "children": [
-          {
-            "id": "LOCAL-00014",
-            "title": "Menu SFX bus",
-            "description": "",
-            "priority": "",
-            "created": "2026-05-15 11:03",
-            "due": "",
-            "completed_at": null,
-            "collapsed": false,
-            "children": []
-          }
-        ]
       }
     ],
     "In Progress": [],
@@ -158,6 +113,50 @@
         "created": "2026-05-15 11:03",
         "due": "",
         "completed_at": "2026-05-15 11:03",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00014",
+        "title": "Menu SFX bus",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-15 11:03",
+        "due": "",
+        "completed_at": "2026-05-17 21:33",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00010",
+        "title": "Audio Buses",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-14 16:16",
+        "due": "",
+        "completed_at": "2026-05-17 21:33",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00002",
+        "title": "platform sfx",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-13 20:24",
+        "due": "",
+        "completed_at": "2026-05-17 21:44",
+        "collapsed": false,
+        "children": []
+      },
+      {
+        "id": "LOCAL-00001",
+        "title": "Don't play sfx when sfx already playing; if_play()",
+        "description": "",
+        "priority": "",
+        "created": "2026-05-13 20:24",
+        "due": "",
+        "completed_at": "2026-05-17 21:44",
         "collapsed": false,
         "children": []
       }

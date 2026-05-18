@@ -700,7 +700,8 @@ func player_aim() ->void: # Called by input_handling(); Player aim
 
 func player_jump() -> void: # Called by state_machine(); Jump!
 	velocity.y = jump_speed #omg Godot defines "Up" as -Y and NOT +Y. *sigh*
-	sfx_jump.play()
+	if not sfx_jump.playing:
+		sfx_jump.play()
 	if is_ball_near() and !is_on_top_of_ball(): # If ball is in range, but we're not directly on top of it
 		%Ball.linear_velocity.y = 1.1 * jump_speed # Apply upward force to ball
 	var platform_name = "PlayerPlatform_" + player_color # Search for existing platforms with this name
@@ -709,7 +710,8 @@ func player_jump() -> void: # Called by state_machine(); Jump!
 			child.free() # Free the existing platform and kill it, because we kill platforms on jump.
 
 func player_slide() -> void: # Called by state_machine(); Megaman slide!
-	sfx_slide.play()
+	if not sfx_slide.playing:
+		sfx_slide.play()
 	if last_facing == "left": # If player is facing left
 		velocity.x = -slide_speed # Tune the forces to the left
 	else: # else, we're facing right
@@ -717,7 +719,8 @@ func player_slide() -> void: # Called by state_machine(); Megaman slide!
 
 func player_meteor() -> void: 	# Called by state_machine(); Meteor strike downwards from the sky!
 	raycast.enabled = false # Turns ball detector OFF [for is_on_top_of_ball()], allowing us to pinch the ball, maybe? Returns to normal on Jump-just released in _physics_process()
-	sfx_meteor.play()
+	if not sfx_meteor.playing:
+		sfx_meteor.play()
 	velocity.y = meteor_speed # Drop really fast; 800
 	from_meteor = true # Set Flag on. Returns to normal on Jump-just released in _physics_process()
 
@@ -725,7 +728,8 @@ func player_attack() -> void: # Called by state_machine(); Localized magic ball 
 	# NOTE: Players do not collide with melee attacks by default - rather, the attack colides with them. This lets players move their melee attack.
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 1 seconds
 		attack_cooldown.start() # Start cooldown timer
-		sfx_attack.play()
+		if not sfx_attack.playing:
+			sfx_attack.play()
 		if cast_anim_timer.is_stopped():
 			cast_anim_timer.start()
 		var new_attack = player_attack_scene.instantiate() # Instantiate the preloaded scene
@@ -747,7 +751,8 @@ func player_attack() -> void: # Called by state_machine(); Localized magic ball 
 func player_missile() -> void: # Called by state_machine(); Ranged dart attack
 	if attack_cooldown.is_stopped(): # Don't let players spam attack more than once every 0.75 seconds
 		attack_cooldown.start() # Start cooldown timer
-		sfx_missile.play()
+		if not sfx_missile.playing:
+			sfx_missile.play()
 		if cast_anim_timer.is_stopped():
 			cast_anim_timer.start()
 		var new_missile = player_missile_scene.instantiate() # Instantiate the preloaded scene
@@ -784,7 +789,8 @@ func player_block() -> void: # Called by state_machine(); Localized magic wall f
 	else:
 		construct_hot_team(new_block)
 	magic_layer.add_child(new_block) # Add the new instance as a child of the magic layer node
-	sfx_block.play()
+	if not sfx_block.playing:
+		sfx_block.play()
 
 func player_platform() -> void: #Called by state_machine(); Localized matgic floor for manuvering
 	# NOTE: Players collide with blocking walls by default, stopping the players in their tracks.
@@ -802,6 +808,8 @@ func player_platform() -> void: #Called by state_machine(); Localized matgic flo
 	else:
 		construct_hot_team(new_platform)
 	magic_layer.add_child(new_platform) # Add the new instance as a child of the magic layer node
+	if not sfx_block.playing:
+		sfx_block.play()
 
 func player_special() -> void: # TODO Called by state_machine(); The Player is spending their 'smash ball' scroll
 	pass
@@ -840,13 +848,15 @@ func player_hurt(attacker) -> void:
 	player_knockback()
 	if hp <= 0:
 		var killer = get_parent().get_node(attacker)
-		sfx_death.play()
+		if not sfx_death.playing:
+			sfx_death.play()
 		if not self.kill.is_connected(Callable(killer, "player_kill")):
 			self.kill.connect(Callable(killer, "player_kill"))
 		kill.emit()
 		self.kill.disconnect(Callable(killer, "player_kill"))
 	else:
-		sfx_hurt.play()
+		if not sfx_hurt.playing:
+			sfx_hurt.play()
 
 func player_kill() -> void:
 	kills += 1
