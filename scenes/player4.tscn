@@ -2238,35 +2238,35 @@ one_shot = true
 
 [node name="sfx_attack" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("8_20pmj")
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_block" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("9_dxt67")
 volume_db = -12.0
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_death" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_sla0c")
 volume_db = -12.0
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_hurt" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("10_7h7j2")
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_jump" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("7_6ev3t")
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_meteor" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("12_3mu1j")
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_missile" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("13_nu2ma")
-bus = &"SFX"
+bus = &"Player SFX"
 
 [node name="sfx_slide" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("14_2u5sl")
 volume_db = -3.0
-bus = &"SFX"
+bus = &"Player SFX"
